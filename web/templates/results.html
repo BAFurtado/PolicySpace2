@@ -1,0 +1,12 @@
+{% extends 'layout.html' %}
+{% block content %}
+<header class="results-header">
+    <h1>{{ id }}</h1>
+</header>
+<ul class="results">
+    {% for plot in plots %}
+        <li><img src="{{ plot }}"></li>
+    {% endfor %}
+</ul>
+{% endblock %}
+

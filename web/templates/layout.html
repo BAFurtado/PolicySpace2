@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>SEAL</title>
+  <link rel="stylesheet" type="text/css" href="/assets/style.css">
+</head>
+<body>
+    <main>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('web.start') }}">Start</a></li>
+                <li><a href="{{ url_for('web.index') }}">Status</a></li>
+                <li><a href="{{ url_for('web.runs') }}">Results</a></li>
+            </ul>
+        </nav>
+        {% block content %}
+        {% endblock %}
+    </main>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="/assets/main.js"></script>
+    {% block scripts %}
+    {% endblock %}
+</body>
+</html>

@@ -1,0 +1,21 @@
+{% macro render_field_with_errors(field, label=True) %}
+  <p class="form-field">
+    {% if field.type != 'BooleanField' %}
+        {% if label %} {{ field.label }} {% endif %} {{ field(**kwargs)|safe }}
+    {% else %}
+        {{ field(**kwargs)|safe }}
+        {% if label %}{{ field.label }}{% endif %}
+    {% endif %}
+    {% if field.errors %}
+      <ul class="errors">
+      {% for error in field.errors %}
+        <li class="error">{{ error|safe }}</li>
+      {% endfor %}
+      </ul>
+    {% endif %}
+  </p>
+{% endmacro %}
+
+{% macro render_field(field) %}
+  {{ field(**kwargs)|safe }}
+{% endmacro %}

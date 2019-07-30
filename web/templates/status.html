@@ -1,0 +1,42 @@
+{% extends 'layout.html' %}
+{% block content %}
+<header class="status">
+    <div class="status-name"></div>
+    <button class="stop-sim">Stop</button>
+</header>
+<div class="logs">
+    <header>
+        <h2>Logs</h2>
+        <h4 class="last-updated"></h4>
+    </header>
+    <ul></ul>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function update(data) {
+    var now = new Date();
+    $('.last-updated').text(`Last updated: ${now.toLocaleString()}`);
+    data.logs.reverse();
+    if (data.running) {
+        $('.status').css('background', '#42cc42');
+        $('.status-name').text('Running');
+        $('.stop-sim').show();
+        lis = [];
+        for (var i=0; i<data.logs.length; i++) {
+            lis.push(`<li>${data.logs[i]}</li>`);
+        }
+        $('.logs ul').html(lis.join(''));
+    } else {
+        $('.status').css('background', '#f92525');
+        $('.status-name').text('Stopped');
+        $('.stop-sim').hide();
+    }
+}
+
+$('body').on('click', '.stop-sim', () => stop_sim(update));
+poll_status(update, 1000);
+</script>
+{% endblock %}
+

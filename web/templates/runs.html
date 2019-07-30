@@ -1,0 +1,8 @@
+{% extends 'layout.html' %}
+{% block content %}
+<ul class="results">
+    {% for id in runs %}
+        <li><a href="{{ url_for('web.results', id=id) }}">{{ id }}</a></li>
+    {% endfor %}
+</ul>
+{% endblock %}

@@ -1,0 +1,35 @@
+{% from "_macros.html" import render_field_with_errors, render_field %}
+{% extends 'layout.html' %}
+{% block content %}
+<form action="{{ url_for('web.start') }}" method="POST" class="start-sim">
+    {{ form.hidden_tag() }}
+    {{ render_field_with_errors(form.run_type) }}
+    {{ render_field_with_errors(form.n_runs) }}
+    {{ render_field_with_errors(form.n_cpus) }}
+    {{ render_field_with_errors(form.params) }}
+    {{ render_field_with_errors(form.sensitivity_params) }}
+    {{ render_field_with_errors(form.config) }}
+    <button>Start</button>
+</form>
+<div class="notice">
+    <h1>A simulation is already running.</h1>
+    <h2><a href="{{ url_for('web.index') }}">View Status</a></h2>
+    <button class="stop-sim">Stop</button>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function update(data) {
+    if (data.running) {
+        $('.notice').show();
+    } else {
+        $('.notice').hide();
+    }
+}
+
+$('body').on('click', '.stop-sim', () => stop_sim(update));
+poll_status(update, 1000);
+</script>
+{% endblock %}
+

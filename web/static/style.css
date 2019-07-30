@@ -1,0 +1,89 @@
+html, body {
+  padding: 0;
+  margin: 0;
+  font-family: 'Helvetica Neue', sans-serif;
+  background: #fbfbec;
+}
+
+.status, .logs,
+.results, .start-sim {
+  padding: 1em;
+}
+
+img {
+  max-width: 100%;
+}
+
+.results-header {
+  text-align: center;
+  padding: 1em;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  font-family: monospace;
+  font-size: 1.4em;
+}
+.logs li {
+  margin: 0.5em 0;
+}
+.logs header, .status {
+  overflow: hidden;
+}
+.logs h2, .status-name {
+  float: left;
+}
+.logs h4, .status button {
+  float: right;
+}
+.status-name {
+  margin: 0.2em 0;
+}
+
+.last-updated {
+  font-weight: normal;
+  color: #c0c0c0;
+}
+
+.notice {
+  z-index: 10;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: rgba(255,0,0,0.8);
+  padding-top: 6em;
+  text-align: center;
+}
+form {
+  max-width: 600px;
+  margin: 2em auto;
+}
+
+nav {
+  background: #222;
+  padding: 0.5em 1em;
+}
+nav li {
+  display: inline-block;
+  margin-right: 1em;
+}
+nav li a {
+  color: #fff;
+  text-decoration: none;
+}
+nav li a:hover {
+  text-decoration: underline;
+}
+
+textarea {
+  display: block;
+  width: 100%;
+  min-height: 40em;
+}
+textarea[name=sensitivity_params] {
+  min-height: 8em;
+}
