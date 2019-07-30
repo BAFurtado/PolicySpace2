@@ -283,7 +283,8 @@ class Simulation:
         self.logger.log_time('SAVING DATA', self.timer, self.clock.months)
         self.output.times.append(self.timer.elapsed())
 
-        self.logger.info('Month: {}'.format(self.clock.months))
+        if conf.RUN['PRINT_STATISTICS_AND_RESULTS_DURING_PROCESS']:
+            self.logger.logger.info('Month: {}'.format(self.clock.months))
 
     def quarterly(self):
         if conf.RUN['SAVE_AGENTS_DATA_QUARTERLY']:

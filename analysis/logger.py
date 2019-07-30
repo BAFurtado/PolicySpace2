@@ -37,5 +37,4 @@ class Logger:
         print(self.clock)
 
     def info(self, msg):
-        if conf.RUN['PRINT_STATISTICS_AND_RESULTS_DURING_PROCESS']:
-            print(msg)
+        self.logger.info(msg)

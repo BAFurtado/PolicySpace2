@@ -13,7 +13,7 @@ import conf
 import json
 import click
 import logging
-import validation_tentative
+# import validation_tentative
 import numpy as np
 import pandas as pd
 import matplotlib
@@ -21,7 +21,7 @@ import matplotlib
 matplotlib.use('agg') # necessary for multiprocess plotting
 
 from glob import glob
-from other import report
+from analysis import report
 from datetime import datetime
 from simulation import Simulation
 from collections import defaultdict
