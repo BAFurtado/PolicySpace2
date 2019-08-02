@@ -223,7 +223,7 @@ def gen_output_dir(command):
 @click.group()
 @click.pass_context
 @click.option('-n', '--runs', help='Number of simulation runs', default=1)
-@click.option('-c', '--cpus', help='Number of CPU cores to use', default=-1)
+@click.option('-c', '--cpus', help='Number of CPU cores to use', default=1)
 @click.option('-p', '--params', help='JSON of params override')
 @click.option('-r', '--config', help='JSON of run config override')
 def main(ctx, runs, cpus, params, config):
