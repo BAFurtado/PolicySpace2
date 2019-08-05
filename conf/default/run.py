@@ -4,7 +4,7 @@
 OUTPUT_PATH = r'\\storage6\usuarios\# MODELO DINAMICO DE SIMULACAO #\Exits_python\output\policy2'
 # OUTPUT_PATH = '/home/furtadobb/MyModels/policyspace2/output/testes_fpm'
 
-KEEP_RANDOM_SEED = True
+KEEP_RANDOM_SEED = False
 
 # Descriptive stats to plot evolution of age and qualification by municipality
 DESCRIPTIVE_STATS_CHOICE = False
@@ -59,4 +59,4 @@ TOTAL_DAYS = 630
 YEAR_TO_START = 2000
 
 # Force generation of new population
-FORCE_NEW_POPULATION = False
+FORCE_NEW_POPULATION = True

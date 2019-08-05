@@ -35,6 +35,8 @@ TAX_FIRM = 4.4E-04
 TAX_PROPERTY = 1.4E-06
 
 # GOVERNMENT
+# ANNUAL Real interest rate of the economy (SELIC minus INFLATION) for the Brazilian case
+INTEREST_RATE = round(0.06 - 0.04, 2)
 # ALTERNATIVE OF DISTRIBUTION OF TAXES COLLECTED. REPLICATING THE NOTION OF A COMMON POOL OF RESOURCES ################
 # Alternative0 is True, municipalities are just normal as INPUT
 # Alternative0 is False, municipalities are all together

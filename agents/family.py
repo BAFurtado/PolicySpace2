@@ -1,3 +1,6 @@
+import numpy as np
+
+
 class Family:
     """
     Family class. Nothing but a bundle of Agents together.
@@ -70,15 +73,25 @@ class Family:
         self.savings = 0
         return s
 
-    def add_house_ownership(self, h):
-        self.owned_houses.append(h)
-
-    def remove_house_ownership(self, h):
-        self.owned_houses.remove(h)
-
     def get_wealth(self):
         """ Calculate current wealth, including real estate. """
-        pass
+        estate_value = sum(h.price for h in self.owned_houses)
+        return self.savings + estate_value
+
+    def human_capital(self, r):
+        # Using retiring age minus current age as exponent s
+        # Using last wage available as base for permanent income calculus
+        ts = sum([np.pv(r/12, (74 - member.age) * 12, -member.last_wage)
+                  for member in self.members.values()
+                  if member.last_wage is not None])
+        t0 = sum(member.last_wage for member in self.members.values() if member.last_wage is not None)
+        return t0, ts
+
+    def permanent_income(self, r):
+        # Equals Consumption (Bielefeld, 2018, pp.13-14)
+        t0, ts = self.human_capital(r)
+        r_1_r = r/(1 + r)
+        return r_1_r * t0 + r_1_r * ts + self.get_wealth() * r
 
     def average_study(self):
         """Averages the years of study of the family"""
@@ -106,28 +119,27 @@ class Family:
         return sum(m.grab_money() for m in self.members.values())
 
     def consume(self, firms, regions, params, seed):
-        """Family spends a random amount of money, based on the BETA parameter,
-        on a single firm's goods, chosen either by (closest) distance or (cheapest) price.
-        Amount bought is maximum allowable amount (given firm inventory and spendable money)"""
+        """Family consumes its permanent income, based on members wages, working life expectancy
+        and real estate and savings real interest
+        """
         money = self.to_consume()
-        # Decision on how much money to spend
-        # Deduced by parameter Beta
         if money > 0:
-            if money < 1:
-                # As beta is an exponential, when money is below 1, choose a value between 0 and 1
-                money_to_spend = seed.uniform(0, money)
+            # Decision on how much money to consume or save
+            permanent_income = self.permanent_income(params['INTEREST_RATE'])
+            if money > permanent_income:
+                money_to_spend = permanent_income
+                self.savings += money - permanent_income
             else:
-                # When money is 1 or above, choose a value to spend between 0 and total discounted by beta
-                money_to_spend = money * seed.betavariate(1, (1 - params['BETA'])/params['BETA'])
+                # No borrowing for consumption at this time
+                money_to_spend = money
 
             # Picks SIZE_MARKET number of firms at seed and choose the closest or the cheapest
             # Consumes from each product the chosen firm offers
             market = seed.sample(firms, min(len(firms), int(params['SIZE_MARKET'])))
             # Choose between cheapest or closest
-            firm_strategy = seed.random()
-            self.firm_strategy = 'Price' if firm_strategy < 0.5 else 'Distance'
+            firm_strategy = seed.choice(['Price', 'Distance'])
 
-            if firm_strategy < 0.5:
+            if firm_strategy == 'Price':
                 # Choose firm with cheapest average prices
                 chosen_firm = min(market, key=lambda firm: firm.prices)
             else:
@@ -136,10 +148,7 @@ class Family:
 
             # Buy from chosen company
             change = chosen_firm.sale(money_to_spend, regions, params['TAX_CONSUMPTION'])
-            money -= (money_to_spend - change)
-            # Rounding values
-
-            self.savings += money
+            self.savings += change
 
             # Update family utility
             utility = money_to_spend - change

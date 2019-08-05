@@ -14,8 +14,9 @@ def allocate_houses(sim):
     # EMPTY AVAILABLE HOUSES
     on_sale = []
     for house in houses.values():
+        # Updating all houses values every month
+        house.update_price(regions)
         if not house.is_occupied:
-            house.update_price(regions)
             on_sale.append(house)
 
     # BUYING FAMILIES
@@ -74,9 +75,8 @@ def allocate_houses(sim):
                 # Deposit money on selling family
                 families[house.owner_id].update_balance(price - taxes)
 
-                old_owner = house.owner_id
-
                 # Transfer ownership
+                old_owner = house.owner_id
                 house.owner_id = family.id
                 families[old_owner].owned_houses.remove(house)
                 family.owned_houses.append(house)

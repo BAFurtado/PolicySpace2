@@ -38,6 +38,7 @@ https://www.researchgate.net/profile/Bernardo_Furtado
 4. Exogenous growth of firms
 5. Marriage procedures have been added to the model
 6. Better support for plot formats
+7. House prices (offer) are included into wealth and updated every month
 
 #### How do I get set up?
 

@@ -112,10 +112,13 @@ class Generator:
                 my_firms[firm] = regional_firms[firm]
 
             regional_agents, regional_families = self.allocate_to_family(regional_agents, regional_families)
+            # Eliminating families with no members
+
             regional_families = self.allocate_to_households(regional_families, regional_houses)
 
             # Set ownership of remaining houses for random families
             self.randomly_assign_houses(regional_houses.values(), regional_families.values())
+
         return my_agents, my_houses, my_families, my_firms
 
     def randomly_assign_houses(self, houses, families):

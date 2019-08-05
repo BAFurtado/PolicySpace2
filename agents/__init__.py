@@ -1,8 +1,8 @@
+from world.population import marriage_data
 from .family import Family
 from .firm import Firm
 from .house import House
 from .region import Region
-from world.population import marriage_data
 
 
 class Agent:
