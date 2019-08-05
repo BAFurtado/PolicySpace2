@@ -18,6 +18,8 @@ class Family:
         self.id = id
         self.balance = balance
         self.savings = savings
+        self.wealth = None
+        self.owned_houses = list()
         self.members = {}
         self.house = house
         self.firm_strategy = firm_strategy
@@ -50,7 +52,7 @@ class Family:
             return self.house.region_id
 
     # Budget operations ##############################################################################################
-    def sum_balance(self):
+    def get_total_balance(self):
         """Calculates the total available balance of the family"""
         self.balance = sum(m.money for m in self.members.values())
         return self.balance
@@ -67,6 +69,16 @@ class Family:
         s = self.savings
         self.savings = 0
         return s
+
+    def add_house_ownership(self, h):
+        self.owned_houses.append(h)
+
+    def remove_house_ownership(self, h):
+        self.owned_houses.remove(h)
+
+    def get_wealth(self):
+        """ Calculate current wealth, including real estate. """
+        pass
 
     def average_study(self):
         """Averages the years of study of the family"""
@@ -158,4 +170,4 @@ class Family:
 
     def __repr__(self):
         return 'Family ID %s, House ID %s, Savings $ %.2f, Balance $ %.2f' % \
-               (self.id, self.house.id if self.house else None, self.savings, self.sum_balance())
+               (self.id, self.house.id if self.house else None, self.savings, self.get_total_balance())

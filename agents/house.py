@@ -1,4 +1,4 @@
-class House():
+class House:
     """Holds the fixed households.
     They may have changing owners and changing occupancy."""
 
@@ -9,8 +9,8 @@ class House():
         self.price = price
         self.region_id = region_id
         self.quality = quality
-        self.family_id = family_id
-        self.owner_id = owner_id # owner may be the occupant or the house may be vacant
+        self.family_id = family_id # owner may be the occupant or the house may be vacant
+        self.owner_id = owner_id
 
         # cache firm distances
         # since houses never change address
@@ -39,7 +39,7 @@ class House():
             family = families[self.owner_id]
         else:
             family = families[self.family_id]
-        if family.sum_balance() > tax:
+        if family.get_total_balance() > tax:
             family.update_balance(-tax)
             # Transfer to region
             regions[self.region_id].collect_taxes(tax, 'property')

@@ -78,6 +78,8 @@ def allocate_houses(sim):
 
                 # Transfer ownership
                 house.owner_id = family.id
+                families[old_owner].owned_houses.remove(house)
+                family.owned_houses.append(house)
 
                 # Update house index
                 sim.house_index[old_owner].remove(house)

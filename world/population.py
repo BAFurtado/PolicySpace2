@@ -207,6 +207,8 @@ def marriage(sim):
                 houses = sim.house_index[b.family.id]
                 for house in list(houses):
                     house.owner_id = a.family.id
+                    a.family.owned_houses.append(house)
+                    b.family.owned_houses.remove(house)
                     sim.house_index[b.family.id].remove(house)
                     sim.house_index[a.family.id].add(house)
                 old_r_id = b.region_id

@@ -100,10 +100,10 @@ class Statistics(object):
 
     # Calculate wealth: families, firms and profits
     def calculate_families_median_wealth(self, families):
-        return np.median([family.sum_balance() for family in families])
+        return np.median([family.get_total_balance() for family in families])
 
     def calculate_families_wealth(self, families):
-        dummy_wealth = np.sum([families[family].sum_balance() for family in families.keys()])
+        dummy_wealth = np.sum([families[family].get_total_balance() for family in families.keys()])
         dummy_savings = np.sum([families[family].savings for family in families.keys()])
         return dummy_wealth, dummy_savings
 

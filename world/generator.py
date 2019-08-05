@@ -124,6 +124,7 @@ class Generator:
             if house.owner_id is None:
                 family = self.seed.choice(families)
                 house.owner_id = family.id
+                family.owned_houses.append(house)
 
     def create_agents(self, region):
         agents = {}
@@ -237,6 +238,7 @@ class Generator:
                 if not house.is_occupied:
                     family.move_in(house)
                     house.owner_id = family.id
+                    family.owned_houses.append(house)
                     house_id = None
         return families
 

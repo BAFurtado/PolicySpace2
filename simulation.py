@@ -29,9 +29,12 @@ class Simulation:
         # Read necessary files
         self.m_men, self.m_women, self.f = {}, {}, {}
         for state in self.geo.states_on_process:
-            self.m_men[state] = pd.read_csv('input/mortality/mortality_men_%s.csv' % state, sep=';', header=0, decimal='.').groupby('age')
-            self.m_women[state] = pd.read_csv('input/mortality/mortality_women_%s.csv' % state, sep=';', header=0, decimal='.').groupby('age')
-            self.f[state] = pd.read_csv('input/fertility/fertility_%s.csv' % state, sep=';', header=0, decimal='.').groupby('age')
+            self.m_men[state] = pd.read_csv('input/mortality/mortality_men_%s.csv' % state,
+                                            sep=';', header=0, decimal='.').groupby('age')
+            self.m_women[state] = pd.read_csv('input/mortality/mortality_women_%s.csv' % state,
+                                              sep=';', header=0, decimal='.').groupby('age')
+            self.f[state] = pd.read_csv('input/fertility/fertility_%s.csv' % state,
+                                        sep=';', header=0, decimal='.').groupby('age')
 
     def update_pop(self, old_region_id, new_region_id):
         if old_region_id is not None:
@@ -57,7 +60,7 @@ class Simulation:
             with open(save_file, 'rb') as f:
                  agents, houses, families, firms, regions = pickle.load(f)
 
-		# Index houses by owner
+        # Index houses by owner
         self.house_index = defaultdict(set)
         for house in houses.values():
             self.house_index[house.owner_id].add(house)
