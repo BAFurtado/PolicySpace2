@@ -1,8 +1,8 @@
-class Family():
+class Family:
     """
     Family class. Nothing but a bundle of Agents together.
     Generated once and fixed.
-    Families share resources equaly and move together from household to household.
+    Families share resources equally and move together from household to household.
     Children, when born, remain inside the same family.
 
     - Setup family class
@@ -55,10 +55,6 @@ class Family():
         self.balance = sum(m.money for m in self.members.values())
         return self.balance
 
-    def to_consume(self):
-        """Grabs all money from all members"""
-        return sum(m.grab_money() for m in self.members.values())
-
     def update_balance(self, amount):
         """Evenly distribute money to each member"""
         if self.members:
@@ -93,6 +89,10 @@ class Family():
             return employed / (employed + unemployed)
 
     # Consumption ####################################################################################################
+    def to_consume(self):
+        """Grabs all money from all members"""
+        return sum(m.grab_money() for m in self.members.values())
+
     def consume(self, firms, regions, params, seed):
         """Family spends a random amount of money, based on the BETA parameter,
         on a single firm's goods, chosen either by (closest) distance or (cheapest) price.

@@ -42,17 +42,11 @@ https://www.researchgate.net/profile/Bernardo_Furtado
 #### How do I get set up?
 
 We recommend using conda  and creating an environment that includes all libraries simultaneously.
-Type on a terminal, after having downloaded and installed conda.
+Type on a terminal, after having downloaded and installed conda, choosing a name for your environment and replacing 
+<env> and using requirements.txt | requirements_linux.txt in place of <this file>
 
-`conda create -n e36 python=3.6 gdal fiona geopandas numpy mkl scikit-learn numba joblib click click-plugins cligj
-cycler descartes llvmlite munch numba pandas pyparsing pyproj python-dateutil pytz scipy shapely joblib Flask
-Flask-WTF WTForms psutil statsmodels scikit-learn y-c conda-forge`
 
-Using the above code will install the libraries.
-Then, you have to activate the newly created environment with the command: `activate <your_env>` or `source <your_env>`.
-If any of the libraries were not available on conda-forge, use `pip install -U scikit-learn`, for example.
-
-### Unzip file mun_ibge_2014_latlong_wgs1984_fixed.zip ###
+`conda create --name <env> --file <this file>`
 
 ## How to run the model ##
 

@@ -5,7 +5,7 @@ from .region import Region
 from world.population import marriage_data
 
 
-class Agent():
+class Agent:
     """
     This class represent the general citizen of the model.
     Agents have the following variables:

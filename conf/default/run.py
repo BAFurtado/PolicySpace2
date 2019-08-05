@@ -22,7 +22,7 @@ TIME_TO_BE_ELIMINATED = 0.0
 
 # Saving adjustments
 SAVE_SPATIAL_PLOTS = False
-SAVE_PLOTS_FIGURES = True
+SAVE_PLOTS_FIGURES = False
 # Save Agents data and also PLOT regional plots
 SAVE_AGENTS_DATA_MONTHLY = False
 SAVE_AGENTS_DATA_QUARTERLY = False
@@ -53,7 +53,7 @@ LIMIT_SAVED_TRANSIT_REGIONS = None
 PLOT_FORMAT = 'png'
 
 # Maximum running time (restrained by official data) is 30 years, or 7560 days
-TOTAL_DAYS = 1260
+TOTAL_DAYS = 630
 
 # Selecting the starting year to build the Agents, can be: 1991, 2000 or 2010
 YEAR_TO_START = 2000
