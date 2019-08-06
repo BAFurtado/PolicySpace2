@@ -6,9 +6,9 @@
 5. Include transportation costs on people's budget
 6. Incorporate preferences/money into decision-making (families on choosing houses/workers on choosing jobs)
 7. Financial (mortgage, credit) market structures
-8. Include construction companies
+8. Include construction companies. 
+9. Confirm creation new_families and house allocation.
 9. Improve/check pricing mechanisms (introduce time estate is available in the market, cost of not owning a house)
-10. Make marriage create a new family
 11. Introduce inheritance (houses and savings). Use implemented transfer, but directed it to offspring.
 
 **Checks**
