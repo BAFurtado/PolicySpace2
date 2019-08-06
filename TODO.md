@@ -2,7 +2,7 @@
 
 **Enhancements**
 1. Include simple credit market
-2. Improve families initial composition
+
 
 4. Introduce a rental market
 5. Include transportation costs on people's budget
@@ -10,8 +10,11 @@
 7. Financial (mortgage, credit) market structures
 8. Include construction companies
 9. Improve/check pricing mechanisms (introduce time estate is available in the market, cost of not owning a house)
+10. Make marriage create a new family
+11. Make sure to eliminate empty families
 
 **Checks**
+0. Check qualification and age. And qualification dynamics
 0. How do you calibrate the change of price per unit of change of the development index? Also, how do you calibrate the increase of the development index with fiscal investment?
 1. After change decision, check if its superlinear. Are distribution of housing prices is similar to the real one? Are we able to reproduce the geographical patters of housing prices? 
 2. Check implications of marriage and immigration

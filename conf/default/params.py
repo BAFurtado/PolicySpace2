@@ -9,8 +9,6 @@ STICKY_PRICES = .5
 # Order of magnitude correction of production. Production divided by parameter
 PRODUCTION_MAGNITUDE = 76
 
-# Consumption function, beta. Decaying consumption on wealth
-BETA = .7
 # Number of firms consulted before consumption
 SIZE_MARKET = 10
 
@@ -58,7 +56,7 @@ LIST_NEW_AGE_GROUPS = [6, 12, 17, 25, 35, 45, 65, 100]
 
 # Percentage of actual population to run the simulation
 # Minimum value to run depends on the size of municipality 0,001 is recommended minimum
-PERCENTAGE_ACTUAL_POP = 0.01
+PERCENTAGE_ACTUAL_POP = 0.001
 
 # Consumption_equal: ratio of consumption tax distributed at state level (equal)
 # Fpm: ratio of 'labor' and 'firm' taxes distributed per the fpm ruling

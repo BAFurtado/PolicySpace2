@@ -5,8 +5,6 @@ This is an evolution of:
 
 **FURTADO, Bernardo Alves. PolicySpace: agent-based modeling. IPEA: Brasília, 2018.** available at https://github.com/BAFurtado/PolicySpace
 
-
-
 This is an open agent-based model (ABM) with three markets and a tax scheme that empirically simulates 46 Brazilian
 metropolitan regions.
 
@@ -38,7 +36,11 @@ https://www.researchgate.net/profile/Bernardo_Furtado
 4. Exogenous growth of firms
 5. Marriage procedures have been added to the model
 6. Better support for plot formats
-7. House prices (offer) are included into wealth and updated every month
+7. House prices (offer) are included into families' wealth and updated every month
+8. Consumption decisions now follow Bielefeld, 2018 and is now a 
+"linear function of current and expected future incomes and of financial wealth." In other words, 
+"all income in excess of permanent income will be saved and added to financial wealth."
+9. Families composition are now sure to have at least one adult. Children are initially distributed randomly.
 
 #### How do I get set up?
 

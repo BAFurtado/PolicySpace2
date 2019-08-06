@@ -9,9 +9,6 @@ KEEP_RANDOM_SEED = True
 # Descriptive stats to plot evolution of age and qualification by municipality
 DESCRIPTIVE_STATS_CHOICE = False
 
-# Visualization data through the simulation
-DELETE_TESTS = True
-
 # Logging
 PRINT_STATISTICS_AND_RESULTS_DURING_PROCESS = True
 PRINT_FINAL_STATISTICS_ABOUT_AGENTS = False
@@ -22,7 +19,7 @@ TIME_TO_BE_ELIMINATED = 0.0
 
 # Saving adjustments
 SAVE_SPATIAL_PLOTS = False
-SAVE_PLOTS_FIGURES = True
+SAVE_PLOTS_FIGURES = False
 # Save Agents data and also PLOT regional plots
 SAVE_AGENTS_DATA_MONTHLY = False
 SAVE_AGENTS_DATA_QUARTERLY = False
@@ -39,7 +36,7 @@ AVERAGE_ALL_DATA = False
 
 # If plots should be generated separately
 # for each simulation run or just aggregated
-PLOT_EACH_RUN = True
+PLOT_EACH_RUN = False
 
 # Whether or not to save data for the transit simulation
 SAVE_TRANSIT_DATA = False
@@ -53,10 +50,10 @@ LIMIT_SAVED_TRANSIT_REGIONS = None
 PLOT_FORMAT = 'png'
 
 # Maximum running time (restrained by official data) is 30 years, or 7560 days
-TOTAL_DAYS = 5040
+TOTAL_DAYS = 630
 
 # Selecting the starting year to build the Agents, can be: 1991, 2000 or 2010
 YEAR_TO_START = 2000
 
 # Force generation of new population
-FORCE_NEW_POPULATION = False
+FORCE_NEW_POPULATION = True

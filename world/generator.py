@@ -181,10 +181,22 @@ class Generator:
         agents = list(agents.values())
         self.seed.shuffle(agents)
         fams = list(families.values())
-        for agent in agents:
+        # Separate adults to make sure all families have at least one adult
+        adults = [a for a in agents if a.age > 21]
+        chd = [a for a in agents if a not in adults]
+        # Assume there are more adults than families
+        # First, distribute adults as equally as possible
+        # Including +1 to avoid division by zero
+        for i in range(len(adults)):
+            if not adults[i].belongs_to_family:
+                fams[i % len(fams)].add_agent(adults[i])
+
+        # Allocate children into random families
+        for agent in chd:
             family = self.seed.choice(fams)
             if not agent.belongs_to_family:
                 family.add_agent(agent)
+        assert len([f for f in fams if len(f.members) == 0]) == 0
         return agents, families
 
     # Address within the region
@@ -243,6 +255,8 @@ class Generator:
                     house.owner_id = family.id
                     family.owned_houses.append(house)
                     house_id = None
+            else:
+                del families[family.id]
         return families
 
     def create_firms(self, num_firms, region):

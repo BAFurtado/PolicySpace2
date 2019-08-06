@@ -66,9 +66,17 @@ def die(sim, agent):
     """An agent dies"""
     sim.grave.append(agent)
     agent.family.remove_agent(agent)
+
     # This makes the house vacant if all members of a given family have passed
     if agent.family.num_members == 0:
         agent.family.move_out()
+        # Save houses of empty family
+        inheritance = agent.family.owned_houses
+        # Eliminate families with no members
+        del sim.families[agent.family.id]
+        # Redistribute houses of empty family
+        sim.generator.randomly_assign_houses(inheritance, sim.families.values())
+
     if agent.is_employed:
         sim.firms[agent.firm_id].obit(agent)
     sim.update_pop(agent.region_id, None)

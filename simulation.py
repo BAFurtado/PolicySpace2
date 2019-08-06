@@ -176,10 +176,11 @@ class Simulation:
             birthdays = defaultdict(list)
             for agent in self.agents.values():
                 if (present_month % 12 + 1) == agent.month \
-                    and agent.region_id[:2] == state_str:
+                        and agent.region_id[:2] == state_str:
                     birthdays[agent.age].append(agent)
 
-            births, deaths = demographics.check_demographics(self, birthdays, present_year, mortality_men, mortality_women, fertility)
+            births, deaths = demographics.check_demographics(self, birthdays, present_year,
+                                                             mortality_men, mortality_women, fertility)
 
         # Adjust population for immigration
         population.immigration(self)
