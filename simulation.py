@@ -60,11 +60,6 @@ class Simulation:
             with open(save_file, 'rb') as f:
                  agents, houses, families, firms, regions = pickle.load(f)
 
-        # Index houses by owner
-        self.house_index = defaultdict(set)
-        for house in houses.values():
-            self.house_index[house.owner_id].add(house)
-
         # Count populations for each municipality and region
         self.mun_pops = {}
         self.reg_pops = {}

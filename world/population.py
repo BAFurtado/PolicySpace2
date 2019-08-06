@@ -203,14 +203,10 @@ def marriage(sim):
             # and the house ownership transfers
             # to a's family.
             if b_is_alone:
-                b.family.house.owner_id = a.family.id
-                houses = sim.house_index[b.family.id]
-                for house in list(houses):
+                houses = b.family.owned_houses
+                for house in houses:
                     house.owner_id = a.family.id
                     a.family.owned_houses.append(house)
-                    b.family.owned_houses.remove(house)
-                    sim.house_index[b.family.id].remove(house)
-                    sim.house_index[a.family.id].add(house)
                 old_r_id = b.region_id
                 b.family.move_out()
                 del sim.families[b.family.id]

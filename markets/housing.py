@@ -76,14 +76,10 @@ def allocate_houses(sim):
                 families[house.owner_id].update_balance(price - taxes)
 
                 # Transfer ownership
-                old_owner = house.owner_id
+                families[house.owner_id].owned_houses.remove(house)
                 house.owner_id = family.id
-                families[old_owner].owned_houses.remove(house)
-                family.owned_houses.append(house)
 
-                # Update house index
-                sim.house_index[old_owner].remove(house)
-                sim.house_index[house.owner_id].add(house)
+                family.owned_houses.append(house)
 
                 # Withdraw from available houses
                 to_remove.append(house)
