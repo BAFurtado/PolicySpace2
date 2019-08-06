@@ -179,8 +179,8 @@ class Simulation:
                         and agent.region_id[:2] == state_str:
                     birthdays[agent.age].append(agent)
 
-            births, deaths = demographics.check_demographics(self, birthdays, present_year,
-                                                             mortality_men, mortality_women, fertility)
+            demographics.check_demographics(self, birthdays, present_year,
+                                            mortality_men, mortality_women, fertility)
 
         # Adjust population for immigration
         population.immigration(self)

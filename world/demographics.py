@@ -69,9 +69,14 @@ def die(sim, agent):
 
     # This makes the house vacant if all members of a given family have passed
     if agent.family.num_members == 0:
+        # Transfer savings for current residing regions' government
+
         agent.family.move_out()
         # Save houses of empty family
         inheritance = agent.family.owned_houses
+        # Make houses vacant
+        for h in inheritance:
+            h.owner_id = None
         # Eliminate families with no members
         del sim.families[agent.family.id]
         # Redistribute houses of empty family

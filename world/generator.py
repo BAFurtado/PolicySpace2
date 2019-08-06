@@ -112,8 +112,8 @@ class Generator:
                 my_firms[firm] = regional_firms[firm]
 
             regional_agents, regional_families = self.allocate_to_family(regional_agents, regional_families)
-            # Eliminating families with no members
 
+            # Allocating houses
             regional_families = self.allocate_to_households(regional_families, regional_houses)
 
             # Set ownership of remaining houses for random families
@@ -246,17 +246,14 @@ class Generator:
         self.seed.shuffle(unclaimed)
         house_id = None
         for family in families.values():
-            if family.members:
-                if house_id is None:
-                    house_id = unclaimed.pop(0)
-                house = households[house_id]
-                if not house.is_occupied:
-                    family.move_in(house)
-                    house.owner_id = family.id
-                    family.owned_houses.append(house)
-                    house_id = None
-            else:
-                del families[family.id]
+            if house_id is None:
+                house_id = unclaimed.pop(0)
+            house = households[house_id]
+            if not house.is_occupied:
+                family.move_in(house)
+                house.owner_id = family.id
+                family.owned_houses.append(house)
+                house_id = None
         return families
 
     def create_firms(self, num_firms, region):
