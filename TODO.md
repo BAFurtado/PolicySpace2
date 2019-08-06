@@ -2,8 +2,6 @@
 
 **Enhancements**
 1. Include simple credit market
-
-
 4. Introduce a rental market
 5. Include transportation costs on people's budget
 6. Incorporate preferences/money into decision-making (families on choosing houses/workers on choosing jobs)
@@ -11,7 +9,7 @@
 8. Include construction companies
 9. Improve/check pricing mechanisms (introduce time estate is available in the market, cost of not owning a house)
 10. Make marriage create a new family
-11. Make sure to eliminate empty families
+11. Introduce inheritance (houses and savings). Use implemented transfer, but directed it to offspring.
 
 **Checks**
 0. Check qualification and age. And qualification dynamics

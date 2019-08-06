@@ -41,6 +41,7 @@ https://www.researchgate.net/profile/Bernardo_Furtado
 "linear function of current and expected future incomes and of financial wealth." In other words, 
 "all income in excess of permanent income will be saved and added to financial wealth."
 9. Families composition are now sure to have at least one adult. Children are initially distributed randomly.
+10. Houses of families whose last member dies are randomly allocated to remaining families.
 
 #### How do I get set up?
 
