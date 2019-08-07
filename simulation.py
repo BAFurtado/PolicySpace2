@@ -47,6 +47,7 @@ class Simulation:
     def generate(self):
         """Spawn or load regions, agents, houses, families, and firms"""
         self.generator = Generator(self)
+
         save_file = '{}.agents'.format(self.output.save_name)
         if not os.path.isfile(save_file) or conf.RUN['FORCE_NEW_POPULATION']:
             self.logger.info('Creating new agents')
@@ -73,7 +74,7 @@ class Simulation:
             self.mun_pops[mun_code] += 1
             self.reg_pops[r_id] += 1
 
-        return regions, agents, houses, families, firms
+        return regions, agents, houses, families, firms, self.generator.central
 
     def run(self):
         """Runs the simulation"""
@@ -86,7 +87,7 @@ class Simulation:
 
         self.labor_market = markets.LaborMarket(self.seed)
         self.pops, self.total_pop = population.load_pops(self.geo.mun_codes, self.PARAMS)
-        self.regions, self.agents, self.houses, self.families, self.firms = self.generate()
+        self.regions, self.agents, self.houses, self.families, self.firms, self.central = self.generate()
         self.logger.info('Initializing...')
         self.initialize()
 

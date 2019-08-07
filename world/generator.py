@@ -15,7 +15,7 @@ import pandas as pd
 from .firms import FirmData
 from .shapes import prepare_shapes
 from .population import pop_age_data
-from agents import Agent, Family, Firm, Region, House
+from agents import Agent, Family, Firm, Region, House, Central
 
 logger = logging.getLogger('generator')
 
@@ -64,6 +64,7 @@ class Generator:
         self.seed = sim.seed
         self.urban, self.shapes = prepare_shapes(sim.geo)
         self.firm_data = FirmData()
+        self.central = Central('central')
 
     def create_regions(self):
         """Create regions"""
@@ -85,6 +86,7 @@ class Generator:
         my_families = {}
         my_houses = {}
         my_firms = {}
+
         for region_id, region in regions.items():
             logger.info('Generating region {}'.format(region_id))
             num_houses = 0

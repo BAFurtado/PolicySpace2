@@ -37,7 +37,7 @@ class Central:
         pass
 
 
-class Banks(Central):
+class Bank(Central):
     """ Market banks
         Yet to be designed
 
@@ -48,4 +48,4 @@ class Banks(Central):
 
 if __name__ == '__main__':
     BC = Central(0)
-    b1 = Banks(0)
+    b1 = Bank(0)

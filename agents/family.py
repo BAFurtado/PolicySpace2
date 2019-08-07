@@ -123,36 +123,39 @@ class Family:
         and real estate and savings real interest
         """
         money = self.to_consume()
-        assert money > 0
-        # Decision on how much money to consume or save
-        permanent_income = self.permanent_income(params['INTEREST_RATE'])
-        if money > permanent_income:
-            money_to_spend = permanent_income
-            self.savings += money - permanent_income
+        if money > 0:
+            # Decision on how much money to consume or save
+            permanent_income = self.permanent_income(params['INTEREST_RATE'])
+            if money > permanent_income:
+                money_to_spend = permanent_income
+                self.savings += money - permanent_income
+            else:
+                # No borrowing for consumption at this time
+                money_to_spend = money
+
+            # Picks SIZE_MARKET number of firms at seed and choose the closest or the cheapest
+            # Consumes from each product the chosen firm offers
+            market = seed.sample(firms, min(len(firms), int(params['SIZE_MARKET'])))
+            # Choose between cheapest or closest
+            firm_strategy = seed.choice(['Price', 'Distance'])
+
+            if firm_strategy == 'Price':
+                # Choose firm with cheapest average prices
+                chosen_firm = min(market, key=lambda firm: firm.prices)
+            else:
+                # Choose closest firm
+                chosen_firm = min(market, key=lambda firm: self.house.distance_to_firm(firm))
+
+            # Buy from chosen company
+            change = chosen_firm.sale(money_to_spend, regions, params['TAX_CONSUMPTION'])
+            self.savings += change
+
+            # Update family utility
+            utility = money_to_spend - change
+            self.distribute_utility(utility)
         else:
-            # No borrowing for consumption at this time
-            money_to_spend = money
-
-        # Picks SIZE_MARKET number of firms at seed and choose the closest or the cheapest
-        # Consumes from each product the chosen firm offers
-        market = seed.sample(firms, min(len(firms), int(params['SIZE_MARKET'])))
-        # Choose between cheapest or closest
-        firm_strategy = seed.choice(['Price', 'Distance'])
-
-        if firm_strategy == 'Price':
-            # Choose firm with cheapest average prices
-            chosen_firm = min(market, key=lambda firm: firm.prices)
-        else:
-            # Choose closest firm
-            chosen_firm = min(market, key=lambda firm: self.house.distance_to_firm(firm))
-
-        # Buy from chosen company
-        change = chosen_firm.sale(money_to_spend, regions, params['TAX_CONSUMPTION'])
-        self.savings += change
-
-        # Update family utility
-        utility = money_to_spend - change
-        self.distribute_utility(utility)
+            pass
+            # print('family with negative money', money)
 
     def distribute_utility(self, utility):
         """Evenly distribute utility to each member"""

@@ -3,6 +3,7 @@ from .family import Family
 from .firm import Firm
 from .house import House
 from .region import Region
+from .bank import Central
 
 
 class Agent:
