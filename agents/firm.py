@@ -1,7 +1,7 @@
 from .product import Product
 
 
-class Firm():
+class Firm:
     """
     Firms contain all elements connected with firms, their methods to handle production, adding, paying
     and firing employees, maintaining information about their current staff, and available products, as

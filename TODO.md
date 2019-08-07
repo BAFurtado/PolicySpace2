@@ -7,9 +7,8 @@
 6. Incorporate preferences/money into decision-making (families on choosing houses/workers on choosing jobs)
 7. Financial (mortgage, credit) market structures
 8. Include construction companies. 
-9. Confirm creation new_families and house allocation.
 9. Improve/check pricing mechanisms (introduce time estate is available in the market, cost of not owning a house)
-11. Introduce inheritance (houses and savings). Use implemented transfer, but directed it to offspring.
+11. Introduce inheritance (savings). Use implemented transfer, but directed it to offspring [Idea of HEAD of the house].
 
 **Checks**
 0. Check qualification and age. And qualification dynamics
@@ -20,9 +19,10 @@
 4. List endogenous x exogenous mechanisms
 5. Steady state of graphs second half of the period
 6. Include names of columns os csv files. It can't interfere with plotting
+7. Confer how SAVE_PLOTS is set at the moment
 
 **Final changes**
-1. Validade real estate market
+1. Validate real estate market
 
 **Forecasting?**
 1. Imagine we would calibrate the model using half of the data: is there anything the model would be able to tell us about the other half? 

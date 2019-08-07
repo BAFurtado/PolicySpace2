@@ -123,7 +123,7 @@ class Family:
         and real estate and savings real interest
         """
         money = self.to_consume()
-        # if money > 0:
+        assert money > 0
         # Decision on how much money to consume or save
         permanent_income = self.permanent_income(params['INTEREST_RATE'])
         if money > permanent_income:

@@ -34,7 +34,7 @@ TAX_PROPERTY = 1.4E-06
 
 # GOVERNMENT
 # ANNUAL Real interest rate of the economy (SELIC minus INFLATION) for the Brazilian case
-INTEREST_RATE = round(0.06 - 0.04, 2)
+INTEREST_RATE = round(0.06 - 0.04, 4)
 # ALTERNATIVE OF DISTRIBUTION OF TAXES COLLECTED. REPLICATING THE NOTION OF A COMMON POOL OF RESOURCES ################
 # Alternative0 is True, municipalities are just normal as INPUT
 # Alternative0 is False, municipalities are all together
@@ -56,7 +56,7 @@ LIST_NEW_AGE_GROUPS = [6, 12, 17, 25, 35, 45, 65, 100]
 
 # Percentage of actual population to run the simulation
 # Minimum value to run depends on the size of municipality 0,001 is recommended minimum
-PERCENTAGE_ACTUAL_POP = 0.01
+PERCENTAGE_ACTUAL_POP = 0.001
 
 # Consumption_equal: ratio of consumption tax distributed at state level (equal)
 # Fpm: ratio of 'labor' and 'firm' taxes distributed per the fpm ruling
