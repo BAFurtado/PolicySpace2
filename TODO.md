@@ -1,5 +1,8 @@
 # TODO
 
+**Finalize** (em andamento)
+1. Families with money <= 0
+
 **Enhancements**
 1. Include simple credit market
 4. Introduce a rental market

@@ -1,4 +1,5 @@
 import numpy as np
+import datetime
 
 
 class Family:
@@ -78,6 +79,11 @@ class Family:
         estate_value = sum(h.price for h in self.owned_houses)
         return self.savings + estate_value
 
+    def invest(self, r, bank, y, m):
+        reserve = self.savings > self.permanent_income(r) * 6
+        if self.savings > reserve:
+            bank.deposit(self, self.savings - reserve, datetime.date(y, m, 1))
+
     def human_capital(self, r):
         # Using retiring age minus current age as exponent s
         # Using last wage available as base for permanent income calculus
@@ -154,8 +160,7 @@ class Family:
             utility = money_to_spend - change
             self.distribute_utility(utility)
         else:
-            pass
-            # print('family with negative money', money)
+            print('family with negative money', money)
 
     def distribute_utility(self, utility):
         """Evenly distribute utility to each member"""

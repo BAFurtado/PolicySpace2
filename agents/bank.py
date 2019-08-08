@@ -19,22 +19,31 @@ class Central:
         self.id = id_
         self.balance = 0
         self.interest = conf.PARAMS['INTEREST_RATE']
-        self.wallet = d = defaultdict(partial(defaultdict, int, datetime))
+        self.wallet = defaultdict(partial(defaultdict, float, datetime))
 
     def pay_interest(self, client):
         """ Gives back only the interest to the client
         """
         pass
 
-    def deposit(self, client):
+    def deposit(self, client, amount, data):
         """ Receives the money of the client
         """
-        pass
+        try:
+            self.wallet[client] += amount, data
+        except TypeError:
+            self.wallet[client] = amount, data
 
     def withdraw(self, client):
         """ Gives the money back to the client
         """
         pass
+
+    def sum_deposits(self):
+        return sum(self.wallet[k][i]
+                   for k in self.wallet.keys()
+                   for i in range(len(self.wallet[k]))
+                   if i % 2 == 0)
 
 
 class Bank(Central):
