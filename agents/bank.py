@@ -6,6 +6,7 @@
 import datetime
 from collections import defaultdict
 from functools import partial
+from numpy import fv
 
 import conf
 
@@ -20,11 +21,26 @@ class Central:
         self.balance = 0
         self.interest = conf.PARAMS['INTEREST_RATE']
         self.wallet = defaultdict(partial(defaultdict, float, datetime))
+        self.taxes = 0
 
-    def pay_interest(self, client):
-        """ Gives back only the interest to the client
+    def pay_interest(self, client, y, m):
+        """ Updates interest to the client
         """
-        pass
+        # Compute future values
+        interest = 0
+        for i in range(len(self.wallet[client])):
+            if i % 2 == 0:
+                interest += fv(self.interest/12,
+                               (datetime.date(y, m, 1) - self.wallet[client][i + 1]).days // 30,
+                               0,
+                               self.wallet[client][i] * -1)
+                interest -= self.wallet[client][i]
+
+        # Compute taxes
+        tax = interest * .15
+        self.taxes += tax
+        self.balance -= interest - tax
+        return interest - tax
 
     def deposit(self, client, amount, data):
         """ Receives the money of the client
@@ -34,16 +50,18 @@ class Central:
         except TypeError:
             self.wallet[client] = amount, data
 
-    def withdraw(self, client):
+    def withdraw(self, client, y, m):
         """ Gives the money back to the client
         """
-        pass
+        interest = self.pay_interest(client, y, m)
+        amount = self.sum_deposits(client)
+        del self.wallet[client]
+        return amount + interest
 
-    def sum_deposits(self):
-        return sum(self.wallet[k][i]
-                   for k in self.wallet.keys()
-                   for i in range(len(self.wallet[k]))
-                   if i % 2 == 0)
+    def sum_deposits(self, client):
+        return sum([self.wallet[client][i]
+                   for i in range(len(self.wallet[client]))
+                   if i % 2 == 0])
 
 
 class Bank(Central):

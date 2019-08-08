@@ -1,7 +1,7 @@
 # TODO
 
-**Finalize** (em andamento)
-1. Families with money <= 0
+**Finalize**
+1. Check self.year
 
 **Enhancements**
 1. Include simple credit market

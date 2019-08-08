@@ -65,8 +65,10 @@ def allocate_houses(sim):
                 price = (s + p) / 2
 
                 # Buy
-                # Withdraw money from buying family
-                family.update_balance(family.grab_savings() - price)
+                # Withdraw money from buying family and distribute back the difference
+                family.update_balance(family.grab_savings(sim.central,
+                                                          sim.clock.year,
+                                                          ((sim.clock.months % 12) + 1)) - price)
 
                 # Collect taxes on transaction
                 taxes = price * sim.PARAMS['TAX_ESTATE_TRANSACTION']

@@ -1,5 +1,6 @@
-import numpy as np
 import datetime
+
+import numpy as np
 
 
 class Family:
@@ -68,10 +69,11 @@ class Family:
             for member in self.members.values():
                 member.money += per_member
 
-    def grab_savings(self):
+    def grab_savings(self, central, y, m):
         """Withdraws total available balance of the family"""
         s = self.savings
         self.savings = 0
+        s += central.withdraw(self, y, m)
         return s
 
     def get_wealth(self):
@@ -80,9 +82,9 @@ class Family:
         return self.savings + estate_value
 
     def invest(self, r, bank, y, m):
-        reserve = self.savings > self.permanent_income(r) * 6
-        if self.savings > reserve:
-            bank.deposit(self, self.savings - reserve, datetime.date(y, m, 1))
+        liquid_money = self.savings > self.permanent_income(r) * 6
+        if self.savings > liquid_money:
+            bank.deposit(self, self.savings - liquid_money, datetime.date(y, m, 1))
 
     def human_capital(self, r):
         # Using retiring age minus current age as exponent s
@@ -120,25 +122,35 @@ class Family:
             return employed / (employed + unemployed)
 
     # Consumption ####################################################################################################
-    def to_consume(self):
+    def to_consume(self, r):
         """Grabs all money from all members"""
-        return sum(m.grab_money() for m in self.members.values())
+        money = sum(m.grab_money() for m in self.members.values())
+        permanent_income = self.permanent_income(r)
+        if money > 0:
+            if money > permanent_income:
+                money_to_spend = permanent_income
+                self.savings += money - permanent_income
+            else:
+                money_to_spend = money
+            return money_to_spend
+        elif self.savings > permanent_income:
+            self.savings -= permanent_income
+            return permanent_income
+        elif self.savings > 0:
+            money_to_spend = self.savings
+            self.savings = 0
+            return money_to_spend
+        else:
+            return None
 
     def consume(self, firms, regions, params, seed):
         """Family consumes its permanent income, based on members wages, working life expectancy
         and real estate and savings real interest
         """
-        money = self.to_consume()
-        if money > 0:
-            # Decision on how much money to consume or save
-            permanent_income = self.permanent_income(params['INTEREST_RATE'])
-            if money > permanent_income:
-                money_to_spend = permanent_income
-                self.savings += money - permanent_income
-            else:
-                # No borrowing for consumption at this time
-                money_to_spend = money
+        money_to_spend = self.to_consume(params['INTEREST_RATE'])
+        # Decision on how much money to consume or save
 
+        if money_to_spend is not None:
             # Picks SIZE_MARKET number of firms at seed and choose the closest or the cheapest
             # Consumes from each product the chosen firm offers
             market = seed.sample(firms, min(len(firms), int(params['SIZE_MARKET'])))
@@ -159,8 +171,6 @@ class Family:
             # Update family utility
             utility = money_to_spend - change
             self.distribute_utility(utility)
-        else:
-            print('family with negative money', money)
 
     def distribute_utility(self, utility):
         """Evenly distribute utility to each member"""
