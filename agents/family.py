@@ -126,6 +126,7 @@ class Family:
         """Grabs all money from all members"""
         money = sum(m.grab_money() for m in self.members.values())
         permanent_income = self.permanent_income(r)
+        # If cash at hand is positive consume it capped to permanent income
         if money > 0:
             if money > permanent_income:
                 money_to_spend = permanent_income
@@ -133,6 +134,7 @@ class Family:
             else:
                 money_to_spend = money
             return money_to_spend
+        # If there is no cash available, withdraw at most permanent income from savings
         elif self.savings > permanent_income:
             self.savings -= permanent_income
             return permanent_income
@@ -141,6 +143,7 @@ class Family:
             self.savings = 0
             return money_to_spend
         else:
+        # If there is no cash and no savings, pass
             return None
 
     def consume(self, firms, regions, params, seed):

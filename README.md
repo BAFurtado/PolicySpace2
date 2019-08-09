@@ -30,7 +30,8 @@ https://www.researchgate.net/profile/Bernardo_Furtado
 
 ### Major changes, since PolicySpace
 
-1. PolicySpace2 generates data that can be applied at https://github.com/frnsys/transit_demand_model. The transit model in turn generates private and public transport routes, visualization and congestion times.
+1. PolicySpace2 generates data that can be applied at https://github.com/frnsys/transit_demand_model. 
+The transit model in turn generates private and public transport routes, visualization and congestion times.
 2. Now data is read at the **intraurban** level of 'áreas de ponderação' (census track/block) from IBGE.
 3. There is exogenous migration embedded in the model (creating new houses)
 4. Exogenous growth of firms
@@ -43,6 +44,7 @@ https://www.researchgate.net/profile/Bernardo_Furtado
 9. Families composition are now sure to have at least one adult. Children are initially distributed randomly.
 10. Houses of families whose last member dies are randomly allocated to remaining families.
 11. Interest being now paid on families' savings
+12. Internal clock updated to use datetime
 
 #### How do I get set up?
 

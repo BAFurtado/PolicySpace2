@@ -25,7 +25,7 @@ prop_urban = pd.read_csv('input/prop_urban_rural_2000.csv', sep=';', header=0,
 
 idhm = pd.read_csv('input/idhm_1991_2010.txt', sep=',', header=0,
                    decimal='.').apply(pd.to_numeric, errors='coerce')
-idhm = idhm.loc[idhm['year'] == conf.RUN['YEAR_TO_START']]
+idhm = idhm.loc[idhm['year'] == 2000]
 
 # load qualifications data, combining municipal-level with AP-level
 quali = pd.read_csv('input/qualification_2000.csv', sep=';', header=0,

@@ -7,16 +7,18 @@ Disclaimer:
 This code was generated for research purposes only.
 It is licensed under GNU v3 license
 """
-import os
 import copy
-import conf
 import json
-import click
 import logging
+import os
+
+import click
+import matplotlib
 # import validation_tentative
 import numpy as np
 import pandas as pd
-import matplotlib
+
+import conf
 
 matplotlib.use('agg') # necessary for multiprocess plotting
 
@@ -88,7 +90,7 @@ def multiple_runs(overrides, runs, cpus, output_dir):
             json.dump({
                 'RUN': conf.RUN,
                 'PARAMS': params
-            }, f)
+            }, f, default=str)
 
         # average run data and then plot
         runs = [p for p in glob('{}/*'.format(path)) if os.path.isdir(p)]

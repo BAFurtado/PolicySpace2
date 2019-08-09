@@ -1,16 +1,19 @@
-import os
-import conf
+import datetime
 import json
+import os
 import pickle
 import random
-import markets
-import analysis
-import pandas as pd
 from collections import defaultdict
+
+import pandas as pd
+
+import analysis
+import conf
+import markets
 from world import Generator, demographics, clock, population
-from world.geography import Geography, STATES_CODES, state_string
-from world.funds import Funds
 from world.firms import firm_growth
+from world.funds import Funds
+from world.geography import Geography, STATES_CODES, state_string
 from world.houses import update_housing_supply
 
 
@@ -19,7 +22,7 @@ class Simulation:
         self.PARAMS = params
         self.geo = Geography(params)
         self.funds = Funds(self)
-        self.clock = clock.Clock()
+        self.clock = clock.Clock(conf.RUN['STARTING_DAY'])
         self.output = analysis.Output(self, output_path)
         self.stats = analysis.Statistics()
         self.logger = analysis.Logger(hex(id(self))[-5:])
@@ -92,7 +95,7 @@ class Simulation:
         self.initialize()
 
         self.logger.info('Running...')
-        while self.clock.days < conf.RUN['TOTAL_DAYS']:
+        while self.clock.days < conf.RUN['STARTING_DAY'] + datetime.timedelta(days=conf.RUN['TOTAL_DAYS']):
             self.daily()
             if self.clock.months == 1 and conf.RUN['SAVE_TRANSIT_DATA']:
                 self.output.save_transit_data(self, 'start')
@@ -102,7 +105,7 @@ class Simulation:
                 self.quarterly()
             if self.clock.new_year:
                 self.yearly()
-            self.clock.days += 1
+            self.clock.days += datetime.timedelta(days=1)
 
         if conf.RUN['PRINT_FINAL_STATISTICS_ABOUT_AGENTS']:
             self.logger.log_outcomes(self)
@@ -287,14 +290,12 @@ class Simulation:
         self.output.times.append(self.timer.elapsed())
 
         if conf.RUN['PRINT_STATISTICS_AND_RESULTS_DURING_PROCESS']:
-            self.logger.logger.info('Month: {}'.format(self.clock.months))
+            self.logger.logger.info(self.clock.days)
 
     def quarterly(self):
         if conf.RUN['SAVE_AGENTS_DATA_QUARTERLY']:
             self.output.save_data(self)
-        self.logger.info('Quarter: {}'.format(self.clock.quarters))
 
     def yearly(self):
         if conf.RUN['SAVE_AGENTS_DATA_ANNUALLY']:
             self.output.save_data(self)
-        self.logger.info('Years: {}'.format(self.clock.years))

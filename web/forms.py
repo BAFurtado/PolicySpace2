@@ -8,7 +8,7 @@ from wtforms.fields.html5 import IntegerField
 
 RUN_TYPES = [(rt, rt) for rt in manager.RUN_TYPES]
 PARAMS = json.dumps(conf.PARAMS, sort_keys=True, indent=4)
-CONFIG = json.dumps(conf.RUN, sort_keys=True, indent=4)
+CONFIG = json.dumps(conf.RUN, sort_keys=True, indent=4, default=str)
 
 
 class SimulationForm(FlaskForm):
