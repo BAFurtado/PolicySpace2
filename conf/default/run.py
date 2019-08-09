@@ -22,7 +22,14 @@ TIME_TO_BE_ELIMINATED = 0.0
 # Saving adjustments
 SAVE_SPATIAL_PLOTS = False
 SAVE_PLOTS_FIGURES = True
-# Save Agents data and also PLOT regional plots
+# If plots should be generated separately
+# for each simulation run or just aggregated
+PLOT_EACH_RUN = True
+# 'png' or 'eps'
+PLOT_FORMAT = 'png'
+PLOT_REGIONAL = True
+
+# Save Agents data
 SAVE_AGENTS_DATA_MONTHLY = False
 SAVE_AGENTS_DATA_QUARTERLY = False
 SAVE_AGENTS_DATA_ANNUALLY = False
@@ -36,9 +43,7 @@ SAVE_DATA = []
 # across all runs
 AVERAGE_ALL_DATA = False
 
-# If plots should be generated separately
-# for each simulation run or just aggregated
-PLOT_EACH_RUN = False
+
 
 # Whether or not to save data for the transit simulation
 SAVE_TRANSIT_DATA = False
@@ -47,9 +52,6 @@ SAVE_TRANSIT_DATA = False
 # of the listed codes (as strings).
 # If None, include all
 LIMIT_SAVED_TRANSIT_REGIONS = None
-
-# 'png' or 'eps'
-PLOT_FORMAT = 'png'
 
 # Selecting the starting year to build the Agents, can be: 1991, 2000 or 2010
 STARTING_DAY = datetime.date(2000, 1, 1)

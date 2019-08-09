@@ -166,7 +166,7 @@ def plot(input_paths, output_path, params, styles=None, sim=None):
 
     if conf.RUN['SAVE_PLOTS_FIGURES']:
         plotter.plot_general()
-        if sim is not None or conf.RUN['AVERAGE_ALL_DATA']:
+        if sim is not None and conf.RUN['PLOT_REGIONAL']:
             plotter.plot_regional_stats()
 
         # if conf.RUN['SAVE_AGENTS_DATA_MONTHLY'] \

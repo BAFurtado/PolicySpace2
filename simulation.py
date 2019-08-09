@@ -53,14 +53,14 @@ class Simulation:
 
         save_file = '{}.agents'.format(self.output.save_name)
         if not os.path.isfile(save_file) or conf.RUN['FORCE_NEW_POPULATION']:
-            self.logger.info('Creating new agents')
+            self.logger.logger.info('Creating new agents')
             regions = self.generator.create_regions()
             agents, houses, families, firms = self.generator.create_all(regions)
             agents = {a: agents[a] for a in agents.keys() if agents[a].address is not None}
             with open(save_file, 'wb') as f:
                 pickle.dump([agents, houses, families, firms, regions], f)
         else:
-            self.logger.info('Loading existing agents')
+            self.logger.logger.info('Loading existing agents')
             with open(save_file, 'rb') as f:
                  agents, houses, families, firms, regions = pickle.load(f)
 
@@ -81,9 +81,9 @@ class Simulation:
 
     def run(self):
         """Runs the simulation"""
-        self.logger.info('Starting run.')
-        self.logger.info('Output: {}'.format(self.output.path))
-        self.logger.info('Params: {}'.format(json.dumps(self.PARAMS)))
+        self.logger.logger.info('Starting run.')
+        self.logger.logger.info('Output: {}'.format(self.output.path))
+        self.logger.logger.info('Params: {}'.format(json.dumps(self.PARAMS)))
 
         timer = analysis.Timer()
         timer.start()
@@ -91,10 +91,10 @@ class Simulation:
         self.labor_market = markets.LaborMarket(self.seed)
         self.pops, self.total_pop = population.load_pops(self.geo.mun_codes, self.PARAMS)
         self.regions, self.agents, self.houses, self.families, self.firms, self.central = self.generate()
-        self.logger.info('Initializing...')
+        self.logger.logger.info('Initializing...')
         self.initialize()
 
-        self.logger.info('Running...')
+        self.logger.logger.info('Running...')
         while self.clock.days < conf.RUN['STARTING_DAY'] + datetime.timedelta(days=conf.RUN['TOTAL_DAYS']):
             self.daily()
             if self.clock.months == 1 and conf.RUN['SAVE_TRANSIT_DATA']:
@@ -112,8 +112,8 @@ class Simulation:
 
         if conf.RUN['SAVE_TRANSIT_DATA']:
             self.output.save_transit_data(self, 'end')
-        self.logger.info('Simulation completed.')
-        self.logger.info('Run took {:.2f}s'.format(timer.elapsed()))
+        self.logger.logger.info('Simulation completed.')
+        self.logger.logger.info('Run took {:.2f}s'.format(timer.elapsed()))
 
     def initialize(self):
         """Initiating simulation"""

@@ -81,7 +81,7 @@ class Plotter:
 
         # # Time to be eliminated (adjustment of the model)
         if conf.RUN['TIME_TO_BE_ELIMINATED'] > 0:
-            dat = dat.loc[(dat['month']).astype(int) >= ((dat['month']).max() * conf.RUN['TIME_TO_BE_ELIMINATED']), :]
+            dat = dat.loc[len(dat['month']) * conf.RUN['TIME_TO_BE_ELIMINATED']:, :]
         return dat
 
     def _prepare_datas(self, fname, columns):
@@ -123,7 +123,7 @@ class Plotter:
 
         # commuting
         title = 'Evolution of commute by region, monthly'
-        dats_to_plot = [d.pivot(index='month', columns='region_id', values='commuting').astype(float) for d in dats]
+        dats_to_plot = [d.pivot(index='month', columns='region_id', values='commuting') for d in dats]
         names_mun = [mun_codes[v] for v in list(dats_to_plot[0].columns.values)]
         fig = self.make_plot(dats_to_plot, title, years_division, labels=names_mun, y_label='Regional commute')
         self.save_fig(fig, 'temp_regional_evolution_of_commute')

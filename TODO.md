@@ -22,7 +22,7 @@
 4. List endogenous x exogenous mechanisms
 5. Steady state of graphs second half of the period
 6. Include names of columns os csv files. It can't interfere with plotting
-7. Confer how SAVE_PLOTS is set at the moment
+8. Check map visualization for maps that are not full period.
 
 **Final changes**
 1. Validate real estate market
