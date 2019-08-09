@@ -75,24 +75,21 @@ class Plotter:
         return fig
 
     def _prepare_data(self, path, columns):
-        dat = pd.read_csv(path,  sep=';', decimal='.', header=None).apply(pd.to_numeric, errors='coerce')
+        # Just read the data
+        dat = pd.read_csv(path,  sep=';', decimal='.', header=None)
         dat.columns = columns
 
-        # Time to be eliminated (adjustment of the model)
+        # # Time to be eliminated (adjustment of the model)
         if conf.RUN['TIME_TO_BE_ELIMINATED'] > 0:
-            dat = dat.loc[(dat['month']).astype(int) >= ((dat['month']).max() *
-                                                        conf.RUN['TIME_TO_BE_ELIMINATED']), :]
-
+            dat = dat.loc[(dat['month']).astype(int) >= ((dat['month']).max() * conf.RUN['TIME_TO_BE_ELIMINATED']), :]
         return dat
 
     def _prepare_datas(self, fname, columns):
         dats = [self._prepare_data(os.path.join(path, fname), columns) for path in self.input_paths]
-
         # Formatting the list of values for X axis
         # Assume this is equivalent for all supplied datasets
         dat = dats[-1]
-        years_division = list(range(dat['month'].min(), int(dat['month'].max()), 12)) + [dat['month'].max() + 1]
-
+        years_division = list(range(0, len(dat['month']), 12))
         return dats, years_division
 
     def plot_general(self):
@@ -105,7 +102,7 @@ class Plotter:
 
         cols = ['price_index', 'gdp_index', 'gdp_growth', 'unemployment', 'average_workers', 'families_wealth',
                 'families_savings', 'firms_wealth', 'firms_profit', 'gini_index', 'average_utility', 'inflation',
-                'average_qli','equally', 'locally', 'fpm' ]
+                'average_qli','equally', 'locally', 'fpm']
         titles = ['Average prices\' level', 'GDP absolute value', 'GDP growth in % m-m', 'Unemployment',
                 'Average workers per firm', 'Families\' disposable cash', 'Families\' absolute savings',
                 'Firms\' abolute capital', 'Firms\' profit', 'GINI index', 'Average families\' utility',

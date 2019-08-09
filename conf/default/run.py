@@ -55,7 +55,7 @@ PLOT_FORMAT = 'png'
 STARTING_DAY = datetime.date(2000, 1, 1)
 
 # Maximum running time (restrained by official data) is 30 years,
-TOTAL_DAYS = (datetime.date(2020, 1, 1) - STARTING_DAY).days
+TOTAL_DAYS = (datetime.date(2003, 1, 1) - STARTING_DAY).days
 
 # Force generation of new population
 FORCE_NEW_POPULATION = False

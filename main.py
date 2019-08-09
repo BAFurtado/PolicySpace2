@@ -142,13 +142,17 @@ def average_run_data(path, avg='mean'):
     # merge
     for fname, files in file_groups.items():
         dfs = []
+        saved_date = []
         for f in files:
-            df = pd.read_csv(f,  sep=';', decimal='.', header=None).apply(pd.to_numeric, errors='coerce')
+            df = pd.read_csv(f,  sep=';', decimal='.', header=None)
+            saved_date = df[0]
+            df = df.loc[:, 1:]
             dfs.append(df)
         df = pd.concat(dfs)
+        # Saving date before avering
         df = df.groupby(df.index)
         df = getattr(df, avg)()
-        df[0] = df[0].astype(int) # first col is month and should be int
+        df.insert(0, 0, saved_date)
         df.to_csv(os.path.join(output_path, fname), header=False, index=False, sep=';')
     return output_path
 

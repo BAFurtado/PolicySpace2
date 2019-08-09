@@ -67,7 +67,7 @@ class Output:
 
         report = '{};{:.3f};{:.3f};{:.3f};{:.3f};{:.3f};{:.3f};{:.3f};{:.3f};{:.3f};{:.3f};{:.3f};{:.4f};{:.4f};' \
                  '{:.4f};{:.4f};{:.4f}\n'.format(
-                    sim.clock.months, price_index, gdp_index,
+                    sim.clock.days, price_index, gdp_index,
                     gdp_growth, unemployment, average_workers,
                     families_wealth, families_savings,
                     firms_wealth, firms_profit, gini_index,
@@ -127,7 +127,7 @@ class Output:
             mun_qli = sum(r.index for r in regions)/len(regions)
 
             reports.append('%s;%s;%.3f;%d;%.3f;%.4f;%.3f;%.4f;%.5f;%.3f;%.6f;%.6f;%.6f;%.6f'
-                                % (sim.clock.months, mun_id, commuting, mun_pop, mun_gdp, mun_gini, mun_house_values,
+                                % (sim.clock.days, mun_id, commuting, mun_pop, mun_gdp, mun_gini, mun_house_values,
                                    mun_unemployment, mun_qli, GDP_mun_capita, mun_cumulative_treasure,
                                    mun_applied_treasure['equally'],
                                    mun_applied_treasure['locally'],
@@ -148,7 +148,7 @@ class Output:
     def save_firms_data(self, sim):
         with open(self.firms_path, 'a') as f:
             [f.write('%s; %s; %s; %.3f; %.3f; %.3f; %s; %.3f; %.3f; %.3f ; %.3f; %.3f; %.3f; %.3f \n' %
-                            (sim.clock.months, firm.id, firm.region_id, firm.address.x,
+                            (sim.clock.days, firm.id, firm.region_id, firm.address.x,
                             firm.address.y, firm.total_balance, firm.num_employees,
                             firm.total_quantity, firm.amount_produced, firm.inventory[0].price,
                             firm.amount_sold, firm.revenue, firm.profit,
@@ -157,7 +157,7 @@ class Output:
 
     def save_agents_data(self, sim):
         with open(self.agents_path, 'a') as f:
-            [f.write('%d;%s;%s;%.3f;%.3f;%d;%d;%d;%s;%s;%.3f;%.3f;%s\n' % (sim.clock.months, agent.region_id,
+            [f.write('%s;%s;%s;%.3f;%.3f;%d;%d;%d;%s;%s;%.3f;%.3f;%s\n' % (sim.clock.days, agent.region_id,
                                                                            agent.gender, agent.address.x,
                                                                            agent.address.y, agent.id, agent.age,
                                                                            agent.qualification, agent.firm_id,
@@ -167,7 +167,7 @@ class Output:
 
     def save_grave_data(self, sim):
         with open(self.grave_path, 'a') as f:
-            [f.write('%d;%s;%s;%s;%s;%d;%d;%d;%s;%s;%.3f;%.3f;%s\n' % (sim.clock.months, agent.region_id,
+            [f.write('%s;%s;%s;%s;%s;%d;%d;%d;%s;%s;%.3f;%.3f;%s\n' % (sim.clock.days, agent.region_id,
                                                                            agent.gender,
                                                                            agent.address.x if agent.address else None,
                                                                            agent.address.y if agent.address else None,
@@ -179,7 +179,7 @@ class Output:
 
     def save_house_data(self, sim):
         with open(self.houses_path, 'a') as f:
-            [f.write('%d;%d;%f;%f;%.2f;%.2f;%s;%s\n' % (sim.clock.months,
+            [f.write('%s;%d;%f;%f;%.2f;%.2f;%s;%s\n' % (sim.clock.days,
                                                                 house.id,
                                                                 house.address.x,
                                                                 house.address.y,
@@ -191,7 +191,7 @@ class Output:
 
     def save_family_data(self, sim):
         with open(self.families_path, 'a') as f:
-            [f.write('%s;%s;%s;%s;%.2f;%.2f;%s\n' % (sim.clock.months,
+            [f.write('%s;%s;%s;%s;%.2f;%.2f;%s\n' % (sim.clock.days,
                                                             family.id,
                                                             family.house.price if family.house else 0,
                                                             family.region_id,
