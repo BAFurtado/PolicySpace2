@@ -290,7 +290,7 @@ class Simulation:
         self.output.times.append(self.timer.elapsed())
 
         if conf.RUN['PRINT_STATISTICS_AND_RESULTS_DURING_PROCESS']:
-            self.logger.logger.info(self.clock.days)
+            self.logger.info(self.clock.days)
 
     def quarterly(self):
         if conf.RUN['SAVE_AGENTS_DATA_QUARTERLY']:

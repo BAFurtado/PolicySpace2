@@ -2,7 +2,6 @@
 
 This is an evolution of:
 
-
 **FURTADO, Bernardo Alves. PolicySpace: agent-based modeling. IPEA: Brasília, 2018.** available at https://github.com/BAFurtado/PolicySpace
 
 This is an open agent-based model (ABM) with three markets and a tax scheme that empirically simulates 46 Brazilian
@@ -10,13 +9,6 @@ metropolitan regions.
 
 Developed by Bernardo Alves Furtado, funded by Institute of Applied Economic Research (IPEA).
 The author acknowledges receiving a grant of productivity by National Council of Research (CNPq).
-
-#### Previous collaborators
-1. Bernardo Alves Furtado, since beginning:(conception, design, coding - agents, markets, timeframe, general)
-2. Isaque Daniel Rocha Eberhardt, [16 months]:(design, coding - 'controls', 'plottings', 'parameters')
-3. Alexandre Messa (some suggestions) [4 months]
-4. Davoud Taghawi-Nejad (early-on pontual suggestion)
-5. Francis Tseng (automating, general fixtures and improvements, transport, plots, output) [12 months]
 
 This work is licensed under GNU General Public License v3.0
 
@@ -44,6 +36,8 @@ The transit model in turn generates private and public transport routes, visuali
 9. Families composition are now sure to have at least one adult. Children are initially distributed randomly.
 10. Houses of families whose last member dies are randomly allocated to remaining families.
 11. Interest being now paid on families' savings
+12. When no cash available, families can withdraw from savings for consumption (if any at savings) 
+up to permanent income
 12. Internal clock updated to use datetime
 
 #### How do I get set up?
@@ -51,7 +45,6 @@ The transit model in turn generates private and public transport routes, visuali
 We recommend using conda  and creating an environment that includes all libraries simultaneously.
 Type on a terminal, after having downloaded and installed conda, choosing a name for your environment and replacing 
 <env> and using requirements.txt | requirements_linux.txt in place of <this file>
-
 
 `conda create --name <env> --file <this file>`
 

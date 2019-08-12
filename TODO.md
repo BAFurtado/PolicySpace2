@@ -4,12 +4,13 @@
 1. Check self.year
 
 **Enhancements**
-1. Include simple credit market
 4. Introduce a rental market
+8. Include construction companies. 
+7. Financial (mortgage, credit) market structures
+1. Check credit market (central bank point of view). 
+2. Check families for 0 savings and 0 money
 5. Include transportation costs on people's budget
 6. Incorporate preferences/money into decision-making (families on choosing houses/workers on choosing jobs)
-7. Financial (mortgage, credit) market structures
-8. Include construction companies. 
 9. Improve/check pricing mechanisms (introduce time estate is available in the market, cost of not owning a house)
 11. Introduce inheritance (savings). Use implemented transfer, but directed it to offspring [Idea of HEAD of the house].
 

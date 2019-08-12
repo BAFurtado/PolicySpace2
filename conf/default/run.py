@@ -21,13 +21,13 @@ TIME_TO_BE_ELIMINATED = 0.0
 
 # Saving adjustments
 SAVE_SPATIAL_PLOTS = False
-SAVE_PLOTS_FIGURES = True
+SAVE_PLOTS_FIGURES = False
 # If plots should be generated separately
 # for each simulation run or just aggregated
-PLOT_EACH_RUN = True
+PLOT_EACH_RUN = False
 # 'png' or 'eps'
 PLOT_FORMAT = 'png'
-PLOT_REGIONAL = True
+PLOT_REGIONAL = False
 
 # Save Agents data
 SAVE_AGENTS_DATA_MONTHLY = False
@@ -42,8 +42,6 @@ SAVE_DATA = []
 # Average all data (not just general data)
 # across all runs
 AVERAGE_ALL_DATA = False
-
-
 
 # Whether or not to save data for the transit simulation
 SAVE_TRANSIT_DATA = False

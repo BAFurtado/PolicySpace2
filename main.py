@@ -48,6 +48,8 @@ def conf_to_str(conf, delimiter='\n'):
 
 def single_run(params, path):
     """Run a simulation once for given parameters"""
+    if conf.RUN['PRINT_STATISTICS_AND_RESULTS_DURING_PROCESS']:
+        logging.basicConfig(level=logging.INFO)
     sim = Simulation(params, path)
     sim.run()
 
@@ -360,7 +362,6 @@ def acps(ctx):
     multiple_runs(confs, ctx.obj['runs'], ctx.obj['cpus'], ctx.obj['output_dir'])
 
 
-
 @main.command()
 @click.argument('output_dir')
 def make_plots(output_dir):
@@ -370,26 +371,26 @@ def make_plots(output_dir):
     plot_results(output_dir)
 
 
-@main.command()
-@click.option('-s', '--sig-level', help='Significance level', default=0.05)
-@click.pass_context
-def validate(ctx, sig_level):
-    """
-    Validate simulation output
-    """
-    df = pd.read_csv('validating_data/general.csv')
-    rw_data = {
-        'inflation': impute(df['real_inflation']).values,
-        'consumption': impute(df['real_consumption']).values
-    }
-
-    ab_data = [{
-        'inflation': impute(df['model_inflation']).values,
-        'consumption': impute(df['model_consumption']).values
-    }]
-    rw_data_len = len(df['real_inflation'].values)
-    results = validation_tentative.validate(rw_data, ab_data, rw_data_len, sig_level)
-    print(results)
+# @main.command()
+# @click.option('-s', '--sig-level', help='Significance level', default=0.05)
+# @click.pass_context
+# def validate(ctx, sig_level):
+#     """
+#     Validate simulation output
+#     """
+#     df = pd.read_csv('validating_data/general.csv')
+#     rw_data = {
+#         'inflation': impute(df['real_inflation']).values,
+#         'consumption': impute(df['real_consumption']).values
+#     }
+#
+#     ab_data = [{
+#         'inflation': impute(df['model_inflation']).values,
+#         'consumption': impute(df['model_consumption']).values
+#     }]
+#     rw_data_len = len(df['real_inflation'].values)
+#     results = validation_tentative.validate(rw_data, ab_data, rw_data_len, sig_level)
+#     print(results)
 
 
 @main.command()
