@@ -49,6 +49,7 @@ FPM_DISTRIBUTION = True
 # Families run parameters
 MEMBERS_PER_FAMILY = 2.5                             # (on average)
 HOUSE_VACANCY = .05                                   # percentage of vacant houses
+RENTAL_SHARE = 0
 # Definition to simplify population by group age groups(TRUE) or including all ages (FALSE)
 SIMPLIFY_POP_EVOLUTION = True
 # Defines the superior limit of age groups, the first value is always ZERO and is omitted from the list.

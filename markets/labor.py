@@ -1,4 +1,4 @@
-class LaborMarket():
+class LaborMarket:
     """
     This class makes the match among firms and prospective candidates.
     The two lists (of firms and candidates) are ordered.

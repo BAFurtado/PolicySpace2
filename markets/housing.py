@@ -2,6 +2,7 @@
 This module is where the real estate market takes effect.
 Definitions on ownership and actual living residence is made.
 """
+import markets.rental
 
 
 def allocate_houses(sim):
@@ -21,12 +22,13 @@ def allocate_houses(sim):
 
     # BUYING FAMILIES
     # Select sample of families looking for houses at this time, given parameter
-    family_on_the_look = sim.seed.sample(list(families.keys()),
+    family_on_the_look = sim.seed.sample(list(families.values()),
                                          int(len(families) * sim.PARAMS['PERCENTAGE_CHECK_NEW_LOCATION']))
 
     # # Given the endogenous formation of families, some families may contain no members, excluding those
-    family_on_the_look = [families[f] for f in family_on_the_look if families[f].members]
+    # family_on_the_look = [families[f] for f in family_on_the_look if families[f].members]
 
+    # If empty lists, stop procedure
     if not family_on_the_look or not on_sale:
         return
 
@@ -42,15 +44,30 @@ def allocate_houses(sim):
     # Family with larger savings
     maximum_purchasing_power = family_on_the_look[0].savings
 
-    # Shortening the lists
-    family_on_the_look = [f for f in family_on_the_look if f.savings > minimum_price]
+    # Families that can afford to buy, remain on the list
+    # Those without funds, try the rental market.
+    # TODO: Introduce other decision mechanisms
+    f_to_rent = list()
+    still_on_the_look = list()
+    [still_on_the_look.append(f) if f.savings > minimum_price else f_to_rent.append(f)
+     for f in family_on_the_look]
+
+    # Extract houses to rental market from sales pool
+    h_to_rent = sim.seed.sample(on_sale, len(f_to_rent))
+    [on_sale.remove(h) for h in on_sale if h in h_to_rent]
+
+    # Call Rental market
+    if f_to_rent and h_to_rent:
+        markets.rental.rental_market(h_to_rent, f_to_rent)
+
     on_sale = [h for h in on_sale if h.price < maximum_purchasing_power]
 
-    if not family_on_the_look or not on_sale:
+    # Second check. If empty lists, stop procedure
+    if not still_on_the_look or not on_sale:
         return
 
     # For each family
-    for family in family_on_the_look:
+    for family in still_on_the_look:
         move = False
         to_remove = []
         for house in on_sale:

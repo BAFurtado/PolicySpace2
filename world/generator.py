@@ -115,11 +115,15 @@ class Generator:
 
             regional_agents, regional_families = self.allocate_to_family(regional_agents, regional_families)
 
-            # Allocating houses
-            regional_families = self.allocate_to_households(regional_families, regional_houses)
+            # Allocating only percentage of houses to ownership.
+            rental_size = int((1 - conf.PARAMS['RENTAL_SHARE']) * len(regional_houses))
+            regional_families = self.allocate_to_households(regional_families,
+                                                            dict(list(regional_houses.items())[:rental_size]))
 
             # Set ownership of remaining houses for random families
             self.randomly_assign_houses(regional_houses.values(), regional_families.values())
+
+            # TODO: Have to set rental market for families that do not own house
 
         return my_agents, my_houses, my_families, my_firms
 

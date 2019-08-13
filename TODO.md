@@ -1,7 +1,6 @@
 # TODO
 
 **Finalize**
-1. Check self.year
 
 **Enhancements**
 4. Introduce a rental market
