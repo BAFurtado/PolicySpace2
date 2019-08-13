@@ -20,6 +20,10 @@ Furtado, B. A. (2019). Modeling tax distribution in metropolitan regions with Po
 #### Repository of produced texts
 https://www.researchgate.net/profile/Bernardo_Furtado
 
+### Previous collaborator after PolicySpace
+Francis Tseng (automating, general fixtures and improvements, transport, plots, output) [April-July 2018]
+
+
 ### Major changes, since PolicySpace
 
 1. PolicySpace2 generates data that can be applied at https://github.com/frnsys/transit_demand_model. 

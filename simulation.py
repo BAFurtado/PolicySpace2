@@ -89,6 +89,7 @@ class Simulation:
         timer.start()
 
         self.labor_market = markets.LaborMarket(self.seed)
+        self.housing = markets.HousingMarket()
         self.pops, self.total_pop = population.load_pops(self.geo.mun_codes, self.PARAMS)
         self.regions, self.agents, self.houses, self.families, self.firms, self.central = self.generate()
         self.logger.logger.info('Initializing...')
@@ -263,7 +264,7 @@ class Simulation:
         # Tax transaction taxes (ITBI) when selling house
         # Property tax (IPTU) collected. One twelfth per month
         self.timer.start()
-        markets.housing.allocate_houses(self)
+        self.housing.allocate_houses(self)
         for house in self.houses.values():
             house.pay_property_tax(self)
 
