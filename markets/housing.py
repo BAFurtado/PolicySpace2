@@ -18,11 +18,20 @@ class HousingMarket:
         for house in sim.houses.values():
             # Updating all houses values every month
             house.update_price(sim.regions)
+
             if not house.is_occupied:
-                self.on_sale.append(house)
+                if house not in self.on_sale:
+                    self.on_sale.append(house)
         # Ranking houses by price and families by saving
         # Sorting. Those houses cheaper first
         self.on_sale.sort(key=lambda h: h.price, reverse=True)
+
+    def make_move(self, family, house, sim):
+        # Make the move
+        old_r_id = family.region_id
+        family.move_out()
+        family.move_in(house)
+        sim.update_pop(old_r_id, family.region_id)
 
     def allocate_houses(self, sim):
 
@@ -73,16 +82,16 @@ class HousingMarket:
             return
 
         # For each family
+        # Necessary to save in another list because you cannot delete an element while iterating over the list
+        to_remove = []
         for family in self.looking:
-            move = False
-            to_remove = []
             for house in self.on_sale:
                 if house in to_remove:
                     # skip to next house
                     continue
-
                 s = family.savings
                 p = house.price
+
                 if s > p:
                     # Then PRICE is established as the average of the two
                     price = (s + p) / 2
@@ -106,47 +115,30 @@ class HousingMarket:
 
                     family.owned_houses.append(house)
 
-                    # Withdraw from available houses
+                    # Decision on moving
+                    self.decision(family, sim)
+
+                    # Cleaning up list
                     to_remove.append(house)
 
-                    # Decision on moving
-                    destin, move = decision(family, houses)
+                    # This family has solved its problem
                     break
+            [self.on_sale.remove(h) for h in to_remove]
 
-            # Make the move
-            if move:
-                old_r_id = family.region_id
-                family.move_out()
-                family.move_in(house)
-                sim.update_pop(old_r_id, family.region_id)
+    def decision(self, family, sim):
+        """A family decides which house to move into"""
+        options = family.owned_houses
+        prop_employed = family.prop_employed()
+        if len(options) > 1:
+            # Sort by price, which captures quality, size, and location
+            # This puts the cheapest house first
+            options.sort(key=lambda h: h.price, reverse=False)
+            # If family does not live in the worst house
+            # and no one in the family is employed, move to the worst house
+            if options[0].family_id != family.id and prop_employed == 0:
+                self.make_move(family, options[0], sim)
 
-            for house in to_remove:
-                self.on_sale.remove(house)
-
-
-def decision(family, houses):
-    """A family decides which house to move into"""
-    options = [h for h in houses.values() if h.owner_id == family.id]
-    prop_employed = family.prop_employed()
-    if len(options) > 1:
-        # Sort by price, which captures quality, size, and location
-        # This puts the cheapest house first
-        options.sort(key=lambda h: h.price, reverse=False)
-        # If family does not live in the worst house
-        # and no one in the family is employed, move to the worst house
-        if options[0].family_id != family.id and prop_employed == 0:
-            move = True
-            destin = options[0]
-
-        # Else if they live in the worst house
-        # but are not all unemployed, move to a better house
-        elif options[0].family_id == family.id and prop_employed > 0:
-            move = True
-            destin = options[-1]
-        else:
-            move = False
-            destin = None
-    else:
-        move = False
-        destin = None
-    return destin, move
+            # Else if they live in the worst house
+            # but are not all unemployed, move to a better house
+            elif options[0].family_id == family.id and prop_employed > 0:
+                self.make_move(family, options[-1], sim)
