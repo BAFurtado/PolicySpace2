@@ -68,13 +68,13 @@ class HousingMarket:
 
         # Extract houses to rental market from sales pool
         self.rental = sim.seed.sample(self.on_sale, len(self.renting))
-        [self.on_sale.remove(h) for h in self.on_sale if h in self.for_rent]
+        self.on_sale[:] = [h for h in self.on_sale if h not in self.for_rent]
 
         # Call Rental market
         if self.renting and self.for_rent:
             self.rental.rental_market(self.renting, self.for_rent)
 
-        self.on_sale = [h for h in self.on_sale if h.price < maximum_purchasing_power]
+        self.on_sale[:] = [h for h in self.on_sale if h.price < maximum_purchasing_power]
 
         # Second check. If empty lists, stop procedure
         if not self.looking or not self.on_sale:
@@ -82,12 +82,9 @@ class HousingMarket:
 
         # For each family
         # Necessary to save in another list because you cannot delete an element while iterating over the list
-        to_remove = []
+
         for family in self.looking:
             for house in self.on_sale:
-                if house in to_remove:
-                    # skip to next house
-                    continue
                 s = family.savings
                 p = house.price
 
@@ -121,6 +118,10 @@ class HousingMarket:
                     self.on_sale[:] = [h for h in self.on_sale if h is not house]
 
                     # This family has solved its problem. Go to next family
+                    break
+
+                # Shortening the loop, in case the savings won't be enough for available houses
+                elif s < self.on_sale[-1].price:
                     break
 
     def decision(self, family, sim):
