@@ -1,3 +1,8 @@
+import datetime
+from collections import defaultdict
+from functools import partial
+
+
 class House:
     """Holds the fixed households.
     They may have changing owners and changing occupancy."""
@@ -11,6 +16,8 @@ class House:
         self.quality = quality
         self.family_id = family_id # owner may be the occupant or the house may be vacant
         self.owner_id = owner_id
+        self.rental = False
+        self.rent_data = None
 
         # cache firm distances
         # since houses never change address

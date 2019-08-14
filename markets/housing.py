@@ -70,20 +70,20 @@ class HousingMarket:
         self.rental = sim.seed.sample(self.on_sale, len(self.renting))
         self.on_sale[:] = [h for h in self.on_sale if h not in self.for_rent]
 
-        # Call Rental market
+        # Call Rental market ###############################################################
         if self.renting and self.for_rent:
-            self.rental.rental_market(self.renting, self.for_rent)
+            self.rental.rental_market(self.renting, self.for_rent, sim)
 
         self.on_sale[:] = [h for h in self.on_sale if h.price < maximum_purchasing_power]
 
         # Second check. If empty lists, stop procedure
-        if not self.looking or not self.on_sale:
+        if not self.purchasing or not self.on_sale:
             return
 
         # For each family
         # Necessary to save in another list because you cannot delete an element while iterating over the list
 
-        for family in self.looking:
+        for family in self.purchasing:
             for house in self.on_sale:
                 s = family.savings
                 p = house.price

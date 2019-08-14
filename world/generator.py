@@ -117,13 +117,19 @@ class Generator:
 
             # Allocating only percentage of houses to ownership.
             rental_size = int((1 - conf.PARAMS['RENTAL_SHARE']) * len(regional_houses))
-            regional_families = self.allocate_to_households(regional_families,
+
+
+            # Do not allocate all houses to families. Some families (parameter) will have to rent
+            regional_families = self.allocate_to_households(dict(list(regional_families.items())[:rental_size]),
                                                             dict(list(regional_houses.items())[:rental_size]))
 
             # Set ownership of remaining houses for random families
             self.randomly_assign_houses(regional_houses.values(), regional_families.values())
 
-            # TODO: Have to set rental market for families that do not own house
+            # Run the first Rental Market
+            renting = [f for f in regional_families.values() if f.house is None]
+            to_rent = [h for h in regional_houses.values() if h.family_id is None]
+            self.sim.housing.rental.rental_market(to_rent, renting, self.sim)
 
         return my_agents, my_houses, my_families, my_firms
 
