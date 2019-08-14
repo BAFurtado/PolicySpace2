@@ -38,7 +38,6 @@ class HousingMarket:
         self.update_on_sale(sim)
 
         """Allocation of houses on the market"""
-        houses = sim.houses
         families = sim.families
         regions = sim.regions
 
@@ -119,11 +118,10 @@ class HousingMarket:
                     self.decision(family, sim)
 
                     # Cleaning up list
-                    to_remove.append(house)
+                    self.on_sale[:] = [h for h in self.on_sale if h is not house]
 
-                    # This family has solved its problem
+                    # This family has solved its problem. Go to next family
                     break
-            [self.on_sale.remove(h) for h in to_remove]
 
     def decision(self, family, sim):
         """A family decides which house to move into"""
