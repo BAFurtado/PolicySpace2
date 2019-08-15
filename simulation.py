@@ -214,7 +214,7 @@ class Simulation:
         markets.goods.consume(self)
 
         for fam in self.families.values():
-            fam.invest(self.PARAMS['INTEREST_RATE'], self.central, present_year, (present_month  % 12) + 1)
+            fam.invest(self.PARAMS['INTEREST_RATE'], self.central, present_year, (present_month % 12) + 1)
 
         self.logger.log_time('CONSUME FAMILY', self.timer, self.clock.months)
         self.output.times.append(self.timer.elapsed())

@@ -31,10 +31,15 @@ class HousingMarket:
         old_r_id = family.region_id
         family.move_out()
         family.move_in(house)
-        sim.update_pop(old_r_id, family.region_id)
+        # Only after simulation has begun, it is necessary to update population, not at generation time
+        try:
+            if sim.mun_pops:
+                sim.update_pop(old_r_id, family.region_id)
+        except AttributeError:
+            pass
 
     def allocate_houses(self, sim):
-
+        # Clear list of past houses for sale
         self.update_on_sale(sim)
 
         """Allocation of houses on the market"""
@@ -67,13 +72,18 @@ class HousingMarket:
          for f in self.looking]
 
         # Extract houses to rental market from sales pool
+        # TODO RENTAL IS REMAINING EMPTY
         self.rental = sim.seed.sample(self.on_sale, len(self.renting))
         self.on_sale[:] = [h for h in self.on_sale if h not in self.for_rent]
 
         # Call Rental market ###############################################################
         if self.renting and self.for_rent:
             self.rental.rental_market(self.renting, self.for_rent, sim)
+        # Emptying Rental market lists
+        self.rental[:] = list()
+        self.renting[:] = list()
 
+        # Continue procedures for purchasing market
         self.on_sale[:] = [h for h in self.on_sale if h.price < maximum_purchasing_power]
 
         # Second check. If empty lists, stop procedure
@@ -108,7 +118,6 @@ class HousingMarket:
                     # Transfer ownership
                     families[house.owner_id].owned_houses.remove(house)
                     house.owner_id = family.id
-
                     family.owned_houses.append(house)
 
                     # Decision on moving
@@ -120,9 +129,6 @@ class HousingMarket:
                     # This family has solved its problem. Go to next family
                     break
 
-                # Shortening the loop, in case the savings won't be enough for available houses
-                elif s < self.on_sale[-1].price:
-                    break
 
     def decision(self, family, sim):
         """A family decides which house to move into"""

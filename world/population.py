@@ -1,5 +1,5 @@
 import math
-import random
+
 import numpy as np
 import pandas as pd
 import statsmodels.api as sm
@@ -168,7 +168,7 @@ def immigration(sim):
 
             # Create and assign homes
             # Choose random region in this municipality
-            region_id = random.choice(sim.mun_to_regions[mun_code])
+            region_id = sim.seed.choice(sim.mun_to_regions[mun_code])
             region = sim.regions[region_id]
             new_houses = sim.generator.create_houses(1, region)
             sim.generator.allocate_to_households({f.id: f}, new_houses)
@@ -186,12 +186,12 @@ def marriage(sim):
     for agent in sim.agents.values():
         # Compute probability that this agent will marry
         # NOTE we don't consider whether or not they are already married
-        if random.random() < agent.p_marriage:
+        if sim.seed.random() < agent.p_marriage:
             to_marry.append(agent)
 
     # Marry individuals
     # NOTE individuals are paired randomly
-    random.shuffle(to_marry)
+    sim.seed.shuffle(to_marry)
     to_marry = iter(to_marry)
     for a, b in zip(to_marry, to_marry):
         a_is_alone = a.family.num_members == 1
@@ -231,6 +231,7 @@ def marriage(sim):
                 sim.update_pop(old_r_id, a.region_id)
 
         # If neither a and b are alone,
+        # TODO: CHECK they don't leave children behind
         # they form a new family
         # and get a new house.
         else:
@@ -245,7 +246,7 @@ def marriage(sim):
             # Where do they move to?
             # Assume they move to a or b's region.
 
-            region_id = random.choice([a_region_id, b_region_id])
+            region_id = sim.seed.choice([a_region_id, b_region_id])
             region = sim.regions[region_id]
             new_houses = sim.generator.create_houses(1, region)
             sim.generator.allocate_to_households({new_family.id: new_family}, new_houses)

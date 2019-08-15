@@ -39,8 +39,9 @@ class Family:
         del self.members[agent.id]
 
     def move_out(self):
-        self.house.empty()
-        self.house = None
+        if self.house is not None:
+            self.house.empty()
+            self.house = None
 
     def move_in(self, house):
         self.house = house

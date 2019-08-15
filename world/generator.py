@@ -5,17 +5,17 @@ shapefile input of real limits and real urban/rural areas.
 Then, Agents are created and bundled into families, given population measures.
 Then, houses and firms are created and families are allocated to their first houses.
 """
-import os
-import conf
-import random
-import shapely
-import logging
 import binascii
+import logging
+
 import pandas as pd
-from .firms import FirmData
-from .shapes import prepare_shapes
-from .population import pop_age_data
+import shapely
+
+import conf
 from agents import Agent, Family, Firm, Region, House, Central
+from .firms import FirmData
+from .population import pop_age_data
+from .shapes import prepare_shapes
 
 logger = logging.getLogger('generator')
 
@@ -52,12 +52,6 @@ single_ap_muns = pd.read_csv('input/single_aps.csv', sep=';')
 single_ap_muns = single_ap_muns['mun_code'].tolist()
 
 
-def gen_id(bytes=6):
-    """Generate a random id that should
-    avoid collisions"""
-    return binascii.hexlify(os.urandom(bytes)).decode('utf8')
-
-
 class Generator:
     def __init__(self, sim):
         self.sim = sim
@@ -65,6 +59,11 @@ class Generator:
         self.urban, self.shapes = prepare_shapes(sim.geo)
         self.firm_data = FirmData()
         self.central = Central('central')
+
+    def gen_id(self, byt=6):
+        """Generate a random id that should
+        avoid collisions"""
+        return binascii.hexlify(bytes(self.seed.randint(0, 255) for i in range(byt))).decode('utf8')
 
     def create_regions(self):
         """Create regions"""
@@ -104,6 +103,25 @@ class Generator:
             regional_houses = self.create_houses(num_houses, region)
             regional_firms = self.create_firms(num_firms, region)
 
+            regional_agents, regional_families = self.allocate_to_family(regional_agents, regional_families)
+
+            # Allocating only percentage of houses to ownership.
+            rental_size = int((1 - conf.PARAMS['RENTAL_SHARE']) * len(regional_houses))
+
+            # Do not allocate all houses to families. Some families (parameter) will have to rent
+            purchasing_families = self.allocate_to_households(dict(list(regional_families.items())[:rental_size]),
+                                                            dict(list(regional_houses.items())[:rental_size]))
+
+            # Check families that still do not rent house.
+            # Run the first Rental Market
+            renting = [f for f in regional_families.values() if f.house is None]
+            to_rent = [h for h in regional_houses.values() if h.family_id is None]
+            self.sim.housing.rental.rental_market(to_rent, renting, self.sim)
+
+            # Set ownership of remaining houses for random families
+            self.randomly_assign_houses(regional_houses.values(), purchasing_families.values())
+
+            # Saving on all might dictionary of families
             for family in regional_families.keys():
                 my_families[family] = regional_families[family]
 
@@ -112,24 +130,6 @@ class Generator:
 
             for firm in regional_firms.keys():
                 my_firms[firm] = regional_firms[firm]
-
-            regional_agents, regional_families = self.allocate_to_family(regional_agents, regional_families)
-
-            # Allocating only percentage of houses to ownership.
-            rental_size = int((1 - conf.PARAMS['RENTAL_SHARE']) * len(regional_houses))
-
-
-            # Do not allocate all houses to families. Some families (parameter) will have to rent
-            regional_families = self.allocate_to_households(dict(list(regional_families.items())[:rental_size]),
-                                                            dict(list(regional_houses.items())[:rental_size]))
-
-            # Set ownership of remaining houses for random families
-            self.randomly_assign_houses(regional_houses.values(), regional_families.values())
-
-            # Run the first Rental Market
-            renting = [f for f in regional_families.values() if f.house is None]
-            to_rent = [h for h in regional_houses.values() if h.family_id is None]
-            self.sim.housing.rental.rental_market(to_rent, renting, self.sim)
 
         return my_agents, my_houses, my_families, my_firms
 
@@ -165,7 +165,7 @@ class Generator:
                                                 age)
                     money = self.seed.randrange(50, 100)
                     month = self.seed.randrange(1, 13, 1)
-                    agent_id = gen_id()
+                    agent_id = self.gen_id()
                     a = Agent(agent_id, gender, r_age, qualification, money, month)
                     agents[agent_id] = a
         return agents
@@ -174,9 +174,9 @@ class Generator:
         """Create random agents by sampling the existing
         agent population and creating clones of the sampled agents"""
         new_agents = {}
-        sample = random.sample(list(self.sim.agents.values()), n_agents)
+        sample = self.seed.sample(list(self.sim.agents.values()), n_agents)
         for a in sample:
-            agent_id = gen_id()
+            agent_id = self.gen_id()
             new_agent = Agent(agent_id, a.gender, a.age, a.qualification, a.money, a.month)
             new_agents[agent_id] = new_agent
         return new_agents
@@ -184,7 +184,7 @@ class Generator:
     def create_families(self, num_families):
         community = {}
         for _ in range(num_families):
-            family_id = gen_id()
+            family_id = self.gen_id()
             community[family_id] = Family(family_id)
         return community
 
@@ -208,7 +208,6 @@ class Generator:
             family = self.seed.choice(fams)
             if not agent.belongs_to_family:
                 family.add_agent(agent)
-        assert len([f for f in fams if len(f.members) == 0]) == 0
         return agents, families
 
     # Address within the region
@@ -247,7 +246,7 @@ class Generator:
             # Price is given by 4 quality levels
             quality = self.seed.choice([1, 2, 3, 4])
             price = size * quality * region.index
-            house_id = gen_id()
+            house_id = self.gen_id()
             h = House(house_id, address, size, price, region.id, quality)
             neighborhood[house_id] = h
         return neighborhood
@@ -273,7 +272,7 @@ class Generator:
         for _ in range(num_firms):
             address = self.get_random_point_in_polygon(region)
             total_balance = self.seed.betavariate(1.5, 10) * 100000
-            firm_id = gen_id()
+            firm_id = self.gen_id()
             f = Firm(firm_id, address, total_balance, region.id)
             sector[f.id] = f
         return sector
