@@ -207,6 +207,7 @@ def marriage(sim):
 
             # If a is alone and b is not,
             else:
+                # Check there is no children left behind
                 check_children(a, b, sim)
 
         # If b is alone and a is not,
@@ -215,7 +216,9 @@ def marriage(sim):
             if not a_is_alone:
                 check_children(b, a, sim)
 
-        # If neither a and b are alone,
+        #
+        # # If neither a and b are alone,
+
         # # they form a new family
         # # and get a new house.
         # else:
@@ -240,7 +243,7 @@ def marriage(sim):
 
 
 def moving_process(a, b, sim):
-    # a moves into b
+    # b moves into a
     houses = b.family.owned_houses
     # Transfer ownership
     for house in houses:
@@ -251,20 +254,22 @@ def moving_process(a, b, sim):
     b.family.move_out()
     id = b.family.id
     sim.update_pop(old_r_id, b.region_id)
-    b.family.remove_agent(b)
-    a.family.add_agent(b)
+    members = list(b.family.members.values()).copy()
+    for m in members:
+        b.family.remove_agent(m)
+        a.family.add_agent(m)
     del sim.families[id]
 
 
 def check_children(a, b, sim):
-    # Check there is no children left behind
-    # b is not alone
+    # Checking family b
     adults = [m for m in b.family.members.values() if m.age > 17]
     if len(adults) >= 2:
+        # b moves in with a
         old_r_id = b.region_id
         b.family.remove_agent(b)
         a.family.add_agent(b)
         sim.update_pop(old_r_id, b.region_id)
     else:
-        # a move in with b, inverting passing of parameters
+        # a moves in with b
         moving_process(b, a, sim)
