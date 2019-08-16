@@ -27,7 +27,7 @@ class Simulation:
         self.stats = analysis.Statistics()
         self.logger = analysis.Logger(hex(id(self))[-5:])
         self.timer = analysis.Timer()
-        self.seed = random if conf.RUN['KEEP_RANDOM_SEED'] else random.Random(0)
+        self.seed = random.Random(0) if conf.RUN['KEEP_RANDOM_SEED'] else random
 
         # Read necessary files
         self.m_men, self.m_women, self.f = {}, {}, {}
