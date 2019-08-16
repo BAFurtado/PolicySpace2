@@ -203,53 +203,68 @@ def marriage(sim):
             # and the house ownership transfers
             # to a's family.
             if b_is_alone:
-                houses = b.family.owned_houses
-                for house in houses:
-                    house.owner_id = a.family.id
-                    a.family.owned_houses.append(house)
-                old_r_id = b.region_id
-                b.family.move_out()
-                del sim.families[b.family.id]
-                a.family.add_agent(b)
-                sim.update_pop(old_r_id, b.region_id)
+                moving_process(a, b, sim)
 
             # If a is alone and b is not,
-            # b moves in with a.
             else:
-                old_r_id = b.region_id
-                b.family.remove_agent(b)
-                a.family.add_agent(b)
-                sim.update_pop(old_r_id, b.region_id)
+                check_children(a, b, sim)
 
         # If b is alone and a is not,
         # a moves in with b.
         elif b_is_alone:
             if not a_is_alone:
-                old_r_id = a.region_id
-                a.family.remove_agent(a)
-                b.family.add_agent(a)
-                sim.update_pop(old_r_id, a.region_id)
+                check_children(b, a, sim)
 
         # If neither a and b are alone,
-        # TODO: CHECK they don't leave children behind
-        # they form a new family
-        # and get a new house.
-        else:
-            new_family = list(sim.generator.create_families(1).values())[0]
-            a_region_id = a.family.region_id
-            b_region_id = b.family.region_id
-            a.family.remove_agent(a)
-            b.family.remove_agent(b)
-            new_family.add_agent(a)
-            new_family.add_agent(b)
+        # # they form a new family
+        # # and get a new house.
+        # else:
+        #     new_family = list(sim.generator.create_families(1).values())[0]
+        #     a_region_id = a.family.region_id
+        #     b_region_id = b.family.region_id
+        #     a.family.remove_agent(a)
+        #     b.family.remove_agent(b)
+        #     new_family.add_agent(a)
+        #     new_family.add_agent(b)
+        #
+        #     # Where do they move to?
+        #     # Assume they move to a or b's region.
+        #
+        #     region_id = sim.seed.choice([a_region_id, b_region_id])
+        #     region = sim.regions[region_id]
+        #     new_houses = sim.generator.create_houses(1, region)
+        #     sim.generator.allocate_to_households({new_family.id: new_family}, new_houses)
+        #     sim.families[new_family.id] = new_family
+        #     sim.update_pop(a_region_id, a.region_id)
+        #     sim.update_pop(b_region_id, b.region_id)
 
-            # Where do they move to?
-            # Assume they move to a or b's region.
 
-            region_id = sim.seed.choice([a_region_id, b_region_id])
-            region = sim.regions[region_id]
-            new_houses = sim.generator.create_houses(1, region)
-            sim.generator.allocate_to_households({new_family.id: new_family}, new_houses)
-            sim.families[new_family.id] = new_family
-            sim.update_pop(a_region_id, a.region_id)
-            sim.update_pop(b_region_id, b.region_id)
+def moving_process(a, b, sim):
+    # a moves into b
+    houses = b.family.owned_houses
+    # Transfer ownership
+    for house in houses:
+        sim.families[b.family.id].owned_houses.remove(house)
+        house.owner_id = a.family.id
+        sim.families[a.family.id].owned_houses.append(house)
+    old_r_id = b.region_id
+    b.family.move_out()
+    id = b.family.id
+    sim.update_pop(old_r_id, b.region_id)
+    b.family.remove_agent(b)
+    a.family.add_agent(b)
+    del sim.families[id]
+
+
+def check_children(a, b, sim):
+    # Check there is no children left behind
+    # b is not alone
+    adults = [m for m in b.family.members.values() if m.age > 17]
+    if len(adults) >= 2:
+        old_r_id = b.region_id
+        b.family.remove_agent(b)
+        a.family.add_agent(b)
+        sim.update_pop(old_r_id, b.region_id)
+    else:
+        # a move in with b, inverting passing of parameters
+        moving_process(b, a, sim)

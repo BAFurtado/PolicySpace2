@@ -129,7 +129,6 @@ class HousingMarket:
                     # This family has solved its problem. Go to next family
                     break
 
-
     def decision(self, family, sim):
         """A family decides which house to move into"""
         options = family.owned_houses
