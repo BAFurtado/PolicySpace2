@@ -2,15 +2,25 @@
 
 class RentalMarket:
 
-    def rental_market(self, houses, families, sim):
+    def __init__(self, sim):
+        self.unoccupied = list()
+
+    def update_list(self, sim, to_rent=None):
+        if to_rent:
+            self.unoccupied = to_rent
+        else:
+            self.unoccupied = [h for h in sim.houses.values() if h.family_id is None]
+
+    def rental_market(self, families, sim, to_rent=None):
+        self.update_list(sim, to_rent)
         # Sorting. Those with less savings first
-        if houses and families:
+        if families:
             families.sort(key=lambda f: f.savings, reverse=True)
-            houses.sort(key=lambda h: h.price, reverse=True)
+            self.unoccupied.sort(key=lambda h: h.price, reverse=True)
 
             # Match pairs
             for family in families:
-                for house in houses:
+                for house in self.unoccupied:
                     # Just checking
                     if house.family_id is None:
                         # Define price
@@ -21,7 +31,6 @@ class RentalMarket:
                         house.rent_data = price, sim.clock.days
                         # This family is done
                         break
-
 
     def collect_rent(self, house, family):
         pass

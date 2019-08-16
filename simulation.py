@@ -27,7 +27,7 @@ class Simulation:
         self.stats = analysis.Statistics()
         self.logger = analysis.Logger(hex(id(self))[-5:])
         self.timer = analysis.Timer()
-        self.seed = random.Random(0) if conf.RUN['KEEP_RANDOM_SEED'] else random
+        self.seed = random if conf.RUN['KEEP_RANDOM_SEED'] else random.Random(0)
 
         # Read necessary files
         self.m_men, self.m_women, self.f = {}, {}, {}
@@ -89,7 +89,7 @@ class Simulation:
         timer.start()
 
         self.labor_market = markets.LaborMarket(self.seed)
-        self.housing = markets.HousingMarket()
+        self.housing = markets.HousingMarket(self)
         self.pops, self.total_pop = population.load_pops(self.geo.mun_codes, self.PARAMS)
         self.regions, self.agents, self.houses, self.families, self.firms, self.central = self.generate()
         self.logger.logger.info('Initializing...')
@@ -186,7 +186,7 @@ class Simulation:
         population.immigration(self)
 
         # Adjust families for marriages
-        #population.marriage(self)
+        population.marriage(self)
 
         # Check if house vacancy level is correct,
         # if not, create new houses until it is correct

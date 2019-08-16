@@ -60,7 +60,7 @@ class Generator:
         self.firm_data = FirmData()
         self.central = Central('central')
 
-    def gen_id(self, byt=6):
+    def gen_id(self, byt=4):
         """Generate a random id that should
         avoid collisions"""
         return binascii.hexlify(bytes(self.seed.randint(0, 255) for i in range(byt))).decode('utf8')
@@ -117,7 +117,7 @@ class Generator:
             # Run the first Rental Market
             renting = [f for f in regional_families.values() if f.house is None]
             to_rent = [h for h in regional_houses.values() if h.family_id is None]
-            self.sim.housing.rental.rental_market(to_rent, renting, self.sim)
+            self.sim.housing.rental.rental_market(renting, self.sim, to_rent)
 
             # Set ownership of remaining houses for random families
             self.randomly_assign_houses(regional_houses.values(), purchasing_families.values())

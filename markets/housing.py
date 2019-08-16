@@ -6,8 +6,8 @@ from .rental import RentalMarket
 
 
 class HousingMarket:
-    def __init__(self):
-        self.rental = RentalMarket()
+    def __init__(self, sim):
+        self.rental = RentalMarket(sim)
         self.looking = list()
         self.on_sale = list()
         self.for_rent = list()
