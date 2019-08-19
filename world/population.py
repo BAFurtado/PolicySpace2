@@ -198,11 +198,8 @@ def marriage(sim):
         a_is_alone = a.family.num_members == 1
         b_is_alone = b.family.num_members == 1
         if a_is_alone:
-            # If both a and b are alone,
-            # one moves in with the other
-            # the other family is deleted
-            # and the house ownership transfers
-            # to a's family.
+            # If both a and b are alone, one moves in with the other the other family is deleted
+            # and the house ownership transfers to a's family.
             if b_is_alone:
                 moving_process(a, b, sim)
 
@@ -211,27 +208,34 @@ def marriage(sim):
                 # Check there is no children left behind
                 check_children(a, b, sim)
 
-        # # If b is alone and a is not,
-        # # a moves in with b.
+        # # If b is alone and a is not, a moves in with b.
         elif b_is_alone:
-            if not a_is_alone:
-                check_children(b, a, sim)
+            check_children(b, a, sim)
 
-        # # If neither a and b are alone,
-        # # they form a new family
-        # # and get a new house.
+        # # If neither a and b are alone, they form a new family and get a new house.
         else:
-            new_family = list(sim.generator.create_families(1).values())[0]
-            a.family.remove_agent(a)
-            b.family.remove_agent(b)
-            new_family.add_agent(a)
-            new_family.add_agent(b)
-            sim.families[new_family.id] = new_family
-            sim.housing.rental.rental_market([new_family], sim)
-            a_region_id = a.family.region_id
-            b_region_id = b.family.region_id
-            sim.update_pop(a_region_id, a.region_id)
-            sim.update_pop(b_region_id, b.region_id)
+            adults_a = [m for m in a.family.members.values() if m.age > 21]
+            adults_b = [m for m in b.family.members.values() if m.age > 21]
+            if (len(adults_a) >= 2) and (len(adults_b) >= 2):
+                new_family(a, b, sim)
+            elif len(adults_a) >= 2:
+                moving_process(b, a, sim)
+            else:
+                moving_process(a, b, sim)
+
+
+def new_family(a, b, sim):
+    new_family = list(sim.generator.create_families(1).values())[0]
+    a.family.remove_agent(a)
+    b.family.remove_agent(b)
+    new_family.add_agent(a)
+    new_family.add_agent(b)
+    sim.families[new_family.id] = new_family
+    sim.housing.rental.rental_market([new_family], sim)
+    a_region_id = a.family.region_id
+    b_region_id = b.family.region_id
+    sim.update_pop(a_region_id, a.region_id)
+    sim.update_pop(b_region_id, b.region_id)
 
 
 def moving_process(a, b, sim):
