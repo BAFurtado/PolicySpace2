@@ -2,7 +2,7 @@
 
 class RentalMarket:
 
-    def __init__(self, sim):
+    def __init__(self):
         self.unoccupied = list()
 
     def update_list(self, sim, to_rent=None):

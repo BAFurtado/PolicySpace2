@@ -7,7 +7,7 @@ from .rentmarket import RentalMarket
 
 class HousingMarket:
     def __init__(self, sim):
-        self.rental = RentalMarket(sim)
+        self.rental = RentalMarket()
         self.looking = list()
         self.on_sale = list()
         self.for_rent = list()
@@ -75,7 +75,7 @@ class HousingMarket:
 
         # Call Rental market ###############################################################
         if self.renting and self.for_rent:
-            self.rental.rental_market(self.renting, self.for_rent, sim)
+            self.rental.rental_market(self.renting, sim, self.for_rent)
         # Emptying Rental market lists
         self.renting[:] = list()
         self.for_rent[:] = list()
