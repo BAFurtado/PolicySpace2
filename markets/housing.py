@@ -2,7 +2,7 @@
 This module is where the real estate market takes effect.
 Definitions on ownership and actual living residence is made.
 """
-from .rental import RentalMarket
+from .rentmarket import RentalMarket
 
 
 class HousingMarket:
@@ -66,22 +66,19 @@ class HousingMarket:
 
         # Families that can afford to buy, remain on the list
         # Those without funds, try the rental market.
-        # TODO: Introduce other decision mechanisms
-
         [self.purchasing.append(f) if f.savings > minimum_price else self.renting.append(f)
          for f in self.looking]
 
         # Extract houses to rental market from sales pool
-        # TODO RENTAL IS REMAINING EMPTY
-        self.rental = sim.seed.sample(self.on_sale, len(self.renting))
+        self.for_rent = sim.seed.sample(self.on_sale, int(len(self.on_sale) * sim.PARAMS['RENTAL_SHARE']))
         self.on_sale[:] = [h for h in self.on_sale if h not in self.for_rent]
 
         # Call Rental market ###############################################################
         if self.renting and self.for_rent:
             self.rental.rental_market(self.renting, self.for_rent, sim)
         # Emptying Rental market lists
-        self.rental[:] = list()
         self.renting[:] = list()
+        self.for_rent[:] = list()
 
         # Continue procedures for purchasing market
         self.on_sale[:] = [h for h in self.on_sale if h.price < maximum_purchasing_power]
@@ -128,6 +125,7 @@ class HousingMarket:
 
                     # This family has solved its problem. Go to next family
                     break
+        assert len([f for f in families.values() if f.house is None]) == 0
 
     def decision(self, family, sim):
         """A family decides which house to move into"""

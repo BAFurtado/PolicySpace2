@@ -16,7 +16,7 @@ class House:
         self.quality = quality
         self.family_id = family_id # owner may be the occupant or the house may be vacant
         self.owner_id = owner_id
-        self.rental = False
+        self.rent = False
         self.rent_data = None
 
         # cache firm distances

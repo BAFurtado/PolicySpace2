@@ -216,7 +216,6 @@ def marriage(sim):
             if not a_is_alone:
                 check_children(b, a, sim)
 
-        #
         # # If neither a and b are alone,
         # # they form a new family
         # # and get a new house.
