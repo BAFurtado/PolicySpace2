@@ -43,13 +43,10 @@ class HousingMarket:
         self.update_on_sale(sim)
 
         """Allocation of houses on the market"""
-        families = sim.families
-        regions = sim.regions
-
         # BUYING FAMILIES
         # Select sample of families looking for houses at this time, given parameter
-        self.looking = sim.seed.sample(list(families.values()),
-                                       int(len(families) * sim.PARAMS['PERCENTAGE_CHECK_NEW_LOCATION']))
+        self.looking = sim.seed.sample(list(sim.families.values()),
+                                       int(len(sim.families) * sim.PARAMS['PERCENTAGE_CHECK_NEW_LOCATION']))
 
         # If empty lists, stop procedure
         if not self.looking or not self.on_sale:
@@ -71,17 +68,14 @@ class HousingMarket:
 
         # Extract houses to rental market from sales pool
         self.for_rent = sim.seed.sample(self.on_sale, int(len(self.on_sale) * sim.PARAMS['RENTAL_SHARE']))
-        self.on_sale[:] = [h for h in self.on_sale if h not in self.for_rent]
+        self.on_sale = [h for h in self.on_sale if h not in self.for_rent]
 
         # Call Rental market ###############################################################
         if self.renting and self.for_rent:
             self.rental.rental_market(self.renting, sim, self.for_rent)
-        # Emptying Rental market lists
-        self.renting[:] = list()
-        self.for_rent[:] = list()
 
         # Continue procedures for purchasing market
-        self.on_sale[:] = [h for h in self.on_sale if h.price < maximum_purchasing_power]
+        self.on_sale = [h for h in self.on_sale if h.price < maximum_purchasing_power]
 
         # Second check. If empty lists, stop procedure
         if not self.purchasing or not self.on_sale:
@@ -107,13 +101,13 @@ class HousingMarket:
 
                     # Collect taxes on transaction
                     taxes = price * sim.PARAMS['TAX_ESTATE_TRANSACTION']
-                    regions[house.region_id].collect_taxes(taxes, 'transaction')
+                    sim.regions[house.region_id].collect_taxes(taxes, 'transaction')
 
                     # Deposit money on selling family
-                    families[house.owner_id].update_balance(price - taxes)
+                    sim.families[house.owner_id].update_balance(price - taxes)
 
                     # Transfer ownership
-                    families[house.owner_id].owned_houses.remove(house)
+                    sim.families[house.owner_id].owned_houses.remove(house)
                     house.owner_id = family.id
                     family.owned_houses.append(house)
 
@@ -125,13 +119,15 @@ class HousingMarket:
 
                     # This family has solved its problem. Go to next family
                     break
-        assert len([f for f in families.values() if f.house is None]) == 0
 
     def decision(self, family, sim):
         """A family decides which house to move into"""
         options = family.owned_houses
+        # Leave only empty houses or currently occupied by the same family. Exclude rentals
+        options = [h for h in options if (h.family_id is None) or (h.family_id == family.id)]
         prop_employed = family.prop_employed()
         if len(options) > 1:
+
             # Sort by price, which captures quality, size, and location
             # This puts the cheapest house first
             options.sort(key=lambda h: h.price, reverse=False)

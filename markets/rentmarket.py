@@ -38,6 +38,7 @@ class RentalMarket:
             for f in shortage:
                 new_house = sim.generator.create_houses(1, sim.regions[sim.seed.choice(list(sim.regions.keys()))])
                 sim.generator.allocate_to_households({f.id: f}, new_house)
+                sim.houses.update(new_house)
 
     def collect_rent(self, house, family):
         pass

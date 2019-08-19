@@ -268,6 +268,7 @@ class Generator:
                 house.owner_id = family.id
                 family.owned_houses.append(house)
                 house_id = None
+        assert len(unclaimed) == 0
         return families
 
     def create_firms(self, num_firms, region):

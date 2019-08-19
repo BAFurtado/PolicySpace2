@@ -21,3 +21,4 @@ def update_housing_supply(sim):
             n_new = math.ceil(n_new)
             new_houses = sim.generator.create_houses(n_new, region)
             sim.generator.randomly_assign_houses(new_houses.values(), sim.families.values())
+            sim.houses.update(new_houses)

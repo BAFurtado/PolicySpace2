@@ -36,20 +36,18 @@ class House:
         return self.family_id is not None
 
     def pay_property_tax(self, sim):
-        regions = sim.regions
-        families = sim.families
         # Calculate taxes due of property paid in monthly in twelve installments
         tax = self.price * sim.PARAMS['TAX_PROPERTY'] / 12
         # Withdraw from paying family (current occupant or owner when unoccupied)
         # Only paying taxes when money is available
         if self.family_id is None:
-            family = families[self.owner_id]
+            family = sim.families[self.owner_id]
         else:
-            family = families[self.family_id]
+            family = sim.families[self.family_id]
         if family.get_total_balance() > tax:
             family.update_balance(-tax)
             # Transfer to region
-            regions[self.region_id].collect_taxes(tax, 'property')
+            sim.regions[self.region_id].collect_taxes(tax, 'property')
 
     def __repr__(self):
         return 'House ID %s, Family ID %s, Owner ID %s, Size %s, Price$ %s, Region %s' % (self.id, self.family_id,

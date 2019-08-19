@@ -172,6 +172,7 @@ def immigration(sim):
             region = sim.regions[region_id]
             new_houses = sim.generator.create_houses(1, region)
             sim.generator.allocate_to_households({f.id: f}, new_houses)
+            sim.houses.update(new_houses)
 
         # Has to come after we allocate households
         # so we know where the agents live

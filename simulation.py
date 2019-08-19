@@ -186,7 +186,7 @@ class Simulation:
         population.immigration(self)
 
         # Adjust families for marriages
-        population.marriage(self)
+        #population.marriage(self)
 
         # Check if house vacancy level is correct,
         # if not, create new houses until it is correct
@@ -213,8 +213,9 @@ class Simulation:
         self.timer.start()
         markets.goods.consume(self)
 
-        for fam in self.families.values():
-            fam.invest(self.PARAMS['INTEREST_RATE'], self.central, present_year, (present_month % 12) + 1)
+        for key in self.families.keys():
+            self.families[key].invest(self.PARAMS['INTEREST_RATE'], self.central, present_year,
+                                      (present_month % 12) + 1)
 
         self.logger.log_time('CONSUME FAMILY', self.timer, self.clock.months)
         self.output.times.append(self.timer.elapsed())
@@ -265,8 +266,8 @@ class Simulation:
         # Property tax (IPTU) collected. One twelfth per month
         self.timer.start()
         self.housing.allocate_houses(self)
-        for house in self.houses.values():
-            house.pay_property_tax(self)
+        for key in self.houses.keys():
+            self.houses[key].pay_property_tax(self)
 
         self.logger.log_time('HOUSE MARKET', self.timer, self.clock.months)
         self.output.times.append(self.timer.elapsed())
