@@ -76,6 +76,7 @@ def die(sim, agent):
         # Make houses vacant
         for h in inheritance:
             h.owner_id = None
+            agent.family.owned_houses.remove(h)
 
         # Eliminate families with no members
         f_id = agent.family.id
