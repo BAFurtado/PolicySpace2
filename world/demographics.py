@@ -71,14 +71,16 @@ def die(sim, agent):
         # TODO Transfer savings for offsprings
         # agent.family.grab_savings()
         # Save houses of empty family
-        inheritance = agent.family.owned_houses.copy()
+        inheritance = agent.family.owned_houses
         agent.family.move_out()
         # Make houses vacant
         for h in inheritance:
             h.owner_id = None
 
         # Eliminate families with no members
-        del sim.families[agent.family.id]
+        f_id = agent.family.id
+        del sim.families[f_id]
+
         # Redistribute houses of empty family
         sim.generator.randomly_assign_houses(inheritance, sim.families.values())
     else:
@@ -87,4 +89,5 @@ def die(sim, agent):
     if agent.is_employed:
         sim.firms[agent.firm_id].obit(agent)
     sim.update_pop(agent.region_id, None)
-    del sim.agents[agent.id]
+    a_id = agent.id
+    del sim.agents[a_id]

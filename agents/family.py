@@ -38,14 +38,14 @@ class Family:
     def remove_agent(self, agent):
         del self.members[agent.id]
 
+    def move_in(self, house):
+        self.house = house
+        house.family_id = self.id
+
     def move_out(self):
         if self.house is not None:
             self.house.empty()
             self.house = None
-
-    def move_in(self, house):
-        self.house = house
-        house.family_id = self.id
 
     @property
     def address(self):

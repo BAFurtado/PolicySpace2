@@ -16,7 +16,6 @@ class House:
         self.quality = quality
         self.family_id = family_id # owner may be the occupant or the house may be vacant
         self.owner_id = owner_id
-        self.rent = False
         self.rent_data = None
 
         # cache firm distances
@@ -30,6 +29,7 @@ class House:
     def empty(self):
         """Remove current family"""
         self.family_id = None
+        self.rent_data = None
 
     @property
     def is_occupied(self):

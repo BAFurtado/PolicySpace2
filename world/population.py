@@ -228,12 +228,10 @@ def marriage(sim):
                 b.family.owned_houses.remove(house)
                 a.family.owned_houses.append(house)
             old_r_id = b.region_id
-            b.family.move_out()
             id = b.family.id
+            sim.families[id].move_out()
             sim.update_pop(old_r_id, b.region_id)
             moving = b.family.members.values()
             for each in moving:
                 a.family.add_agent(each)
             del sim.families[id]
-            assert len([h for h in sim.houses.values() if h.family_id == id]) == 0
-
