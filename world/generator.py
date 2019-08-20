@@ -113,14 +113,14 @@ class Generator:
             purchasing_families = self.allocate_to_households(dict(list(regional_families.items())[:rental_size]),
                                                             dict(list(regional_houses.items())[:rental_size]))
 
+            # Set ownership of remaining houses for random families
+            self.randomly_assign_houses(regional_houses.values(), regional_families.values())
+
             # Check families that still do not rent house.
             # Run the first Rental Market
             renting = [f for f in regional_families.values() if f.house is None]
             to_rent = [h for h in regional_houses.values() if h.family_id is None]
             self.sim.housing.rental.rental_market(renting, self.sim, to_rent)
-
-            # Set ownership of remaining houses for random families
-            self.randomly_assign_houses(regional_houses.values(), purchasing_families.values())
 
             # Saving on all might dictionary of families
             for family in regional_families.keys():

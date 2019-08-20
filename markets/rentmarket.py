@@ -39,8 +39,10 @@ class RentalMarket:
                 new_house = sim.generator.create_houses(1, sim.regions[sim.seed.choice(list(sim.regions.keys()))])
                 sim.generator.allocate_to_households({f.id: f}, new_house)
                 sim.houses[new_house.id] = new_house
-
-        assert len([h for h in sim.houses.values() if h.owner_id is None]) == 0
+        try:
+            assert len([h for h in sim.houses.values() if h.owner_id is None]) == 0
+        except AttributeError:
+            assert len([h for h in self.unoccupied if h.owner_id is None]) == 0
 
     def collect_rent(self, house, family):
         pass

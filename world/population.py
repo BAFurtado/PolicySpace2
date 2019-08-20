@@ -235,4 +235,7 @@ def marriage(sim):
             for each in moving:
                 a.family.add_agent(each)
             del sim.families[id]
-            assert len([h for h in sim.houses.values() if h.owner_id is None]) == 0
+            try:
+                assert len([h for h in sim.houses.values() if h.owner_id == id]) == 0
+            except AssertionError:
+                print('stop')
