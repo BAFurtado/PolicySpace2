@@ -228,7 +228,10 @@ def marriage(sim):
                     a.family.owned_houses.append(house)
                 old_r_id = b.region_id
                 id = b.family.id
-                b.family.move_out()
+                to_empty = [h for h in sim.houses.values() if h.family_id == id]
+                for each in to_empty:
+                    each.family_id = None
+
                 sim.update_pop(old_r_id, b.region_id)
                 moving = b.family.members.values()
                 for each in moving:

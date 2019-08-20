@@ -8,11 +8,7 @@ from .rentmarket import RentalMarket
 class HousingMarket:
     def __init__(self, sim):
         self.rental = RentalMarket()
-        self.looking = list()
         self.on_sale = list()
-        self.for_rent = list()
-        self.purchasing = list()
-        self.renting = list()
 
     def update_on_sale(self, sim):
         for house in sim.houses.values():
@@ -45,46 +41,46 @@ class HousingMarket:
         """Allocation of houses on the market"""
         # BUYING FAMILIES
         # Select sample of families looking for houses at this time, given parameter
-        self.looking = sim.seed.sample(list(sim.families.values()),
-                                       int(len(sim.families) * sim.PARAMS['PERCENTAGE_CHECK_NEW_LOCATION']))
+        looking = sim.seed.sample(list(sim.families.values()),
+                                  int(len(sim.families) * sim.PARAMS['PERCENTAGE_CHECK_NEW_LOCATION']))
 
         # If empty lists, stop procedure
-        if not self.looking or not self.on_sale:
+        if not looking or not self.on_sale:
             return
 
         # Sorting. Those with less savings first
-        self.looking.sort(key=lambda f: f.savings, reverse=True)
+        looking.sort(key=lambda f: f.savings, reverse=True)
 
         # Minimum price on market
         minimum_price = self.on_sale[-1].price
 
         # Family with larger savings
-        maximum_purchasing_power = self.looking[0].savings
+        maximum_purchasing_power = looking[0].savings
 
         # Families that can afford to buy, remain on the list
         # Those without funds, try the rental market.
-        [self.purchasing.append(f) if f.savings > minimum_price else self.renting.append(f)
-         for f in self.looking]
+        purchasing, renting = list(), list()
+        [purchasing.append(f) if f.savings > minimum_price else renting.append(f) for f in looking]
 
         # Extract houses to rental market from sales pool
-        self.for_rent = sim.seed.sample(self.on_sale, int(len(self.on_sale) * sim.PARAMS['RENTAL_SHARE']))
-        self.on_sale = [h for h in self.on_sale if h not in self.for_rent]
+        for_rent = sim.seed.sample(self.on_sale, int(len(self.on_sale) * sim.PARAMS['RENTAL_SHARE']))
+        self.on_sale = [h for h in self.on_sale if h not in for_rent]
 
         # Call Rental market ###############################################################
-        if self.renting and self.for_rent:
-            self.rental.rental_market(self.renting, sim, self.for_rent)
+        if renting and for_rent:
+            self.rental.rental_market(renting, sim, for_rent)
 
         # Continue procedures for purchasing market
         self.on_sale = [h for h in self.on_sale if h.price < maximum_purchasing_power]
 
         # Second check. If empty lists, stop procedure
-        if not self.purchasing or not self.on_sale:
+        if not purchasing or not self.on_sale:
             return
 
         # For each family
         # Necessary to save in another list because you cannot delete an element while iterating over the list
 
-        for family in self.purchasing:
+        for family in purchasing:
             for house in self.on_sale:
                 s = family.savings
                 p = house.price

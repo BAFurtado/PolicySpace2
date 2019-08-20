@@ -43,9 +43,8 @@ class Family:
         house.family_id = self.id
 
     def move_out(self):
-        if self.house is not None:
-            self.house.empty()
-            self.house = None
+        self.house.empty()
+        self.house = None
 
     @property
     def address(self):

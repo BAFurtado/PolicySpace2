@@ -71,16 +71,19 @@ def die(sim, agent):
         # TODO Transfer savings for offsprings
         # agent.family.grab_savings()
         # Save houses of empty family
-        inheritance = agent.family.owned_houses
-        agent.family.move_out()
+        id = agent.family.id
+        inheritance = [h for h in sim.houses.values() if h.owner_id == id]
+        to_empty = [h for h in sim.houses.values() if h.family_id == id]
+        for each in to_empty:
+            each.family_id = None
         # Make houses vacant
         for h in inheritance:
             h.owner_id = None
             agent.family.owned_houses.remove(h)
 
         # Eliminate families with no members
-        f_id = agent.family.id
-        del sim.families[f_id]
+        id = agent.family.id
+        del sim.families[id]
 
         # Redistribute houses of empty family
         sim.generator.randomly_assign_houses(inheritance, sim.families.values())

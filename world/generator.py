@@ -110,8 +110,8 @@ class Generator:
             rental_size = int((1 - conf.PARAMS['RENTAL_SHARE']) * len(regional_houses))
 
             # Do not allocate all houses to families. Some families (parameter) will have to rent
-            purchasing_families = self.allocate_to_households(dict(list(regional_families.items())[:rental_size]),
-                                                            dict(list(regional_houses.items())[:rental_size]))
+            regional_families.update(self.allocate_to_households(dict(list(regional_families.items())[:rental_size]),
+                                                                 dict(list(regional_houses.items())[:rental_size])))
 
             # Set ownership of remaining houses for random families
             self.randomly_assign_houses(regional_houses.values(), regional_families.values())
@@ -131,6 +131,11 @@ class Generator:
 
             for firm in regional_firms.keys():
                 my_firms[firm] = regional_firms[firm]
+
+            try:
+                assert len([h for h in regional_houses.values() if h.owner_id is None]) == 0
+            except AssertionError:
+                print('stop nao tem dono')
 
         return my_agents, my_houses, my_families, my_firms
 
