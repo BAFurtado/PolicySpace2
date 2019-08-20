@@ -195,77 +195,44 @@ def marriage(sim):
     sim.seed.shuffle(to_marry)
     to_marry = iter(to_marry)
     for a, b in zip(to_marry, to_marry):
-        a_is_alone = a.family.num_members == 1
-        b_is_alone = b.family.num_members == 1
-        if a_is_alone:
-            # If both a and b are alone, one moves in with the other the other family is deleted
-            # and the house ownership transfers to a's family.
-            if b_is_alone:
-                moving_process(a, b, sim)
 
-            # If a is alone and b is not,
-            else:
-                # Check there is no children left behind
-                check_children(a, b, sim)
-
-        # # If b is alone and a is not, a moves in with b.
-        elif b_is_alone:
-            check_children(b, a, sim)
-
-        # # If neither a and b are alone, they form a new family and get a new house.
+        # STARTING OVER
+        # Characterizing family
+        # If both families have other adults, the ones getting married leave family and make a new one
+        a_to_move_out = len([m for m in a.family.members.values() if m.age > 21]) >= 2
+        b_to_move_out = len([m for m in b.family.members.values() if m.age > 21]) >= 2
+        if a_to_move_out and b_to_move_out:
+            new_family = list(sim.generator.create_families(1).values())[0]
+            a.family.remove_agent(a)
+            b.family.remove_agent(b)
+            new_family.add_agent(a)
+            new_family.add_agent(b)
+            sim.families[new_family.id] = new_family
+            sim.housing.rental.rental_market([new_family], sim)
+            a_region_id = a.family.region_id
+            b_region_id = b.family.region_id
+            sim.update_pop(a_region_id, a.region_id)
+            sim.update_pop(b_region_id, b.region_id)
+        elif b_to_move_out:
+            b.family.remove_agent(b)
+            a.family.add_agent(b)
+        elif a_to_move_out:
+            a.family.remove_agent(a)
+            b.family.add_agent(a)
         else:
-            adults_a = [m for m in a.family.members.values() if m.age > 21]
-            adults_b = [m for m in b.family.members.values() if m.age > 21]
-            if (len(adults_a) >= 2) and (len(adults_b) >= 2):
-                new_family(a, b, sim)
-            elif len(adults_a) >= 2:
-                moving_process(b, a, sim)
-            else:
-                moving_process(a, b, sim)
-
-
-def new_family(a, b, sim):
-    new_family = list(sim.generator.create_families(1).values())[0]
-    a.family.remove_agent(a)
-    b.family.remove_agent(b)
-    new_family.add_agent(a)
-    new_family.add_agent(b)
-    sim.families[new_family.id] = new_family
-    sim.housing.rental.rental_market([new_family], sim)
-    a_region_id = a.family.region_id
-    b_region_id = b.family.region_id
-    sim.update_pop(a_region_id, a.region_id)
-    sim.update_pop(b_region_id, b.region_id)
-
-
-def moving_process(a, b, sim):
-    # b moves into a
-    houses = b.family.owned_houses
-    # Transfer ownership, if any
-    for house in houses:
-        sim.families[b.family.id].owned_houses.remove(house)
-        house.owner_id = a.family.id
-        sim.families[a.family.id].owned_houses.append(house)
-    old_r_id = b.region_id
-    b.family.move_out()
-    id = b.family.id
-    sim.update_pop(old_r_id, b.region_id)
-    members = list(b.family.members.values()).copy()
-    for m in members:
-        b.family.remove_agent(m)
-        a.family.add_agent(m)
-    del sim.families[id]
-
-
-def check_children(a, b, sim):
-    # Checking family b
-    adults = [m for m in b.family.members.values() if m.age > 21]
-    if len(adults) >= 2:
-        # b moves in with a
-        old_r_id = b.region_id
-        b.family.remove_agent(b)
-        a.family.add_agent(b)
-        sim.update_pop(old_r_id, b.region_id)
-    else:
-        # a moves in with b
-        moving_process(b, a, sim)
+            # Else adult B and children (if any) move in with A.
+            houses = b.family.owned_houses
+            # Transfer ownership, if any
+            for house in houses:
+                house.owner_id = a.family.id
+                sim.families[b.family.id].owned_houses.remove(house)
+                sim.families[a.family.id].owned_houses.append(house)
+            old_r_id = b.region_id
+            b.family.move_out()
+            id = b.family.id
+            sim.update_pop(old_r_id, b.region_id)
+            moving = b.family.members.values()
+            for each in moving:
+                a.family.add_agent(each)
+            del sim.families[id]
+            assert len([h for h in sim.houses.values() if h.owner_id is None]) == 0

@@ -6,7 +6,7 @@ class RentalMarket:
         self.unoccupied = list()
 
     def update_list(self, sim, to_rent=None):
-        if to_rent:
+        if to_rent is not None:
             self.unoccupied = to_rent
         else:
             self.unoccupied = [h for h in sim.houses.values() if h.family_id is None]
@@ -27,7 +27,7 @@ class RentalMarket:
                         price = house.price * sim.PARAMS['INITIAL_RENTAL_PRICE']
                         sim.housing.make_move(family, house, sim)
                         # Save information of rental on house
-                        house.rental = True
+                        house.rent = True
                         house.rent_data = price, sim.clock.days
                         # This family is done
                         break
@@ -38,7 +38,9 @@ class RentalMarket:
             for f in shortage:
                 new_house = sim.generator.create_houses(1, sim.regions[sim.seed.choice(list(sim.regions.keys()))])
                 sim.generator.allocate_to_households({f.id: f}, new_house)
-                sim.houses.update(new_house)
+                sim.houses[new_house.id] = new_house
+
+        assert len([h for h in sim.houses.values() if h.owner_id is None]) == 0
 
     def collect_rent(self, house, family):
         pass
