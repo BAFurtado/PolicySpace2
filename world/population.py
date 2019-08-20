@@ -221,12 +221,12 @@ def marriage(sim):
             b.family.add_agent(a)
         else:
             # Else adult B and children (if any) move in with A.
-            houses = b.family.owned_houses
+            houses = [h for h in sim.houses.values() if h.owner_id == b.family.id]
             # Transfer ownership, if any
             for house in houses:
                 house.owner_id = a.family.id
-                sim.families[b.family.id].owned_houses.remove(house)
-                sim.families[a.family.id].owned_houses.append(house)
+                b.family.owned_houses.remove(house)
+                a.family.owned_houses.append(house)
             old_r_id = b.region_id
             b.family.move_out()
             id = b.family.id
@@ -238,4 +238,5 @@ def marriage(sim):
             try:
                 assert len([h for h in sim.houses.values() if h.owner_id == id]) == 0
             except AssertionError:
-                print('stop')
+                print('stop', id)
+                sim.generator.randomly_assign_houses([h for h in sim.houses.values() if h.owner_id == id], sim.families.values())

@@ -70,9 +70,9 @@ def die(sim, agent):
     if agent.family.num_members == 1:
         # TODO Transfer savings for offsprings
         # agent.family.grab_savings()
-        agent.family.move_out()
         # Save houses of empty family
-        inheritance = agent.family.owned_houses
+        inheritance = agent.family.owned_houses.copy()
+        agent.family.move_out()
         # Make houses vacant
         for h in inheritance:
             h.owner_id = None

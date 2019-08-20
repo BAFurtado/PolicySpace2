@@ -138,11 +138,11 @@ class Generator:
 
     def randomly_assign_houses(self, houses, families):
         families = list(families)
+        houses = [h for h in houses if h.owner_id is None]
         for house in houses:
-            if house.owner_id is None:
-                family = self.seed.choice(families)
-                house.owner_id = family.id
-                family.owned_houses.append(house)
+            family = self.seed.choice(families)
+            house.owner_id = family.id
+            family.owned_houses.append(house)
 
     def create_agents(self, region):
         agents = {}
