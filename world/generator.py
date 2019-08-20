@@ -132,8 +132,6 @@ class Generator:
             for firm in regional_firms.keys():
                 my_firms[firm] = regional_firms[firm]
 
-        assert len(my_houses) == len(set(my_houses))
-        assert len(my_families) == len(set(my_families))
         return my_agents, my_houses, my_families, my_firms
 
     def randomly_assign_houses(self, houses, families):

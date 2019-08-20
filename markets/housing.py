@@ -119,7 +119,6 @@ class HousingMarket:
 
                     # This family has solved its problem. Go to next family
                     break
-        assert len([h for h in sim.houses.values() if h.owner_id is None]) == 0
 
     def decision(self, family, sim):
         """A family decides which house to move into"""
