@@ -48,7 +48,7 @@ FPM_DISTRIBUTION = True
 
 # Families run parameters
 MEMBERS_PER_FAMILY = 2.5                             # (on average)
-HOUSE_VACANCY = .05                                   # percentage of vacant houses
+HOUSE_VACANCY = .1                                   # percentage of vacant houses
 RENTAL_SHARE = .2
 INITIAL_RENTAL_PRICE = .05
 # Definition to simplify population by group age groups(TRUE) or including all ages (FALSE)
@@ -98,4 +98,4 @@ TREASURE_INTO_SERVICES = 1
 # "DF"     -      "BRASILIA"
 
 # Write exactly like the list
-PROCESSING_ACPS = ['IPATINGA']
+PROCESSING_ACPS = ['BRASILIA']

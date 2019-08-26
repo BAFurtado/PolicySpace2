@@ -81,8 +81,8 @@ def firm_growth(sim):
         # its region based on the probabilities we computed
         # and then create the new firm
         for _ in range(growth):
-            region_id = sim.seed.choice(regions, p=region_ps)
-            region = sim.regions[region_id]
+            region_id = sim.seed.choices(regions, weights=region_ps)
+            region = sim.regions[region_id[0]]
             firm = list(sim.generator.create_firms(1, region).values())[0]
             firm.create_product()
             sim.firms[firm.id] = firm

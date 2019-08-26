@@ -20,8 +20,8 @@ PRINT_TIME_CONTROL_IN_TIME_ITERATION = False
 TIME_TO_BE_ELIMINATED = 0.0
 
 # Saving adjustments
-SAVE_SPATIAL_PLOTS = False
-SAVE_PLOTS_FIGURES = False
+SAVE_SPATIAL_PLOTS = True
+SAVE_PLOTS_FIGURES = True
 # If plots should be generated separately
 # for each simulation run or just aggregated
 PLOT_EACH_RUN = False
