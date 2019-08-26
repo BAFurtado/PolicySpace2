@@ -76,6 +76,7 @@ def die(sim, agent):
         to_empty = [h for h in sim.houses.values() if h.family_id == id]
         for each in to_empty:
             each.family_id = None
+            each.rent_data = None
         # Make houses vacant
         for h in inheritance:
             h.owner_id = None

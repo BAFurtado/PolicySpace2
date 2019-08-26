@@ -6,9 +6,13 @@ from .rentmarket import RentalMarket
 
 
 class HousingMarket:
-    def __init__(self, sim):
+    def __init__(self):
         self.rental = RentalMarket()
         self.on_sale = list()
+
+    def process_monthly_rent(self, sim):
+        to_pay_rent = [h for h in sim.houses.values() if h.rent_data is not None]
+        self.rental.collect_rent(to_pay_rent, sim)
 
     def update_on_sale(self, sim):
         for house in sim.houses.values():

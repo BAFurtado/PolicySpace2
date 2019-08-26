@@ -39,5 +39,19 @@ class RentalMarket:
                 sim.generator.allocate_to_households({f.id: f}, new_house)
                 sim.houses[new_house.keys()[0]] = new_house
 
-    def collect_rent(self, house, family):
-        pass
+    def collect_rent(self, houses, sim):
+        for house in houses:
+            rent = house.rent_data[0]
+            tenant = sim.families[house.family_id]
+            landperson = sim.families[house.owner_id]
+            # Collect taxes on transaction
+            taxes = rent * sim.PARAMS['TAX_LABOR']
+            sim.regions[house.region_id].collect_taxes(taxes, 'labor')
+
+            # Withdraw money from family members
+            money = sum(m.grab_money() for m in tenant.members.values())
+            # Deposit change
+            tenant.update_balance(money - rent)
+
+            # Deposit money on selling family
+            landperson.update_balance(rent - taxes)

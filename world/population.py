@@ -231,6 +231,7 @@ def marriage(sim):
                 to_empty = [h for h in sim.houses.values() if h.family_id == id]
                 for each in to_empty:
                     each.family_id = None
+                    each.rent_data = None
 
                 sim.update_pop(old_r_id, b.region_id)
                 moving = b.family.members.values()

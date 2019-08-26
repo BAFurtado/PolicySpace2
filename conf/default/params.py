@@ -23,7 +23,7 @@ WAGE_IGNORE_UNEMPLOYMENT = False
 HIRING_SAMPLE_SIZE = 100
 
 # Percentage of households pursuing new location
-PERCENTAGE_CHECK_NEW_LOCATION = 0.01
+PERCENTAGE_CHECK_NEW_LOCATION = 0.002
 
 # TAXES
 TAX_CONSUMPTION = 3.9E-04
@@ -58,7 +58,7 @@ LIST_NEW_AGE_GROUPS = [6, 12, 17, 25, 35, 45, 65, 100]
 
 # Percentage of actual population to run the simulation
 # Minimum value to run depends on the size of municipality 0,001 is recommended minimum
-PERCENTAGE_ACTUAL_POP = 0.002
+PERCENTAGE_ACTUAL_POP = 0.01
 
 # Consumption_equal: ratio of consumption tax distributed at state level (equal)
 # Fpm: ratio of 'labor' and 'firm' taxes distributed per the fpm ruling
