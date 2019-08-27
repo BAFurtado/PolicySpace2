@@ -198,8 +198,8 @@ def marriage(sim):
         if a.family.id != b.family.id:
             # Characterizing family
             # If both families have other adults, the ones getting married leave family and make a new one
-            a_to_move_out = len([m for m in a.family.members.values() if m.age > 21]) >= 2
-            b_to_move_out = len([m for m in b.family.members.values() if m.age > 21]) >= 2
+            a_to_move_out = len([m for k, m in a.family.members.items() if m.age > 21]) >= 2
+            b_to_move_out = len([m for k, m in b.family.members.items() if m.age > 21]) >= 2
             if a_to_move_out and b_to_move_out:
                 new_family = list(sim.generator.create_families(1).values())[0]
                 a.family.remove_agent(a)
@@ -220,12 +220,16 @@ def marriage(sim):
                 b.family.add_agent(a)
             else:
                 # Else adult B and children (if any) move in with A.
-                houses = [h for h in sim.houses.values() if h.owner_id == b.family.id]
+                houses = [val for key, val in sim.houses.items()
+                          if val.owner_id == b.family.id]
                 # Transfer ownership, if any
                 for house in houses:
-                    house.owner_id = a.family.id
-                    b.family.owned_houses.remove(house)
+                    try:
+                        b.family.owned_houses.remove(house)
+                    except ValueError:
+                        print('stop')
                     a.family.owned_houses.append(house)
+                    house.owner_id = a.family.id
                 old_r_id = b.region_id
                 id = b.family.id
                 to_empty = [h for h in sim.houses.values() if h.family_id == id]

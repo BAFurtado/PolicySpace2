@@ -186,7 +186,7 @@ class Simulation:
         population.immigration(self)
 
         # Adjust families for marriages
-        population.marriage(self)
+        #population.marriage(self)
 
         # Check if house vacancy level is correct,
         # if not, create new houses until it is correct

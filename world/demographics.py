@@ -93,6 +93,7 @@ def die(sim, agent):
 
     if agent.is_employed:
         sim.firms[agent.firm_id].obit(agent)
-    sim.update_pop(agent.region_id, None)
+    if agent.family is not None:
+        sim.update_pop(agent.region_id, None)
     a_id = agent.id
     del sim.agents[a_id]

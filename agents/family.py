@@ -36,6 +36,7 @@ class Family:
         agent.family = self
 
     def remove_agent(self, agent):
+        agent.family = None
         del self.members[agent.id]
 
     def move_in(self, house):
