@@ -34,7 +34,6 @@ class Logger:
         for region in sim.regions.values():
             print(region)
 
-        print(self.clock)
 
     def info(self, msg):
         self.logger.info(msg)

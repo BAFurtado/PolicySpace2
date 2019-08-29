@@ -1,7 +1,9 @@
-import os
-import conf
+import datetime
 import json
+import os
 from collections import defaultdict
+
+import conf
 
 AGENTS_PATH = 'StoragedAgents'
 if not os.path.exists(AGENTS_PATH):
@@ -173,13 +175,16 @@ class Output:
                                                                            agent.address.y if agent.address else None,
                                                                            agent.id, agent.age,
                                                                            agent.qualification, agent.firm_id,
-                                                                           agent.family.id, agent.money, agent.utility,
+                                                                           agent.family.id if agent.family else None,
+                                                                           agent.money, agent.utility,
                                                                            agent.distance))
             for agent in sim.grave]
 
     def save_house_data(self, sim):
         with open(self.houses_path, 'a') as f:
-            [f.write('%s;%d;%f;%f;%.2f;%.2f;%s;%s\n' % (sim.clock.days,
+            if sim.clock.days == datetime.date(2000, 1, 1):
+                f.write('months;id;x;y;size;price;family_id;region_id\n')
+            [f.write('%s;%s;%f;%f;%.2f;%.2f;%s;%s\n' % (sim.clock.days,
                                                                 house.id,
                                                                 house.address.x,
                                                                 house.address.y,
@@ -191,6 +196,8 @@ class Output:
 
     def save_family_data(self, sim):
         with open(self.families_path, 'a') as f:
+            if sim.clock.days == datetime.date(2000, 1, 1):
+                f.write('months;id;x;y;size;price;family_id;region_id\n')
             [f.write('%s;%s;%s;%s;%.2f;%.2f;%s\n' % (sim.clock.days,
                                                             family.id,
                                                             family.house.price if family.house else 0,
@@ -215,7 +222,8 @@ class Output:
         agents = {}
         for agent in sim.agents.values():
             if region_ids is None or any(agent.region_id.startswith(r_id) for r_id in region_ids):
-                agents[agent.id] = (agent.address.x, agent.address.y, agent.family.house.id, agent.firm_id, agent.last_wage)
+                agents[agent.id] = (agent.address.x, agent.address.y, agent.family.house.id, agent.firm_id,
+                                    agent.last_wage)
 
         path = os.path.join(self.transit_path, '{}.json'.format(fname))
         with open(path, 'w') as f:

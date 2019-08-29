@@ -90,9 +90,8 @@ class Agent:
             self.distance = 0
 
     def __repr__(self):
-        return 'Ag. ID: %s, %s, Qual. %s, Age: %s, Money $ %.2f, Firm: %s, Util. %.2f %s at %s' % \
-               (self.id, self.gender, self.qualification, self.age, self.money, self.firm_id, self.utility,
-                self.address, self.region_id)
+        return 'Ag. ID: %s, %s, Qual. %s, Age: %s, Money $ %.2f, Firm: %s, Util. %.2f' % \
+               (self.id, self.gender, self.qualification, self.age, self.money, self.firm_id, self.utility)
 
     def distance_to_firm(self, firm):
         return self.family.house.distance_to_firm(firm)

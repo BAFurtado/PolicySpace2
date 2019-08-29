@@ -21,7 +21,7 @@
 3. Check NEW HOUSES for new families in marriage procedures. Where do you create them? We're just creating a house but they should buy one right?
 4. List endogenous x exogenous mechanisms
 5. Steady state of graphs second half of the period
-6. Include names of columns os csv files. It can't interfere with plotting
+6. Include names of columns os csv files [done for houses, families]. It can't interfere with plotting
 8. Check map visualization for maps that are not full period.
 
 **Final changes**

@@ -31,7 +31,7 @@ The transit model in turn generates private and public transport routes, visuali
 2. Now data is read at the **intraurban** level of 'áreas de ponderação' (census track/block) from IBGE.
 3. There is exogenous migration embedded in the model (creating new houses)
 4. Exogenous growth of firms
-5. Marriage procedures have been added to the model
+5. [Marriage disabled]
 6. Better support for plot formats
 7. House prices (offer) are included into families' wealth and updated every month
 8. Consumption decisions now follow Bielefeld, 2018 and is now a 
@@ -42,7 +42,9 @@ The transit model in turn generates private and public transport routes, visuali
 11. Interest being now paid on families' savings
 12. When no cash available, families can withdraw from savings for consumption (if any at savings) 
 up to permanent income
-12. Internal clock updated to use datetime
+13. Internal clock updated to use datetime
+
+
 
 #### How do I get set up?
 

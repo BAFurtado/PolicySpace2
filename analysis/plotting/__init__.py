@@ -187,7 +187,8 @@ class Plotter:
         """Generate spatial plots"""
         figs = geo.plot(sim, text)
         for name, fig in figs:
-            fig.savefig(os.path.join(self.output_path, 'temp_spatial_plot_{}_{}.{}'.format(name, text, conf.RUN['PLOT_FORMAT'])),
+            fig.savefig(os.path.join(self.output_path,
+                                     'temp_spatial_plot_{}_{}.{}'.format(name, text,conf.RUN['PLOT_FORMAT'])),
                         format=conf.RUN['PLOT_FORMAT'], close=True, verbose=True, dpi=600)
             plt.close(fig) # reset figure
         return plt

@@ -13,31 +13,33 @@ DESCRIPTIVE_STATS_CHOICE = False
 
 # Logging
 PRINT_STATISTICS_AND_RESULTS_DURING_PROCESS = True
-PRINT_FINAL_STATISTICS_ABOUT_AGENTS = False
+PRINT_FINAL_STATISTICS_ABOUT_AGENTS = True
 PRINT_TIME_CONTROL_IN_TIME_ITERATION = False
 
 # Inform numbers in percentage of the period
 TIME_TO_BE_ELIMINATED = 0.0
 
 # Saving adjustments
-SAVE_SPATIAL_PLOTS = True
-SAVE_PLOTS_FIGURES = True
+SAVE_PLOTS_FIGURES = False
+
 # If plots should be generated separately
 # for each simulation run or just aggregated
 PLOT_EACH_RUN = False
+# Spatial plots only works when PLOT_EACH_RUN is True
+SAVE_SPATIAL_PLOTS = False
 # 'png' or 'eps'
 PLOT_FORMAT = 'png'
 PLOT_REGIONAL = False
 
 # Save Agents data
-SAVE_AGENTS_DATA_MONTHLY = False
+SAVE_AGENTS_DATA_MONTHLY = True
 SAVE_AGENTS_DATA_QUARTERLY = False
 SAVE_AGENTS_DATA_ANNUALLY = False
 
 # What extra data (i.e. not necessary plotting) to save
 # Can include: ['agents', 'grave', 'house', 'family']
 # If None, set to empty list: []
-SAVE_DATA = []
+SAVE_DATA = ['house', 'family']
 
 # Average all data (not just general data)
 # across all runs
@@ -55,7 +57,7 @@ LIMIT_SAVED_TRANSIT_REGIONS = None
 STARTING_DAY = datetime.date(2000, 1, 1)
 
 # Maximum running time (restrained by official data) is 30 years,
-TOTAL_DAYS = (datetime.date(2020, 1, 1) - STARTING_DAY).days
+TOTAL_DAYS = (datetime.date(2002, 1, 1) - STARTING_DAY).days
 
 # Force generation of new population
 FORCE_NEW_POPULATION = False
