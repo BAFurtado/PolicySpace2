@@ -127,10 +127,11 @@ class MarriageData:
 
         for gender, key in [('male', 'men'), ('female', 'women')]:
             for row in pd.read_csv('input/marriage_age_{}.csv'.format(key)).itertuples():
-                for age in range(row.low, row.high+1):
+                for age in range(row.low, row.high + 1):
                     self.data[gender][age] = row.percentage
 
     def p_marriage(self, agent):
+        # Probabilities in INPUT table have been adapted to allow marriage only of those 21 or older
         return self.data[agent.gender.lower()].get(agent.age, 0)
 
 
@@ -182,6 +183,7 @@ def immigration(sim):
 
 
 def marriage(sim):
+    ### MARRIAGE NOT WORKING PROPERLY. DISABLE FOR NOW.
     """Adjust families for marriages"""
     to_marry = []
     for agent in sim.agents.values():
@@ -198,8 +200,8 @@ def marriage(sim):
         if a.family.id != b.family.id:
             # Characterizing family
             # If both families have other adults, the ones getting married leave family and make a new one
-            a_to_move_out = len([m for k, m in a.family.members.items() if m.age > 21]) >= 2
-            b_to_move_out = len([m for k, m in b.family.members.items() if m.age > 21]) >= 2
+            a_to_move_out = len([m for m in a.family.members.values() if m.age >= 21]) >= 2
+            b_to_move_out = len([m for m in b.family.members.values() if m.age >= 21]) >= 2
             if a_to_move_out and b_to_move_out:
                 new_family = list(sim.generator.create_families(1).values())[0]
                 a.family.remove_agent(a)
@@ -220,25 +222,16 @@ def marriage(sim):
                 b.family.add_agent(a)
             else:
                 # Else adult B and children (if any) move in with A.
-                houses = [val for key, val in sim.houses.items()
-                          if val.owner_id == b.family.id]
                 # Transfer ownership, if any
-                for house in houses:
-                    try:
-                        b.family.owned_houses.remove(house)
-                    except ValueError:
-                        print('stop')
+                for house in b.family.owned_houses:
+                    b.family.owned_houses.remove(house)
                     a.family.owned_houses.append(house)
                     house.owner_id = a.family.id
                 old_r_id = b.region_id
                 id = b.family.id
-                to_empty = [h for h in sim.houses.values() if h.family_id == id]
-                for each in to_empty:
-                    each.family_id = None
-                    each.rent_data = None
+                b.family.house.empty()
 
                 sim.update_pop(old_r_id, b.region_id)
-                moving = b.family.members.values()
-                for each in moving:
+                for each in b.family.members.values():
                     a.family.add_agent(each)
                 del sim.families[id]
