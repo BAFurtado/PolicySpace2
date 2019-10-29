@@ -26,9 +26,10 @@ class Geography:
     """Manages which ACPs/states/municipalities are used for the simulation"""
     def __init__(self, params):
         # Processing the chosen ACPs
-        self.processing_acps_codes, self.processing_acps, self.states_on_process = process_acps(params['PROCESSING_ACPS'])
+        self.processing_acps_codes, self.processing_acps, self.states_on_process = \
+            process_acps(params['PROCESSING_ACPS'])
 
-        # DATA INPUT: ########################################################################################################
+        # DATA INPUT: ##############################################################
         # ACP list to control the selection of municipalities
         mun_codes = []
 
@@ -44,7 +45,8 @@ class Geography:
         if len(self.processing_acps) > 1:
             list_acps_temp = self.processing_acps[1:]
             for acp_dat in list_acps_temp:
-                ACPs_on_process = pd.concat([ACPs_on_process, ACPS_MUN_CODES.loc[ACPS_MUN_CODES['ACPs'] == acp_dat]], axis=0)
+                ACPs_on_process = pd.concat([ACPs_on_process, ACPS_MUN_CODES.loc[ACPS_MUN_CODES['ACPs'] == acp_dat]],
+                                            axis=0)
 
         self.list_of_acps = [i for i in ACPs_on_process['ACPs'].unique()]
 
@@ -54,4 +56,5 @@ class Geography:
         # Selecting the names for each municipality code
         self.LIST_NAMES_MUN = pd.DataFrame(columns=['cod_name', 'cod_mun', 'state'])
         for mun in self.mun_codes:
-            self.LIST_NAMES_MUN = pd.concat([self.LIST_NAMES_MUN, mun_list.loc[mun_list['cod_mun'] == int(mun)]], axis=0)
+            self.LIST_NAMES_MUN = pd.concat([self.LIST_NAMES_MUN, mun_list.loc[mun_list['cod_mun'] == int(mun)]],
+                                            axis=0)

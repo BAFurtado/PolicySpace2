@@ -18,8 +18,7 @@ class Family:
     def __init__(self, id,
                  balance=0,
                  savings=0,
-                 house=None,
-                 firm_strategy=None):
+                 house=None):
         self.id = id
         self.balance = balance
         self.savings = savings
@@ -27,7 +26,6 @@ class Family:
         self.owned_houses = list()
         self.members = {}
         self.house = house
-        self.firm_strategy = firm_strategy
         self.average_utility = 0
 
     def add_agent(self, agent):

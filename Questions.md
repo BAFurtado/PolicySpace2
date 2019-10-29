@@ -1,28 +1,30 @@
 ###Questions
 
 **Real estate and finance**
-1. What are the mechanisms of transmission from availability and markets (mortgage/rental) to affordability?
-2. Are houses affordable (cost of mortgage/rental prices)?
+1. What are the mechanisms of transmission from availability and markets (mortgage/rental) to affordability? [can we measure that? Changes in parameters lead to (dec)increase in prices by how much?]
+2. Are houses affordable (cost of mortgage/rental prices)? [percentage of pop. spending less than 30%]
 3. How much of your income do you spend with housing: either mortgage or rent? 
-4. **How relevant preference for ownership has to be to topple rental cheaper options?** How much do households prefer ownership? How steady, through a life cycle is this expenditure? How do you adjust to that? 
-5. What is the space of profitability for housing owning or renting given specific cities and macroeconomic parameters?
-6. What are the cross influences among family arrangements, income and the real estate market and housing prices?
+4. **How relevant preference for ownership has to be to topple rental cheaper options?** How much do households prefer ownership [can we account for the monetary value of such preference?]? How steady, through a life cycle is this expenditure? How do you adjust to that? 
+5. What is the space of profitability [the size of gains comparatively to the other option] for housing owning or renting given specific cities and macroeconomic parameters?
+6. What are the cross influences among family arrangements, income and the real estate market and housing prices [description of parameters and average of prices?]?
+
+How to validate?
 
 **Supply and Demand**
 1. Given a shock (such as an increase in the rental market), would the people and economics benefit?
 2. **Given a shock in demand (increase in availability), what are the magnitude of the results**
-2. How much do supply shocks such as migration determine housing prices?
+2. How much do supply shocks such as migration determine housing prices [correlate size of shock and prices]?
 
 **Housing Policy**
 1. ***Should the government subsidize (or regulate) rents?***
-2. Should cities be denser (infrastructure, zoning, supply restrictions)?
+2. Should cities be denser (infrastructure, zoning, supply restrictions) [in terms of density parameter vs prices/affordability?]?
 3. Are there enough houses (developers/financing/families)?
 
 **Transport** 
-1. Test congestion and economic influence of private/public choices
+1. Can we test congestion and economic influence of private/public choices?
 2. Does increase in car ownership changes household spatial locations?
-3. What are the benefits of financing of public transport systems?
-4. How transport efficient affect housing choices?
+3. What are the benef'its of financing of public transport systems?
+4. How transport efficiency affect housing choices?
 
 **Education.**
 1. What is the influence of preferences for education investments?

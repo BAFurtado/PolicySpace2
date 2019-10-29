@@ -16,13 +16,11 @@ This work is licensed under GNU General Public License v3.0
 
 Furtado, B. A. (2019). Modeling tax distribution in metropolitan regions with PolicySpace. Journal on Policy and Complex Systems, 5(1). https://doi.org/10.18278/jpcs.5.1.6
 
-
 #### Repository of produced texts
 https://www.researchgate.net/profile/Bernardo_Furtado
 
 ### Previous collaborator after PolicySpace
 Francis Tseng (automating, general fixtures and improvements, transport, plots, output) [April-July 2018]
-
 
 ### Major changes, since PolicySpace
 
@@ -33,7 +31,7 @@ The transit model in turn generates private and public transport routes, visuali
 4. Exogenous growth of firms
 5. [Marriage disabled]
 6. Better support for plot formats
-7. House prices (offer) are included into families' wealth and updated every month
+7. House prices (supply) are included into families' wealth and updated every month
 8. Consumption decisions now follow Bielefeld, 2018 and is now a 
 "linear function of current and expected future incomes and of financial wealth." In other words, 
 "all income in excess of permanent income will be saved and added to financial wealth."
@@ -43,8 +41,6 @@ The transit model in turn generates private and public transport routes, visuali
 12. When no cash available, families can withdraw from savings for consumption (if any at savings) 
 up to permanent income
 13. Internal clock updated to use datetime
-
-
 
 #### How do I get set up?
 
@@ -162,5 +158,4 @@ python main.py web
 ```
 
 Then open `localhost:5000` in your browser.
-
 ---

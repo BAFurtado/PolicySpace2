@@ -395,7 +395,7 @@ def make_plots(output_dir):
 
 @main.command()
 def web():
-    app.run(debug=True)
+    app.run(debug=False)
 
 
 if __name__ == '__main__':

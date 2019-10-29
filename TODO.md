@@ -1,9 +1,7 @@
 # TODO
 
-**Finalize**
-
 **Enhancements**
-4. Introduce a rental market
+4. Introduce a rental market [check, complete]
 8. Include construction companies. 
 7. Financial (mortgage, credit) market structures
 1. Check credit market (central bank point of view). 
@@ -26,6 +24,7 @@
 
 **Final changes**
 1. Validate real estate market
+2. Validate transport
 
 **Forecasting?**
 1. Imagine we would calibrate the model using half of the data: is there anything the model would be able to tell us about the other half? 
