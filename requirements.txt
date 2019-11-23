@@ -8,7 +8,7 @@ descartes==1.1.0
 Fiona==1.8.4
 Flask==1.0.2
 Flask-WTF==0.14.2
-GDAL==2.3.3
+GDAL==2.2.3
 geopandas==0.4.0
 itsdangerous==1.1.0
 Jinja2==2.10.1
@@ -17,9 +17,6 @@ kiwisolver==1.1.0
 llvmlite==0.29.0
 MarkupSafe==1.1.1
 matplotlib==3.1.0
-mkl-fft==1.0.14
-mkl-random==1.0.2
-mkl-service==2.0.2
 munch==2.3.2
 numba==0.45.0
 numpy==1.16.4
