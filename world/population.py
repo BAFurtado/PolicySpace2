@@ -223,10 +223,13 @@ def marriage(sim):
             else:
                 # Else adult B and children (if any) move in with A.
                 # Transfer ownership, if any
-                for house in b.family.owned_houses:
+                # Copy list, so we don't modify the list as we iterate
+                houses = [h for h in b.family.owned_houses]
+                for house in houses:
                     b.family.owned_houses.remove(house)
                     a.family.owned_houses.append(house)
                     house.owner_id = a.family.id
+
                 old_r_id = b.region_id
                 id = b.family.id
                 b.family.house.empty()
