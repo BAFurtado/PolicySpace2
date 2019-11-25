@@ -118,7 +118,7 @@ def multiple_runs(overrides, runs, cpus, output_dir):
         os.remove(latest_path)
 
     try:
-        os.symlink(output_dir, latest_path)
+        os.symlink(os.path.join('..', output_dir), latest_path)
     except OSError: # Windows requires special permissions to symlink
         pass
 
@@ -168,6 +168,8 @@ def plot(input_paths, output_path, params, styles=None, sim=None):
 
     if conf.RUN['SAVE_PLOTS_FIGURES']:
         plotter.plot_general()
+        plotter.plot_housing()
+        plotter.plot_families()
         if sim is not None and conf.RUN['PLOT_REGIONAL']:
             plotter.plot_regional_stats()
 

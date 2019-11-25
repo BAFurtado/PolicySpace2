@@ -1,4 +1,3 @@
-import datetime
 import json
 import os
 from collections import defaultdict
@@ -182,29 +181,28 @@ class Output:
 
     def save_house_data(self, sim):
         with open(self.houses_path, 'a') as f:
-            if sim.clock.days == datetime.date(2000, 1, 1):
-                f.write('months;id;x;y;size;price;family_id;region_id\n')
-            [f.write('%s;%s;%f;%f;%.2f;%.2f;%s;%s\n' % (sim.clock.days,
+            [f.write('%s;%s;%f;%f;%.2f;%.2f;%f;%s;%s\n' % (sim.clock.days,
                                                                 house.id,
                                                                 house.address.x,
                                                                 house.address.y,
                                                                 house.size,
                                                                 house.price,
+                                                                house.on_market,
                                                                 house.family_id,
                                                                 house.region_id))
             for house in sim.houses.values()]
 
     def save_family_data(self, sim):
         with open(self.families_path, 'a') as f:
-            if sim.clock.days == datetime.date(2000, 1, 1):
-                f.write('months;id;house_price;house_id;house_owner_id;house_family_id;region_id;savings;num_members\n')
-            [f.write('%s;%s;%s;%s;%s;%s;%s;%.2f;%.2f\n' % (sim.clock.days,
+            [f.write('%s;%s;%s;%s;%s;%s;%s;%s;%.2f;%.2f;%.2f\n' % (sim.clock.days,
                                                             family.id,
-                                                            family.house.price if family.house else None,
-                                                            family.house.id if family.house else None,
-                                                            family.house.owner_id if family.house else None,
-                                                            family.house.family_id if family.house else None,
+                                                            family.house.price if family.house else '',
+                                                            family.house.rent_data[0] if family.house.rent_data else '',
+                                                            family.house.id if family.house else '',
+                                                            family.house.owner_id if family.house else '',
+                                                            family.house.family_id if family.house else '',
                                                             family.region_id,
+                                                            family.total_wage(),
                                                             family.savings,
                                                             family.num_members))
             for family in sim.families.values()]

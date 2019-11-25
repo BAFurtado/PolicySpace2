@@ -21,7 +21,11 @@ class HousingMarket:
 
             if not house.is_occupied:
                 if house not in self.on_sale:
+                    house.on_market = 0
                     self.on_sale.append(house)
+                else:
+                    house.on_market += 1
+
         # Ranking houses by price and families by saving
         # Sorting. Those houses cheaper first
         self.on_sale.sort(key=lambda h: h.price, reverse=True)
@@ -110,6 +114,7 @@ class HousingMarket:
                     sim.families[house.owner_id].owned_houses.remove(house)
                     house.owner_id = family.id
                     family.owned_houses.append(house)
+                    house.on_market = 0
 
                     # Decision on moving
                     self.decision(family, sim)
