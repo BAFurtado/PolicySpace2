@@ -24,7 +24,7 @@ class Output:
     """Manages simulation outputs"""
 
     def __init__(self, sim, output_path):
-        files = ['stats', 'regional', 'time', 'firms',
+        files = ['stats', 'regional', 'time', 'firms', 'banks',
                  'houses', 'agents', 'families', 'grave']
 
         self.sim = sim
@@ -141,6 +141,7 @@ class Output:
         # firms data is necessary for plots,
         # so always save
         self.save_firms_data(sim)
+        self.save_banks_data(sim)
 
         for type in conf.RUN['SAVE_DATA']:
             save_fn = getattr(self, 'save_{}_data'.format(type))
@@ -206,6 +207,12 @@ class Output:
                                                             family.savings,
                                                             family.num_members))
             for family in sim.families.values()]
+
+    def save_banks_data(self, sim):
+        bank = sim.central
+        with open(self.banks_path, 'a') as f:
+            f.write('%s; %.3f; %.3f; %.3f \n' %
+                            (sim.clock.days, bank.taxes, bank.balance, bank.total_deposits()))
 
     def save_transit_data(self, sim, fname):
         region_ids = conf.RUN['LIMIT_SAVED_TRANSIT_REGIONS']
