@@ -1,4 +1,3 @@
-import datetime
 import json
 import os
 from collections import defaultdict
@@ -25,7 +24,7 @@ class Output:
     """Manages simulation outputs"""
 
     def __init__(self, sim, output_path):
-        files = ['stats', 'regional', 'time', 'firms',
+        files = ['stats', 'regional', 'time', 'firms', 'banks',
                  'houses', 'agents', 'families', 'grave']
 
         self.sim = sim
@@ -142,6 +141,7 @@ class Output:
         # firms data is necessary for plots,
         # so always save
         self.save_firms_data(sim)
+        self.save_banks_data(sim)
 
         for type in conf.RUN['SAVE_DATA']:
             save_fn = getattr(self, 'save_{}_data'.format(type))
@@ -182,32 +182,37 @@ class Output:
 
     def save_house_data(self, sim):
         with open(self.houses_path, 'a') as f:
-            if sim.clock.days == datetime.date(2000, 1, 1):
-                f.write('months;id;x;y;size;price;family_id;region_id\n')
-            [f.write('%s;%s;%f;%f;%.2f;%.2f;%s;%s\n' % (sim.clock.days,
+            [f.write('%s;%s;%f;%f;%.2f;%.2f;%f;%s;%s\n' % (sim.clock.days,
                                                                 house.id,
                                                                 house.address.x,
                                                                 house.address.y,
                                                                 house.size,
                                                                 house.price,
+                                                                house.on_market,
                                                                 house.family_id,
                                                                 house.region_id))
             for house in sim.houses.values()]
 
     def save_family_data(self, sim):
         with open(self.families_path, 'a') as f:
-            if sim.clock.days == datetime.date(2000, 1, 1):
-                f.write('months;id;house_price;house_id;house_owner_id;house_family_id;region_id;savings;num_members\n')
-            [f.write('%s;%s;%s;%s;%s;%s;%s;%.2f;%.2f\n' % (sim.clock.days,
+            [f.write('%s;%s;%s;%s;%s;%s;%s;%s;%.2f;%.2f;%.2f\n' % (sim.clock.days,
                                                             family.id,
-                                                            family.house.price if family.house else None,
-                                                            family.house.id if family.house else None,
-                                                            family.house.owner_id if family.house else None,
-                                                            family.house.family_id if family.house else None,
+                                                            family.house.price if family.house else '',
+                                                            family.house.rent_data[0] if family.house.rent_data else '',
+                                                            family.house.id if family.house else '',
+                                                            family.house.owner_id if family.house else '',
+                                                            family.house.family_id if family.house else '',
                                                             family.region_id,
+                                                            family.total_wage(),
                                                             family.savings,
                                                             family.num_members))
             for family in sim.families.values()]
+
+    def save_banks_data(self, sim):
+        bank = sim.central
+        with open(self.banks_path, 'a') as f:
+            f.write('%s; %.3f; %.3f; %.3f \n' %
+                            (sim.clock.days, bank.taxes, bank.balance, bank.total_deposits()))
 
     def save_transit_data(self, sim, fname):
         region_ids = conf.RUN['LIMIT_SAVED_TRANSIT_REGIONS']

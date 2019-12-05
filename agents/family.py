@@ -85,6 +85,9 @@ class Family:
         if self.savings > liquid_money:
             bank.deposit(self, self.savings - liquid_money, datetime.date(y, m, 1))
 
+    def total_wage(self):
+        return sum(member.last_wage for member in self.members.values() if member.last_wage is not None)
+
     def human_capital(self, r):
         # Using retiring age minus current age as exponent s
         # Using last wage available as base for permanent income calculus

@@ -63,6 +63,9 @@ class Central:
                    for i in range(len(self.wallet[client]))
                    if i % 2 == 0])
 
+    def total_deposits(self):
+        return sum(v[0] for v in self.wallet.values())
+
 
 class Bank(Central):
     """ Market banks

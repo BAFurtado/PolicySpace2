@@ -46,10 +46,8 @@ class Plotter:
         if clear:
             plt.close(fig) # reset figure
 
-    def make_plot(self, datas, title, years_division, labels=None, y_label=None):
+    def make_plot(self, datas, title, labels, y_label=None):
         """Create plot based on input data"""
-        years = [int(i/12) for i in years_division]
-
         # Annotate title with percentage of actual population used
         p_pop = self.params.get('PERCENTAGE_ACTUAL_POP', conf.PARAMS['PERCENTAGE_ACTUAL_POP'])
         title = '{}\nAgents : {}% of Population'.format(title, p_pop * 100)
@@ -58,15 +56,10 @@ class Plotter:
         for d, style in zip(datas, self.styles):
             plot = d.plot(style=style)
 
-        # Apply default or override labels
-        labels = self.labels if labels is None else labels
-
         # Create the plot
         plot.legend(loc='best', ncol=3, fancybox=True, shadow=False, framealpha=.25, labels=labels)
         plot.set_title(title)
-        plot.set_xticks(years_division)
-        plot.set_xticklabels(years)
-        plot.set_xlabel('Years')
+        plot.set_xlabel('Time')
         if y_label is not None:
             plot.set_ylabel(y_label)
         # plot.set_axis_bgcolor('w')
@@ -85,15 +78,12 @@ class Plotter:
         return dat
 
     def _prepare_datas(self, fname, columns):
-        dats = [self._prepare_data(os.path.join(path, fname), columns) for path in self.input_paths]
-        # Formatting the list of values for X axis
-        # Assume this is equivalent for all supplied datasets
-        dat = dats[-1]
-        years_division = list(range(0, len(dat['month']), 12))
-        return dats, years_division
+        paths = [(label, os.path.join(path, fname)) for label, path in zip(self.labels, self.input_paths)]
+        labels, dats = zip(*[(label, self._prepare_data(path, columns)) for label, path in paths if os.path.exists(path)])
+        return labels, dats
 
     def plot_general(self):
-        dats, years_division = self._prepare_datas(
+        labels, dats = self._prepare_datas(
             'temp_stats.csv',
             ['month', 'price_index', 'gdp_index', 'gdp_growth', 'unemployment', 'average_workers',
              'families_wealth', 'families_savings', 'firms_wealth', 'firms_profit', 'gini_index',
@@ -111,11 +101,106 @@ class Plotter:
 
         # General plotting
         for col, title in zip(cols, titles):
-            fig = self.make_plot([d[col] for d in dats], title, years_division)
+            fig = self.make_plot([d[col] for d in dats], title, labels)
             self.save_fig(fig, 'temp_general_{}'.format(title))
 
+    def plot_banks(self):
+        labels, dats = self._prepare_datas(
+            'temp_banks.csv',
+            ['month', 'taxes', 'balance', 'deposits']
+        )
+        cols = ['taxes', 'balance', 'deposits']
+        titles = ['Bank taxes paid', 'Bank balance', 'Bank deposits']
+        for col, title in zip(cols, titles):
+            fig = self.make_plot([d[col] for d in dats], title, labels)
+            self.save_fig(fig, 'temp_banks_{}'.format(title))
+
+    def plot_housing(self):
+        labels, dats = self._prepare_datas(
+            'temp_houses.csv',
+            ['month', 'id', 'x', 'y', 'size', 'price', 'on_market', 'family_id', 'region_id']
+        )
+
+        to_plot = {
+            'price': {
+                'title': 'Mean house prices by month',
+                'name': 'prices'
+            },
+            'on_market': {
+                'title': 'Mean house time on market by month',
+                'name': 'time_on_market'
+            }
+        }
+        for k, d in to_plot.items():
+            title = d['title']
+            name = d['name']
+            dats_to_plot = []
+            for d in dats:
+                df = d.groupby(['month', 'region_id'], as_index=False).mean()
+                dat_to_plot = df.pivot(index='month', columns='region_id', values=k).astype(float)
+                dats_to_plot.append(dat_to_plot)
+
+            # TODO Region ids don't seem correct?
+            # names_mun = [mun_codes[v] for v in list(dats_to_plot[0].columns.values)]
+            names_mun = list(dats_to_plot[0].columns.values)
+            fig = self.make_plot(dats_to_plot, title, labels=names_mun, y_label='Mean {}'.format(name))
+            self.save_fig(fig, 'temp_houses_{}'.format(name))
+
+    def plot_families(self):
+        labels, dats = self._prepare_datas(
+            'temp_families.csv',
+            ['month', 'id', 'house_price', 'house_rent', 'house_id', 'house_owner_id', 'house_family_id', 'region_id', 'total_wage', 'savings', 'num_members']
+        )
+
+        for df in dats:
+            df['renting'] = pd.notna(df['house_rent'])
+            df['income_towards_rent'] = df['house_rent']/df['total_wage']
+            df['affordable_rent'] = (df['income_towards_rent'] <= 0.3) | (pd.isna(df['income_towards_rent']))
+
+        to_plot = {
+            'house_rent': {
+                'title': 'Mean rent by month',
+                'name': 'rents'
+            },
+            'total_wage': {
+                'title': 'Mean total wage by month',
+                'name': 'total_wages'
+            },
+            'savings': {
+                'title': 'Mean savings by month',
+                'name': 'savings'
+            },
+            'affordable_rent': {
+                'title': 'Mean affordability by month',
+                'name': 'affordable'
+            },
+            'income_towards_rent': {
+                'title': 'Mean rent as share of income by month',
+                'name': 'rent_shares'
+            },
+            'renting': {
+                'title': 'Mean is renting by month',
+                'name': 'renting'
+            }
+        }
+        for k, d in to_plot.items():
+            title = d['title']
+            name = d['name']
+            dats_to_plot = []
+            for d in dats:
+                df = d.groupby(['month', 'region_id'], as_index=False).mean()
+                dat_to_plot = df.pivot(index='month', columns='region_id', values=k).astype(float)
+                dats_to_plot.append(dat_to_plot)
+
+            # TODO Region ids don't seem correct?
+            # names_mun = [mun_codes[v] for v in list(dats_to_plot[0].columns.values)]
+            names_mun = list(dats_to_plot[0].columns.values)
+            fig = self.make_plot(dats_to_plot, title, labels=names_mun, y_label='Mean {}'.format(name))
+            self.save_fig(fig, 'temp_families_{}'.format(name))
+
+
     def plot_regional_stats(self):
-        dats, years_division = self._prepare_datas(
+        labels, dats = self._prepare_datas(
             'temp_regional.csv',
             ['month', 'region_id', 'commuting', 'pop', 'gdp_region', 'regional_gini', 'regional_house_values',
             'regional_unemployment', 'qli_index', 'gdp_percapita', 'treasure', 'equally', 'locally', 'fpm']
@@ -125,7 +210,7 @@ class Plotter:
         title = 'Evolution of commute by region, monthly'
         dats_to_plot = [d.pivot(index='month', columns='region_id', values='commuting') for d in dats]
         names_mun = [mun_codes[v] for v in list(dats_to_plot[0].columns.values)]
-        fig = self.make_plot(dats_to_plot, title, years_division, labels=names_mun, y_label='Regional commute')
+        fig = self.make_plot(dats_to_plot, title, labels=names_mun, y_label='Regional commute')
         self.save_fig(fig, 'temp_regional_evolution_of_commute')
 
         cols = ['gdp_region', 'regional_gini', 'regional_house_values',
@@ -136,7 +221,7 @@ class Plotter:
         for col, title in zip(cols, titles):
             title = 'Evolution of {} by region, monthly'.format(title)
             dats_to_plot = [d.pivot(index='month', columns='region_id', values=col).astype(float) for d in dats]
-            fig = self.make_plot(dats_to_plot, title, years_division, labels=names_mun, y_label='Regional {}'.format(title))
+            fig = self.make_plot(dats_to_plot, title, labels=names_mun, y_label='Regional {}'.format(title))
             self.save_fig(fig, 'temp_regional_{}'.format(title))
 
         # Plotting
@@ -145,11 +230,11 @@ class Plotter:
 
         for i in taxes:
             dats_to_plot = [d.groupby(by=['month']).sum()[i] for d in dats]
-            fig = self.make_plot(dats_to_plot, 'Evolution of Taxes', years_division, labels=taxes_labels, y_label='Total Taxes')
+            fig = self.make_plot(dats_to_plot, 'Evolution of Taxes', labels=taxes_labels, y_label='Total Taxes')
         self.save_fig(fig, 'temp_TAXES')
 
     def plot_firms_diagnosis(self):
-        dats, years_division = self._prepare_datas(
+        labels, dats = self._prepare_datas(
             'temp_firms.csv',
             ['month', 'firm_id', 'region_id', 'long', 'lat', 'total_balance$', 'number_employees',
             'stocks', 'amount_produced', 'price', 'amount_sold', 'revenue', 'profit', 'wages_paid']
@@ -159,7 +244,7 @@ class Plotter:
         titles = ['Cumulative sum of amount produced by firm, by month', 'Price values by firm, by month']
         for col, title in zip(cols, titles):
             dats_to_plot = [d.pivot(index='month', columns='firm_id', values=col).astype(float) for d in dats]
-            fig = self.make_plot(dats_to_plot, title, years_division, y_label='Values in units')
+            fig = self.make_plot(dats_to_plot, title, labels, y_label='Values in units')
             self.save_fig(fig, 'temp_general_{}'.format(col))
 
         # Median of number of employees by firm, by region
@@ -170,7 +255,7 @@ class Plotter:
             dat_to_plot = firms_stats.pivot(index='month', columns='region_id', values='number_employees').astype(float)
             dats_to_plot.append(dat_to_plot)
         names_mun = [mun_codes[v] for v in list(dats_to_plot[0].columns.values)]
-        fig = self.make_plot(dats_to_plot, title, years_division, labels=names_mun, y_label='Median of employees')
+        fig = self.make_plot(dats_to_plot, title, labels=names_mun, y_label='Median of employees')
         self.save_fig(fig, 'temp_general_median_number_of_employees_by_firm_index')
 
         # Mean of number of employees by firm, by region
@@ -180,7 +265,7 @@ class Plotter:
             firms_stats = d.groupby(['month', 'region_id'], as_index=False).mean()
             dat_to_plot = firms_stats.pivot(index='month', columns='region_id', values='number_employees').astype(float)
             dats_to_plot.append(dat_to_plot)
-        fig = self.make_plot(dats_to_plot, title, years_division, labels=names_mun, y_label='Mean of employees')
+        fig = self.make_plot(dats_to_plot, title, labels=names_mun, y_label='Mean of employees')
         self.save_fig(fig, 'temp_general_mean_number_of_employees_by_firm_index')
 
     def plot_geo(self, sim, text):
