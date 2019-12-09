@@ -183,7 +183,6 @@ def immigration(sim):
 
 
 def marriage(sim):
-    ### MARRIAGE NOT WORKING PROPERLY. DISABLE FOR NOW.
     """Adjust families for marriages"""
     to_marry = []
     for agent in sim.agents.values():
@@ -208,6 +207,8 @@ def marriage(sim):
                 b.family.remove_agent(b)
                 new_family.add_agent(a)
                 new_family.add_agent(b)
+                new_family.relatives.add(a.id)
+                new_family.relatives.add(b.id)
                 sim.families[new_family.id] = new_family
                 sim.housing.rental.rental_market([new_family], sim)
                 a_region_id = a.family.region_id

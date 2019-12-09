@@ -68,8 +68,6 @@ def die(sim, agent):
 
     # This makes the house vacant if all members of a given family have passed
     if agent.family.num_members == 1:
-        # TODO Transfer savings for offsprings
-        # agent.family.grab_savings()
         # Save houses of empty family
         id = agent.family.id
         inheritance = [h for h in sim.houses.values() if h.owner_id == id]
@@ -86,8 +84,27 @@ def die(sim, agent):
         id = agent.family.id
         del sim.families[id]
 
-        # Redistribute houses of empty family
-        sim.generator.randomly_assign_houses(inheritance, sim.families.values())
+        savings = agent.family.grab_savings(sim.central, sim.clock.year, (sim.clock.months % 12)+1)
+        relatives = [sim.families[i] for i in agent.family.relatives if i in sim.families]
+
+        # Redistribute houses, debt, and savings of empty family
+        if relatives:
+            sim.generator.randomly_assign_houses(inheritance, relatives)
+
+            # Distribute savings equally
+            savings_per_relative = savings/len(relatives)
+            for f in relatives:
+                f.update_balance(savings_per_relative)
+
+            # Distribute debt
+            if id in sim.central.loans:
+                f = relatives[0]
+                loans = sim.central.loans.pop(id)
+                sim.central.loans[f.id] = loans
+
+        else:
+            # Assign randomly
+            sim.generator.randomly_assign_houses(inheritance, sim.families.values())
     else:
         agent.family.remove_agent(agent)
 

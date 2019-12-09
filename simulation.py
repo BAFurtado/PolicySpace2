@@ -269,6 +269,9 @@ class Simulation:
         for house in self.houses.values():
             house.pay_property_tax(self)
 
+        # Collect loan repayments
+        self.central.collect_loan_payments(self.families)
+
         self.logger.log_time('HOUSE MARKET', self.timer, self.clock.months)
         self.output.times.append(self.timer.elapsed())
 
