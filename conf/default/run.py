@@ -37,9 +37,9 @@ SAVE_AGENTS_DATA_QUARTERLY = False
 SAVE_AGENTS_DATA_ANNUALLY = False
 
 # What extra data (i.e. not necessary plotting) to save
-# Can include: ['agents', 'grave', 'house', 'family']
+# Can include: ['agents', 'grave', 'house', 'family', 'banks']
 # If None, set to empty list: []
-SAVE_DATA = ['house', 'family']
+SAVE_DATA = ['house', 'family', 'banks']
 
 # Average all data (not just general data)
 # across all runs

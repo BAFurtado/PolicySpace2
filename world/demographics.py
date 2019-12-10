@@ -105,6 +105,11 @@ def die(sim, agent):
         else:
             # Assign randomly
             sim.generator.randomly_assign_houses(inheritance, sim.families.values())
+
+            # Delete debt
+            # TODO should we do something different with it?
+            if id in sim.central.loans:
+                del sim.central.loans[id]
     else:
         agent.family.remove_agent(agent)
 
@@ -112,5 +117,7 @@ def die(sim, agent):
         sim.firms[agent.firm_id].obit(agent)
     if agent.family is not None:
         sim.update_pop(agent.region_id, None)
+
     a_id = agent.id
     del sim.agents[a_id]
+

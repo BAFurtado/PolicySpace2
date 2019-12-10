@@ -165,6 +165,9 @@ def immigration(sim):
 
         # Keep track of new agents & families
         for f in new_families.values():
+            # Not all families might get members, skip those
+            if not f.members: continue
+
             sim.families[f.id] = f
 
             # Create and assign homes
@@ -235,7 +238,20 @@ def marriage(sim):
                 id = b.family.id
                 b.family.house.empty()
 
+                # Move out of existing rental
+                for house in sim.houses.values():
+                    if house.family_id == id:
+                        house.family_id = None
+                        house.rent_data = None
+
                 sim.update_pop(old_r_id, b.region_id)
                 for each in b.family.members.values():
                     a.family.add_agent(each)
+
+                savings = b.family.grab_savings(sim.central, sim.clock.year, (sim.clock.months % 12)+1)
+                a.family.update_balance(savings)
+                if id in sim.central.loans:
+                    loans = sim.central.loans.pop(id)
+                    sim.central.loans[a.family.id] = loans
+
                 del sim.families[id]

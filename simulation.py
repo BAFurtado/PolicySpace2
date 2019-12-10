@@ -207,11 +207,18 @@ class Simulation:
         self.logger.log_time('FIRMS INITIALIZATION', self.timer, self.clock.months)
         self.output.times.append(self.timer.elapsed())
 
+        # Collect loan repayments
+        self.timer.start()
+        self.central.collect_loan_payments(self)
+        self.logger.log_time('LOAN REPAYMENTS', self.timer, self.clock.months)
+        self.output.times.append(self.timer.elapsed())
+
         # FAMILIES CONSUMPTION
         # Equalize money within family members
         # Tax firms when doing sales
         self.timer.start()
         markets.goods.consume(self)
+
 
         for fam in self.families.values():
             fam.invest(self.PARAMS['INTEREST_RATE'], self.central, present_year, (present_month % 12) + 1)
@@ -268,9 +275,6 @@ class Simulation:
         self.housing.process_monthly_rent(self)
         for house in self.houses.values():
             house.pay_property_tax(self)
-
-        # Collect loan repayments
-        self.central.collect_loan_payments(self.families)
 
         self.logger.log_time('HOUSE MARKET', self.timer, self.clock.months)
         self.output.times.append(self.timer.elapsed())
