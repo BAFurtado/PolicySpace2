@@ -25,6 +25,7 @@ class Family:
         self.wealth = None
         self.owned_houses = list()
         self.members = {}
+        self.relatives = set()
         self.house = house
         self.average_utility = 0
 
@@ -68,11 +69,11 @@ class Family:
             for member in self.members.values():
                 member.money += per_member
 
-    def grab_savings(self, central, y, m):
+    def grab_savings(self, bank, y, m):
         """Withdraws total available balance of the family"""
         s = self.savings
         self.savings = 0
-        s += central.withdraw(self, y, m)
+        s += bank.withdraw(self, y, m)
         return s
 
     def get_wealth(self):

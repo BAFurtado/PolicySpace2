@@ -107,10 +107,15 @@ class Plotter:
     def plot_banks(self):
         labels, dats = self._prepare_datas(
             'temp_banks.csv',
-            ['month', 'taxes', 'balance', 'deposits']
+            ['month', 'taxes', 'balance', 'deposits',
+             'active_loans', 'p_delinquent_loans',
+             'mean_loan_age', 'min_loan', 'max_loan', 'mean_loan']
         )
-        cols = ['taxes', 'balance', 'deposits']
-        titles = ['Bank taxes paid', 'Bank balance', 'Bank deposits']
+        cols = ['taxes', 'balance', 'deposits',
+                'active_loans', 'p_delinquent_loans',
+                'mean_loan_age', 'mean_loan']
+        titles = ['Bank taxes paid', 'Bank balance', 'Bank deposits', 'Bank active loans',
+                  'Bank p delinquent loans', 'Bank mean loan age', 'Bank mean loan amount']
         for col, title in zip(cols, titles):
             fig = self.make_plot([d[col] for d in dats], title, labels)
             self.save_fig(fig, 'temp_banks_{}'.format(title))

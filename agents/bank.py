@@ -5,10 +5,29 @@
     """
 import datetime
 from collections import defaultdict
-from functools import partial
 from numpy import fv
 
 import conf
+
+
+class Loan:
+    def __init__(self, principal, interest_rate, payment):
+        self.age = 0
+        self.principal = principal
+        self.balance = principal * (1+interest_rate)
+        self.payment = payment
+
+        self.paid_off = False
+        self.delinquent = False
+
+    def pay(self, amount):
+        self.balance -= amount
+        if amount < self.payment:
+            self.delinquent = True
+
+        # Fully paid off
+        self.paid_off = self.balance <= 0
+        return self.paid_off
 
 
 class Central:
@@ -20,21 +39,23 @@ class Central:
         self.id = id_
         self.balance = 0
         self.interest = conf.PARAMS['INTEREST_RATE']
-        self.wallet = defaultdict(partial(defaultdict, float, datetime))
+        self.wallet = defaultdict(list)
         self.taxes = 0
+
+        # Track remaining loan balances
+        self.loans = defaultdict(list)
 
     def pay_interest(self, client, y, m):
         """ Updates interest to the client
         """
         # Compute future values
         interest = 0
-        for i in range(len(self.wallet[client])):
-            if i % 2 == 0:
-                interest += fv(self.interest/12,
-                               (datetime.date(y, m, 1) - self.wallet[client][i + 1]).days // 30,
-                               0,
-                               self.wallet[client][i] * -1)
-                interest -= self.wallet[client][i]
+        for amount, date in self.wallet[client]:
+            interest += fv(self.interest/12,
+                            (datetime.date(y, m, 1) - date).days // 30,
+                            0,
+                            amount * -1)
+            interest -= amount
 
         # Compute taxes
         tax = interest * .15
@@ -42,13 +63,11 @@ class Central:
         self.balance -= interest - tax
         return interest - tax
 
-    def deposit(self, client, amount, data):
+    def deposit(self, client, amount, date):
         """ Receives the money of the client
         """
-        try:
-            self.wallet[client] += amount, data
-        except TypeError:
-            self.wallet[client] = amount, data
+        self.wallet[client].append((amount, date))
+        self.balance += amount
 
     def withdraw(self, client, y, m):
         """ Gives the money back to the client
@@ -56,15 +75,90 @@ class Central:
         interest = self.pay_interest(client, y, m)
         amount = self.sum_deposits(client)
         del self.wallet[client]
+        self.balance -= amount
         return amount + interest
 
     def sum_deposits(self, client):
-        return sum([self.wallet[client][i]
-                   for i in range(len(self.wallet[client]))
-                   if i % 2 == 0])
+        return sum(amount for amount, _ in self.wallet[client])
 
     def total_deposits(self):
-        return sum(v[0] for v in self.wallet.values())
+        return sum(sum(amount for amount, _ in deposits) for deposits in self.wallet.values())
+
+    def n_loans(self):
+        return sum(len(ls) for ls in self.loans.values())
+
+    def all_loans(self):
+        for ls in self.loans.values():
+            yield from ls
+
+    def active_loans(self):
+        return [l for l in self.all_loans() if not l.paid_off]
+
+    def delinquent_loans(self):
+        return [l for l in self.active_loans() if l.delinquent]
+
+    def loan_stats(self):
+        loans = self.active_loans()
+        amounts = [l.principal for l in loans]
+        if amounts:
+            mean = sum(amounts)/len(amounts)
+            return min(amounts), max(amounts), mean
+        return 0, 0, 0
+
+    def request_loan(self, family, amount):
+        # Can't loan more than on hand
+        if amount > self.balance:
+            return False
+
+        # Add loan balance
+        monthly_payment = self._max_monthly_payment(family)
+        self.loans[family.id].append(Loan(amount, self.interest, monthly_payment))
+        self.balance -= amount
+        return True
+
+    def max_loan(self, family):
+        """Estimate maximum loan for family"""
+        income = self._max_monthly_payment(family)
+
+        max_years = conf.PARAMS['MAX_LOAN_AGE'] - max([m.age for m in family.members.values()])
+        max_months = max_years * 12
+        max_total = income * max_months
+        max_principal = max_total/(1+self.interest)
+        return min(max_principal, self.balance)
+
+    def _max_monthly_payment(self, family):
+        # Max % of income on loan repayments
+        income = family.permanent_income(self.interest) * conf.PARAMS['MAX_LOAN_REPAYMENT_PERCENT_INCOME']
+
+        # Account for existing loans
+        for l in self.loans[family.id]:
+            income -= l.payment
+        return income
+
+    def collect_loan_payments(self, sim):
+        for family_id, loans in self.loans.items():
+            if not loans: continue
+            family = sim.families[family_id]
+            remaining_loans = []
+            for loan in loans:
+                if loan.paid_off: continue
+                loan.age += 1
+
+                money = family.savings
+                if money < loan.payment:
+                    money = family.grab_savings(self, sim.clock.year,(sim.clock.months % 12) + 1)
+                    family.savings = money
+                payment = min(money, loan.payment)
+                done = loan.pay(payment)
+                family.savings -= payment
+
+                # Add to bank balance
+                self.balance += payment
+
+                # Remove loans that are paid off
+                if not done:
+                    remaining_loans.append(loan)
+            self.loans[family_id] = remaining_loans
 
 
 class Bank(Central):

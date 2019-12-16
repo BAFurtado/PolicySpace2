@@ -211,8 +211,14 @@ class Output:
     def save_banks_data(self, sim):
         bank = sim.central
         with open(self.banks_path, 'a') as f:
-            f.write('%s; %.3f; %.3f; %.3f \n' %
-                            (sim.clock.days, bank.taxes, bank.balance, bank.total_deposits()))
+            active = bank.active_loans()
+            n_active = len(active)
+            mean_age = sum(l.age for l in active)/n_active if n_active else 0
+            p_delinquent = len(bank.delinquent_loans())/n_active if n_active else 0
+            mn, mx, avg = bank.loan_stats()
+            f.write('%s; %.3f; %.3f; %.3f; %.3f; %.3f; %.3f; %.3f; %.3f; %.3f \n' %
+                            (sim.clock.days, bank.taxes, bank.balance, bank.total_deposits(),
+                             n_active, p_delinquent, mean_age, mn, mx, avg))
 
     def save_transit_data(self, sim, fname):
         region_ids = conf.RUN['LIMIT_SAVED_TRANSIT_REGIONS']

@@ -56,19 +56,22 @@ class HousingMarket:
         if not looking or not self.on_sale:
             return
 
+        for f in looking:
+            f.savings_with_loan = f.savings + sim.central.max_loan(f)
+
         # Sorting. Those with less savings first
-        looking.sort(key=lambda f: f.savings, reverse=True)
+        looking.sort(key=lambda f: f.savings_with_loan, reverse=True)
 
         # Minimum price on market
         minimum_price = self.on_sale[-1].price
 
         # Family with larger savings
-        maximum_purchasing_power = looking[0].savings
+        maximum_purchasing_power = looking[0].savings_with_loan
 
         # Families that can afford to buy, remain on the list
         # Those without funds, try the rental market.
         purchasing, renting = list(), list()
-        [purchasing.append(f) if f.savings > minimum_price else renting.append(f) for f in looking]
+        [purchasing.append(f) if f.savings_with_loan > minimum_price else renting.append(f) for f in looking]
 
         # Extract houses to rental market from sales pool
         for_rent = sim.seed.sample(self.on_sale, int(len(self.on_sale) * sim.PARAMS['RENTAL_SHARE']))
@@ -91,39 +94,57 @@ class HousingMarket:
         for family in purchasing:
             for house in self.on_sale:
                 s = family.savings
+                S = family.savings_with_loan
                 p = house.price
 
                 if s > p:
                     # Then PRICE is established as the average of the two
                     price = (s + p) / 2
 
-                    # Buy
-                    # Withdraw money from buying family and distribute back the difference
-                    family.update_balance(family.grab_savings(sim.central,
-                                                              sim.clock.year,
-                                                              ((sim.clock.months % 12) + 1)) - price)
+                elif S > p:
+                    price = (S + p) / 2
 
-                    # Collect taxes on transaction
-                    taxes = price * sim.PARAMS['TAX_ESTATE_TRANSACTION']
-                    sim.regions[house.region_id].collect_taxes(taxes, 'transaction')
+                else:
+                    continue
 
-                    # Deposit money on selling family
-                    sim.families[house.owner_id].update_balance(price - taxes)
+                savings = family.grab_savings(sim.central,
+                                              sim.clock.year,
+                                              ((sim.clock.months % 12) + 1))
 
-                    # Transfer ownership
-                    sim.families[house.owner_id].owned_houses.remove(house)
-                    house.owner_id = family.id
-                    family.owned_houses.append(house)
-                    house.on_market = 0
+                # Get loan to make up the difference
+                if savings < price:
+                    loan_amount = price - savings
+                    success = sim.central.request_loan(family, loan_amount)
+                    change = 0
+                    if not success:
+                        continue
+                else:
+                    change = savings - price
 
-                    # Decision on moving
-                    self.decision(family, sim)
+                # Buy
+                # Withdraw money from buying family and distribute back the difference
+                family.update_balance(change)
+                # Collect taxes on transaction
+                taxes = price * sim.PARAMS['TAX_ESTATE_TRANSACTION']
+                sim.regions[house.region_id].collect_taxes(taxes, 'transaction')
 
-                    # Cleaning up list
-                    self.on_sale[:] = [h for h in self.on_sale if h is not house]
+                # Deposit money on selling family
+                sim.families[house.owner_id].update_balance(price - taxes)
 
-                    # This family has solved its problem. Go to next family
-                    break
+                # Transfer ownership
+                sim.families[house.owner_id].owned_houses.remove(house)
+                house.owner_id = family.id
+                family.owned_houses.append(house)
+                house.on_market = 0
+
+                # Decision on moving
+                self.decision(family, sim)
+
+                # Cleaning up list
+                self.on_sale[:] = [h for h in self.on_sale if h is not house]
+
+                # This family has solved its problem. Go to next family
+                break
 
     def decision(self, family, sim):
         """A family decides which house to move into"""
