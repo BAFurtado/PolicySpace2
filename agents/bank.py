@@ -110,6 +110,10 @@ class Central:
         if amount > self.balance:
             return False
 
+        # If they have outstanding loans, don't lend
+        if self.loans[family.id]:
+            return False
+
         # Add loan balance
         monthly_payment = self._max_monthly_payment(family)
         self.loans[family.id].append(Loan(amount, self.interest, monthly_payment))
