@@ -25,7 +25,7 @@ class RentalMarket:
                     if house.family_id is None:
                         # Define price
                         price = house.price * sim.PARAMS['INITIAL_RENTAL_PRICE']
-                        family.move_in(house)
+                        self.make_move(family, house, sim)
                         # Save information of rental on house
                         house.rent_data = price, sim.clock.days
                         # This family is done
@@ -55,3 +55,16 @@ class RentalMarket:
 
             # Deposit money on selling family
             landperson.update_balance(rent - taxes)
+
+    def make_move(self, family, house, sim):
+        # Make the move
+        old_r_id = family.region_id
+        if family.house:
+            family.move_out()
+        family.move_in(house)
+        # Only after simulation has begun, it is necessary to update population, not at generation time
+        try:
+            if sim.mun_pops:
+                sim.update_pop(old_r_id, family.region_id)
+        except AttributeError:
+            pass
