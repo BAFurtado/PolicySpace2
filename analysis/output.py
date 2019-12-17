@@ -83,7 +83,6 @@ class Output:
 
     def save_regional_report(self, sim):
         reports = []
-        municipalities = defaultdict(list)
         agents_by_mun = defaultdict(list)
         families_by_mun = defaultdict(list)
         for agent in sim.agents.values():
@@ -100,6 +99,7 @@ class Output:
 
         # aggregate regions into municipalities,
         # in case they are APs
+        municipalities = defaultdict(list)
         for region in sim.regions.values():
             mun_id = region.id[:7]
             municipalities[mun_id].append(region)
@@ -149,8 +149,8 @@ class Output:
 
     def save_firms_data(self, sim):
         with open(self.firms_path, 'a') as f:
-            [f.write('%s; %s; %s; %.3f; %.3f; %.3f; %s; %.3f; %.3f; %.3f ; %.3f; %.3f; %.3f; %.3f \n' %
-                            (sim.clock.days, firm.id, firm.region_id, firm.address.x,
+            [f.write('%s; %s; %s; %s; %.3f; %.3f; %.3f; %s; %.3f; %.3f; %.3f ; %.3f; %.3f; %.3f; %.3f \n' %
+                            (sim.clock.days, firm.id, firm.region_id, firm.region_id[:7], firm.address.x,
                             firm.address.y, firm.total_balance, firm.num_employees,
                             firm.total_quantity, firm.amount_produced, firm.inventory[0].price,
                             firm.amount_sold, firm.revenue, firm.profit,
@@ -182,7 +182,7 @@ class Output:
 
     def save_house_data(self, sim):
         with open(self.houses_path, 'a') as f:
-            [f.write('%s;%s;%f;%f;%.2f;%.2f;%f;%s;%s\n' % (sim.clock.days,
+            [f.write('%s;%s;%f;%f;%.2f;%.2f;%f;%s;%s;%s\n' % (sim.clock.days,
                                                                 house.id,
                                                                 house.address.x,
                                                                 house.address.y,
@@ -190,12 +190,13 @@ class Output:
                                                                 house.price,
                                                                 house.on_market,
                                                                 house.family_id,
-                                                                house.region_id))
+                                                                house.region_id,
+                                                                house.region_id[:7]))
             for house in sim.houses.values()]
 
     def save_family_data(self, sim):
         with open(self.families_path, 'a') as f:
-            [f.write('%s;%s;%s;%s;%s;%s;%s;%s;%.2f;%.2f;%.2f\n' % (sim.clock.days,
+            [f.write('%s;%s;%s;%s;%s;%s;%s;%s;%s;%.2f;%.2f;%.2f\n' % (sim.clock.days,
                                                             family.id,
                                                             family.house.price if family.house else '',
                                                             family.house.rent_data[0] if family.house.rent_data else '',
@@ -203,6 +204,7 @@ class Output:
                                                             family.house.owner_id if family.house else '',
                                                             family.house.family_id if family.house else '',
                                                             family.region_id,
+                                                            family.region_id[:7],
                                                             family.total_wage(),
                                                             family.savings,
                                                             family.num_members))
