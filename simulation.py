@@ -1,3 +1,4 @@
+import sys
 import datetime
 import json
 import os
@@ -27,7 +28,8 @@ class Simulation:
         self.stats = analysis.Statistics()
         self.logger = analysis.Logger(hex(id(self))[-5:])
         self.timer = analysis.Timer()
-        self.seed = random if conf.RUN['KEEP_RANDOM_SEED'] else random.Random(0)
+        self._seed = random.randrange(sys.maxsize) if conf.RUN['KEEP_RANDOM_SEED'] else conf.RUN.get('SEED', 0)
+        self.seed = random.Random(self._seed)
 
         # Read necessary files
         self.m_men, self.m_women, self.f = {}, {}, {}
@@ -84,6 +86,7 @@ class Simulation:
         self.logger.logger.info('Starting run.')
         self.logger.logger.info('Output: {}'.format(self.output.path))
         self.logger.logger.info('Params: {}'.format(json.dumps(self.PARAMS)))
+        self.logger.logger.info('Seed: {}'.format(self._seed))
 
         timer = analysis.Timer()
         timer.start()
