@@ -145,9 +145,7 @@ class Plotter:
                 dat_to_plot = df.pivot(index='month', columns='region_id', values=k).astype(float)
                 dats_to_plot.append(dat_to_plot)
 
-            # TODO Region ids don't seem correct?
-            # names_mun = [mun_codes[v] for v in list(dats_to_plot[0].columns.values)]
-            names_mun = list(dats_to_plot[0].columns.values)
+            names_mun = [mun_codes[v] for v in list(dats_to_plot[0].columns.values)]
             fig = self.make_plot(dats_to_plot, title, labels=names_mun, y_label='Mean {}'.format(name))
             self.save_fig(fig, 'temp_houses_{}'.format(name))
 
@@ -197,9 +195,7 @@ class Plotter:
                 dat_to_plot = df.pivot(index='month', columns='region_id', values=k).astype(float)
                 dats_to_plot.append(dat_to_plot)
 
-            # TODO Region ids don't seem correct?
-            # names_mun = [mun_codes[v] for v in list(dats_to_plot[0].columns.values)]
-            names_mun = list(dats_to_plot[0].columns.values)
+            names_mun = [mun_codes[v] for v in list(dats_to_plot[0].columns.values)]
             fig = self.make_plot(dats_to_plot, title, labels=names_mun, y_label='Mean {}'.format(name))
             self.save_fig(fig, 'temp_families_{}'.format(name))
 
