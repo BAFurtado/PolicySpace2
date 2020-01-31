@@ -3,8 +3,8 @@
 import datetime
 
 
-OUTPUT_PATH = r'\\storage6\usuarios\# MODELO DINAMICO DE SIMULACAO #\Exits_python\output\policy2'
-# OUTPUT_PATH = '/home/furtadobb/MyModels/policyspace2/output/testes_fpm'
+# OUTPUT_PATH = 'output'
+OUTPUT_PATH = '/home/furtadobb/MyModels/policyspace2/output/testes_fpm'
 
 KEEP_RANDOM_SEED = False
 
@@ -57,7 +57,7 @@ LIMIT_SAVED_TRANSIT_REGIONS = None
 STARTING_DAY = datetime.date(2000, 1, 1)
 
 # Maximum running time (restrained by official data) is 30 years,
-TOTAL_DAYS = (datetime.date(2002, 1, 1) - STARTING_DAY).days
+TOTAL_DAYS = (datetime.date(2010, 1, 1) - STARTING_DAY).days
 
 # Force generation of new population
 FORCE_NEW_POPULATION = False
