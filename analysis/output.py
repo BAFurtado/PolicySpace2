@@ -190,6 +190,7 @@ class Output:
                                                                 house.price,
                                                                 house.on_market,
                                                                 house.family_id,
+                                                                house.region_id,
                                                                 house.region_id[:7]))
             for house in sim.houses.values()]
 
@@ -202,6 +203,7 @@ class Output:
                                                             family.house.id if family.house else '',
                                                             family.house.owner_id if family.house else '',
                                                             family.house.family_id if family.house else '',
+                                                            family.region_id,
                                                             family.region_id[:7],
                                                             family.total_wage(),
                                                             family.savings,
