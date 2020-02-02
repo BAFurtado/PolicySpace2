@@ -1,5 +1,3 @@
-
-
 class RentalMarket:
 
     def __init__(self):
@@ -9,7 +7,9 @@ class RentalMarket:
         if to_rent is not None:
             self.unoccupied = to_rent
         else:
-            self.unoccupied = [h for h in sim.houses.values() if h.family_id is None]
+            # Only rent from families, not firms
+            self.unoccupied = [h for h in sim.houses.values()
+                               if h.family_id is None and h.family_owner]
 
     def rental_market(self, families, sim, to_rent=None):
         self.update_list(sim, to_rent)

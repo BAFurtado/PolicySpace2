@@ -155,6 +155,12 @@ class Firm:
             base *= (1 - unemployment)
         return base
 
+    def update_balance(self, amount):
+        self.total_balance += amount
+
+    def get_total_balance(self):
+        return self.total_balance
+
     def make_payment(self, regions, unemployment, alpha, tax_labor, tax_consumption, ignore_unemployment):
         """Pay employees based on a base wage, relative employee qualification,
         consumption & labor taxes, and alpha param"""
@@ -209,6 +215,7 @@ class ConstructionFirm(Firm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.houses = []
+        self.houses_inventory = []
         self.licenses = {}
 
     def decide_buy_license(self, region):
@@ -240,6 +247,7 @@ class ConstructionFirm(Firm):
         quality = 0
         house_id = generator.gen_id()
         price = size * quality * region.index
-        h = House(house_id, address, size, price, region.id, quality)
+        h = House(house_id, address, size, price, region.id, quality, owner_id=self.id, owner_type=House.Owner.FIRM)
         self.houses.append(h)
+        self.houses_inventory.append(h)
         return h
