@@ -6,7 +6,7 @@ from collections import defaultdict
 class Region:
     """Collects taxes and applies to ameliorate quality of life"""
 
-    def __init__(self, region, index=1, gdp=0, pop=0, total_commute=0):
+    def __init__(self, region, index=1, gdp=0, pop=0, total_commute=0, licenses=0):
         # A region is an OSGEO object that contains Fields and Geometry
         self.address_envelope = region.geometry().GetEnvelope()
         self.addresses = region.geometry()
@@ -20,6 +20,10 @@ class Region:
         self.cumulative_treasure = defaultdict(int)
         self.treasure = defaultdict(int)
         self.applied_treasure = defaultdict(int)
+
+    @property
+    def license_price(self):
+        return self.index
 
     @property
     def total_treasure(self):

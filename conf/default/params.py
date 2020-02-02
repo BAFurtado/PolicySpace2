@@ -51,6 +51,9 @@ FPM_DISTRIBUTION = True
 # fpm           TRUE,           FALSE,      TRUE,   FALSE
 # Results     fpm + eq. + loc,  locally,  fpm + eq,   eq
 
+# CONSTRUCTION
+LICENSES_PER_REGION = 10000
+
 # Families run parameters
 MEMBERS_PER_FAMILY = 2.5                             # (on average)
 HOUSE_VACANCY = .1                                   # percentage of vacant houses

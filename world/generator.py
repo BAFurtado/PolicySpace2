@@ -69,7 +69,7 @@ class Generator:
         """Create regions"""
         regions = {}
         for item in self.shapes:
-            r = Region(item)
+            r = Region(item, licenses=conf.PARAMS['LICENSES_PER_REGION'])
 
             # mun code is always first 7 digits of id,
             # if it's a municipality shape or an AP shape
