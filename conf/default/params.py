@@ -52,8 +52,9 @@ FPM_DISTRIBUTION = True
 # Results     fpm + eq. + loc,  locally,  fpm + eq,   eq
 
 # CONSTRUCTION
-LICENSES_PER_REGION = 10000
+LICENSES_PER_REGION = 50
 PERCENT_CONSTRUCTION_FIRMS = 0.05
+INPUTS_PER_SIZE = 1
 
 # Families run parameters
 MEMBERS_PER_FAMILY = 2.5                             # (on average)

@@ -254,6 +254,7 @@ class Simulation:
             firm.decide_buy_license(region)
 
             # See if firm can build a house
+            firm.plan_house(self.regions, self.PARAMS['INPUTS_PER_SIZE'], self.seed)
             house = firm.build_house(self.regions, self.generator)
             if house is not None:
                 self.houses[house.id] = house

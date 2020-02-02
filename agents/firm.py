@@ -217,6 +217,8 @@ class ConstructionFirm(Firm):
         self.houses = []
         self.houses_inventory = []
         self.licenses = {}
+        self.building = False
+        self.building_region = None
 
     def decide_buy_license(self, region):
         """Firm decides whether to purchase
@@ -227,8 +229,11 @@ class ConstructionFirm(Firm):
             self.licenses[region.id] = self.licenses.get(region.id, 0) + 1
         return can_purchase
 
-    def build_house(self, regions, generator):
-        """Firm decides where to build a house"""
+    def plan_house(self, regions, inputs_per_size, seed):
+        """Decide where to build"""
+        if self.building: return
+
+        # Choose out of regions where the firm has a license
         candidate_regions = [region_id for region_id, licenses in self.licenses.items() if licenses > 0]
         if not candidate_regions:
             return
@@ -236,18 +241,38 @@ class ConstructionFirm(Firm):
         # Choose region with highest QLI b/c it will
         # give the highest price
         region_id = max(candidate_regions, key=lambda r_id: regions[r_id].index)
-        region = regions[region_id]
+        self.building_region = region_id
+        self.building = True
+
+        # Targets
+        # TODO random
+        self.building_size = seed.randrange(20, 120)
+        self.building_quality = seed.choice([1, 2, 3, 4])
+        self.building_cost = inputs_per_size * self.building_size * self.building_quality
+
+        # Use up license
+        self.licenses[region_id] -= 1
+
+    def build_house(self, regions, generator):
+        """Firm decides if house is finished"""
+        if not self.building: return
+
+        # Not finished
+        if self.total_quantity < self.building_cost: return
 
         # Choose random place in region
+        region = regions[self.building_region]
         probability_urban = generator.prob_urban(region)
         address = generator.random_address(region, probability_urban)
 
         # TODO size, quality
-        size = 0
-        quality = 0
         house_id = generator.gen_id()
+        size = self.building_size
+        quality = self.building_quality
         price = size * quality * region.index
         h = House(house_id, address, size, price, region.id, quality, owner_id=self.id, owner_type=House.Owner.FIRM)
         self.houses.append(h)
         self.houses_inventory.append(h)
+
+        self.building = False
         return h
