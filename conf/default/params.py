@@ -53,6 +53,7 @@ FPM_DISTRIBUTION = True
 
 # CONSTRUCTION
 LICENSES_PER_REGION = 10000
+PERCENT_CONSTRUCTION_FIRMS = 0.05
 
 # Families run parameters
 MEMBERS_PER_FAMILY = 2.5                             # (on average)

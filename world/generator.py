@@ -11,8 +11,7 @@ import logging
 import pandas as pd
 import shapely
 
-import conf
-from agents import Agent, Family, Firm, Region, House, Central
+from agents import Agent, Family, Firm, ConstructionFirm, Region, House, Central
 from .firms import FirmData
 from .population import pop_age_data
 from .shapes import prepare_shapes
@@ -69,7 +68,7 @@ class Generator:
         """Create regions"""
         regions = {}
         for item in self.shapes:
-            r = Region(item, licenses=conf.PARAMS['LICENSES_PER_REGION'])
+            r = Region(item, licenses=self.sim.PARAMS['LICENSES_PER_REGION'])
 
             # mun code is always first 7 digits of id,
             # if it's a municipality shape or an AP shape
@@ -107,7 +106,7 @@ class Generator:
             regional_agents, regional_families = self.allocate_to_family(regional_agents, regional_families)
 
             # Allocating only percentage of houses to ownership.
-            rental_size = int((1 - conf.PARAMS['RENTAL_SHARE']) * len(regional_houses))
+            rental_size = int((1 - self.sim.PARAMS['RENTAL_SHARE']) * len(regional_houses))
 
             # Do not allocate all houses to families. Some families (parameter) will have to rent
             regional_families.update(self.allocate_to_households(dict(list(regional_families.items())[:rental_size]),
@@ -276,12 +275,17 @@ class Generator:
 
     def create_firms(self, num_firms, region):
         sector = {}
-        for _ in range(num_firms):
+        num_construction_firms = round(num_firms * self.sim.PARAMS['PERCENT_CONSTRUCTION_FIRMS'])
+        for i in range(num_firms):
             address = self.get_random_point_in_polygon(region)
             total_balance = self.seed.betavariate(1.5, 10) * 100000
             firm_id = self.gen_id()
-            f = Firm(firm_id, address, total_balance, region.id)
+            if i < num_construction_firms:
+                f = ConstructionFirm(firm_id, address, total_balance, region.id)
+            else:
+                f = Firm(firm_id, address, total_balance, region.id)
             sector[f.id] = f
+
         return sector
 
     def qual(self, cod):

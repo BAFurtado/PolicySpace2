@@ -8,6 +8,7 @@ class Firm:
     well as cash flow. Decisions are based on endogenous variables and products are available when
     searched for by consumers.
     """
+    type = 'CONSUMER'
 
     def __init__(self, id,
                  address,
@@ -199,3 +200,21 @@ class Firm:
                                                                             self.total_quantity,
                                                                             self.address,
                                                                             self.region_id)
+
+
+class ConstructionFirm(Firm):
+    type = 'CONSTRUCTION'
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.houses = []
+        self.licenses = {}
+
+    def decide_buy_license(self, region):
+        """Firm decides whether to purchase
+        a land license from a region"""
+        can_purchase = region.licenses > 0 and self.total_balance > region.license_price
+        if can_purchase:
+            # TODO how does firm decide when to buy?
+            self.licenses[region.id] = self.licenses.get(region.id, 0) + 1
+        return can_purchase

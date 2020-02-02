@@ -1,9 +1,9 @@
 from world.population import marriage_data
 from .family import Family
-from .firm import Firm
 from .house import House
 from .region import Region
 from .bank import Central
+from .firm import Firm, ConstructionFirm
 
 
 class Agent:

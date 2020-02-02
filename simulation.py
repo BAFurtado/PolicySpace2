@@ -95,6 +95,7 @@ class Simulation:
         self.housing = markets.HousingMarket()
         self.pops, self.total_pop = population.load_pops(self.geo.mun_codes, self.PARAMS)
         self.regions, self.agents, self.houses, self.families, self.firms, self.central = self.generate()
+        self.construction_firms = {f.id: f for f in self.firms.values() if f.type == 'CONSTRUCTION'}
         self.logger.logger.info('Initializing...')
         self.initialize()
 
@@ -222,7 +223,6 @@ class Simulation:
         self.timer.start()
         markets.goods.consume(self)
 
-
         for fam in self.families.values():
             fam.invest(self.PARAMS['INTEREST_RATE'], self.central, present_year, (present_month % 12) + 1)
 
@@ -245,6 +245,12 @@ class Simulation:
                               self.PARAMS['TAX_CONSUMPTION'],
                               self.PARAMS['WAGE_IGNORE_UNEMPLOYMENT'])
             firm.update_prices(self.PARAMS['STICKY_PRICES'], self.PARAMS['MARKUP'], self.seed)
+
+        # Construction firms
+        for firm in self.construction_firms.values():
+            # Choose random region, decide if buying license
+            region = self.seed.choice(self.regions.values())
+            bought = firm.decide_buy_license(region)
 
         self.logger.log_time('FIRMS PROCESS', self.timer, self.clock.months)
         self.output.times.append(self.timer.elapsed())
