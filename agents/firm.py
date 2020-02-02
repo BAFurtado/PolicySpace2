@@ -227,6 +227,7 @@ class ConstructionFirm(Firm):
         if can_purchase:
             # TODO how does firm decide when to buy?
             self.licenses[region.id] = self.licenses.get(region.id, 0) + 1
+            region.licenses -= 1
         return can_purchase
 
     def plan_house(self, regions, inputs_per_size, seed):
@@ -265,7 +266,7 @@ class ConstructionFirm(Firm):
         probability_urban = generator.prob_urban(region)
         address = generator.random_address(region, probability_urban)
 
-        # TODO size, quality
+        # Create the house
         house_id = generator.gen_id()
         size = self.building_size
         quality = self.building_quality
@@ -276,3 +277,16 @@ class ConstructionFirm(Firm):
 
         self.building = False
         return h
+
+    @property
+    def n_houses_sold(self):
+        return len(self.houses) - len(self.houses_inventory)
+
+    def update_balance(self, amount):
+        self.total_balance += amount
+        self.revenue += amount
+
+    def mean_house_price(self):
+        if not self.houses: return 0
+        t = sum(h.price for h in self.houses)
+        return t/len(self.houses)

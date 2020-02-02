@@ -171,6 +171,7 @@ def plot(input_paths, output_path, params, styles=None, sim=None):
         plotter.plot_housing()
         plotter.plot_families()
         plotter.plot_banks()
+        plotter.plot_construction()
         if sim is not None and conf.RUN['PLOT_REGIONAL']:
             plotter.plot_regional_stats()
 
