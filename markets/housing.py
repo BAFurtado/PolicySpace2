@@ -74,7 +74,8 @@ class HousingMarket:
         [purchasing.append(f) if f.savings_with_loan > minimum_price else renting.append(f) for f in looking]
 
         # Extract houses to rental market from sales pool
-        for_rent = sim.seed.sample(self.on_sale, int(len(self.on_sale) * sim.PARAMS['RENTAL_SHARE']))
+        rentable = [h for h in self.on_sale if h.family_owner] # Only rent from families, not firms
+        for_rent = sim.seed.sample(rentable, int(len(rentable) * sim.PARAMS['RENTAL_SHARE']))
         self.on_sale = [h for h in self.on_sale if h not in for_rent]
 
         # Call Rental market ###############################################################

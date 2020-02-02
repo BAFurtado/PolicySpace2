@@ -44,6 +44,7 @@ class RentalMarket:
             rent = house.rent_data[0]
             tenant = sim.families[house.family_id]
             landperson = sim.families[house.owner_id]
+
             # Collect taxes on transaction
             taxes = rent * sim.PARAMS['TAX_LABOR']
             sim.regions[house.region_id].collect_taxes(taxes, 'labor')
