@@ -250,7 +250,7 @@ class Simulation:
         # Construction firms
         for firm in self.construction_firms.values():
             # Choose random region, decide if buying license
-            region = self.seed.choice(self.regions.values())
+            region = self.seed.choice(list(self.regions.values()))
             firm.decide_buy_license(region)
 
             # See if firm can build a house

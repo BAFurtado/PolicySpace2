@@ -16,6 +16,7 @@ class Region:
         self.index = index
         self.gdp = gdp
         self.pop = pop
+        self.licenses = licenses
         self.total_commute = total_commute
         self.cumulative_treasure = defaultdict(int)
         self.treasure = defaultdict(int)

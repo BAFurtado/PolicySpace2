@@ -5,6 +5,7 @@ shapefile input of real limits and real urban/rural areas.
 Then, Agents are created and bundled into families, given population measures.
 Then, houses and firms are created and families are allocated to their first houses.
 """
+import math
 import binascii
 import logging
 
@@ -280,7 +281,7 @@ class Generator:
 
     def create_firms(self, num_firms, region):
         sector = {}
-        num_construction_firms = round(num_firms * self.sim.PARAMS['PERCENT_CONSTRUCTION_FIRMS'])
+        num_construction_firms = math.ceil(num_firms * self.sim.PARAMS['PERCENT_CONSTRUCTION_FIRMS'])
         for i in range(num_firms):
             address = self.get_random_point_in_polygon(region)
             total_balance = self.seed.betavariate(1.5, 10) * 100000
