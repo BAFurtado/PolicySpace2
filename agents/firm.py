@@ -1,3 +1,4 @@
+from .house import House
 from .product import Product
 
 
@@ -218,3 +219,27 @@ class ConstructionFirm(Firm):
             # TODO how does firm decide when to buy?
             self.licenses[region.id] = self.licenses.get(region.id, 0) + 1
         return can_purchase
+
+    def build_house(self, regions, generator):
+        """Firm decides where to build a house"""
+        candidate_regions = [region_id for region_id, licenses in self.licenses.items() if licenses > 0]
+        if not candidate_regions:
+            return
+
+        # Choose region with highest QLI b/c it will
+        # give the highest price
+        region_id = max(candidate_regions, key=lambda r_id: regions[r_id].index)
+        region = regions[region_id]
+
+        # Choose random place in region
+        probability_urban = generator.prob_urban(region)
+        address = generator.random_address(region, probability_urban)
+
+        # TODO size, quality
+        size = 0
+        quality = 0
+        house_id = generator.gen_id()
+        price = size * quality * region.index
+        h = House(house_id, address, size, price, region.id, quality)
+        self.houses.append(h)
+        return h

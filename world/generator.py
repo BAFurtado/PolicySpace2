@@ -235,18 +235,9 @@ class Generator:
     def create_houses(self, num_houses, region):
         """Create houses for a region"""
         neighborhood = {}
-
-        # only use urban/rural distinction
-        # for municipalities with one AP
-        mun_code = int(region.id[:7])
-        if mun_code in single_ap_muns:
-            probability_urban = prop_urban[prop_urban['cod_mun'] == int(mun_code)]['prop_urb'].iloc[0]
-        else:
-            probability_urban = 0
-
+        probability_urban = self.prob_urban(region)
         for _ in range(num_houses):
-            urban = self.seed.random() < probability_urban
-            address = self.get_random_point_in_polygon(region, urban=urban)
+            address = self.random_address(region, probability_urban)
             size = self.seed.randrange(20, 120)
             # Price is given by 4 quality levels
             quality = self.seed.choice([1, 2, 3, 4])
@@ -255,6 +246,20 @@ class Generator:
             h = House(house_id, address, size, price, region.id, quality)
             neighborhood[house_id] = h
         return neighborhood
+
+    def prob_urban(self, region):
+        # only use urban/rural distinction
+        # for municipalities with one AP
+        mun_code = int(region.id[:7])
+        if mun_code in single_ap_muns:
+            probability_urban = prop_urban[prop_urban['cod_mun'] == int(mun_code)]['prop_urb'].iloc[0]
+        else:
+            probability_urban = 0
+        return probability_urban
+
+    def random_address(self, region, prob_urban):
+        urban = self.seed.random() < prob_urban
+        return self.get_random_point_in_polygon(region, urban=urban)
 
     def allocate_to_households(self, families, households):
         """Allocate houses to families"""

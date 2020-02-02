@@ -31,6 +31,8 @@ class Simulation:
         self._seed = random.randrange(sys.maxsize) if conf.RUN['KEEP_RANDOM_SEED'] else conf.RUN.get('SEED', 0)
         self.seed = random.Random(self._seed)
 
+        self.generator = Generator(self)
+
         # Read necessary files
         self.m_men, self.m_women, self.f = {}, {}, {}
         for state in self.geo.states_on_process:
@@ -51,8 +53,6 @@ class Simulation:
 
     def generate(self):
         """Spawn or load regions, agents, houses, families, and firms"""
-        self.generator = Generator(self)
-
         save_file = '{}.agents'.format(self.output.save_name)
         if not os.path.isfile(save_file) or conf.RUN['FORCE_NEW_POPULATION']:
             self.logger.logger.info('Creating new agents')
@@ -250,7 +250,12 @@ class Simulation:
         for firm in self.construction_firms.values():
             # Choose random region, decide if buying license
             region = self.seed.choice(self.regions.values())
-            bought = firm.decide_buy_license(region)
+            firm.decide_buy_license(region)
+
+            # See if firm can build a house
+            house = firm.build_house(self.regions, self.generator)
+            if house is not None:
+                self.houses[house.id] = house
 
         self.logger.log_time('FIRMS PROCESS', self.timer, self.clock.months)
         self.output.times.append(self.timer.elapsed())
