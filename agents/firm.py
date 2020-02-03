@@ -261,6 +261,12 @@ class ConstructionFirm(Firm):
         # Not finished
         if self.total_quantity < self.building_cost: return
 
+        # Finished, expend inputs
+        for k, product in self.inventory.items():
+            paid = min(self.building_cost, product.quantity)
+            product.quantity -= paid
+            self.building_cost -= paid
+
         # Choose random place in region
         region = regions[self.building_region]
         probability_urban = generator.prob_urban(region)
