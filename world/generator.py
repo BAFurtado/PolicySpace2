@@ -5,14 +5,14 @@ shapefile input of real limits and real urban/rural areas.
 Then, Agents are created and bundled into families, given population measures.
 Then, houses and firms are created and families are allocated to their first houses.
 """
+import math
 import binascii
 import logging
 
 import pandas as pd
 import shapely
 
-import conf
-from agents import Agent, Family, Firm, Region, House, Central
+from agents import Agent, Family, Firm, ConstructionFirm, Region, House, Central
 from .firms import FirmData
 from .population import pop_age_data
 from .shapes import prepare_shapes
@@ -69,7 +69,7 @@ class Generator:
         """Create regions"""
         regions = {}
         for item in self.shapes:
-            r = Region(item)
+            r = Region(item, licenses=self.sim.PARAMS['LICENSES_PER_REGION'])
 
             # mun code is always first 7 digits of id,
             # if it's a municipality shape or an AP shape
@@ -107,7 +107,7 @@ class Generator:
             regional_agents, regional_families = self.allocate_to_family(regional_agents, regional_families)
 
             # Allocating only percentage of houses to ownership.
-            rental_size = int((1 - conf.PARAMS['RENTAL_SHARE']) * len(regional_houses))
+            rental_size = int((1 - self.sim.PARAMS['RENTAL_SHARE']) * len(regional_houses))
 
             # Do not allocate all houses to families. Some families (parameter) will have to rent
             regional_families.update(self.allocate_to_households(dict(list(regional_families.items())[:rental_size]),
@@ -236,18 +236,9 @@ class Generator:
     def create_houses(self, num_houses, region):
         """Create houses for a region"""
         neighborhood = {}
-
-        # only use urban/rural distinction
-        # for municipalities with one AP
-        mun_code = int(region.id[:7])
-        if mun_code in single_ap_muns:
-            probability_urban = prop_urban[prop_urban['cod_mun'] == int(mun_code)]['prop_urb'].iloc[0]
-        else:
-            probability_urban = 0
-
+        probability_urban = self.prob_urban(region)
         for _ in range(num_houses):
-            urban = self.seed.random() < probability_urban
-            address = self.get_random_point_in_polygon(region, urban=urban)
+            address = self.random_address(region, probability_urban)
             size = self.seed.randrange(20, 120)
             # Price is given by 4 quality levels
             quality = self.seed.choice([1, 2, 3, 4])
@@ -256,6 +247,20 @@ class Generator:
             h = House(house_id, address, size, price, region.id, quality)
             neighborhood[house_id] = h
         return neighborhood
+
+    def prob_urban(self, region):
+        # only use urban/rural distinction
+        # for municipalities with one AP
+        mun_code = int(region.id[:7])
+        if mun_code in single_ap_muns:
+            probability_urban = prop_urban[prop_urban['cod_mun'] == int(mun_code)]['prop_urb'].iloc[0]
+        else:
+            probability_urban = 0
+        return probability_urban
+
+    def random_address(self, region, prob_urban):
+        urban = self.seed.random() < prob_urban
+        return self.get_random_point_in_polygon(region, urban=urban)
 
     def allocate_to_households(self, families, households):
         """Allocate houses to families"""
@@ -276,12 +281,17 @@ class Generator:
 
     def create_firms(self, num_firms, region):
         sector = {}
-        for _ in range(num_firms):
+        num_construction_firms = math.ceil(num_firms * self.sim.PARAMS['PERCENT_CONSTRUCTION_FIRMS'])
+        for i in range(num_firms):
             address = self.get_random_point_in_polygon(region)
             total_balance = self.seed.betavariate(1.5, 10) * 100000
             firm_id = self.gen_id()
-            f = Firm(firm_id, address, total_balance, region.id)
+            if i < num_construction_firms:
+                f = ConstructionFirm(firm_id, address, total_balance, region.id)
+            else:
+                f = Firm(firm_id, address, total_balance, region.id)
             sector[f.id] = f
+
         return sector
 
     def qual(self, cod):

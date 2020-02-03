@@ -205,7 +205,8 @@ class Plotter:
         labels, dats = self._prepare_datas(
             'temp_regional.csv',
             ['month', 'mun_id', 'commuting', 'pop', 'gdp_region', 'regional_gini', 'regional_house_values',
-            'regional_unemployment', 'qli_index', 'gdp_percapita', 'treasure', 'equally', 'locally', 'fpm']
+            'regional_unemployment', 'qli_index', 'gdp_percapita', 'treasure', 'equally', 'locally', 'fpm',
+             'licenses']
         )
 
         # commuting
@@ -217,9 +218,9 @@ class Plotter:
 
         cols = ['gdp_region', 'regional_gini', 'regional_house_values',
                 'gdp_percapita', 'regional_unemployment', 'qli_index', 'pop',
-                'treasure']
+                'treasure', 'licenses']
         titles = ['GDP', 'GINI', 'House values', 'per capita GDP', 'Unemployment', 'QLI index', 'Population',
-                'Total Taxes']
+                'Total Taxes', 'Land licenses']
         for col, title in zip(cols, titles):
             title = 'Evolution of {} by region, monthly'.format(title)
             dats_to_plot = [d.pivot(index='month', columns='mun_id', values=col).astype(float) for d in dats]
@@ -269,6 +270,41 @@ class Plotter:
             dats_to_plot.append(dat_to_plot)
         fig = self.make_plot(dats_to_plot, title, labels=names_mun, y_label='Mean of employees')
         self.save_fig(fig, 'temp_general_mean_number_of_employees_by_firm_index')
+
+    def plot_construction(self):
+        labels, dats = self._prepare_datas(
+            'temp_construction.csv',
+            ['month', 'firm_id', 'region_id', 'mun_id', 'long', 'lat', 'total_balance$', 'number_employees',
+            'stocks', 'amount_produced', 'price', 'amount_sold', 'revenue', 'profit', 'wages_paid']
+        )
+
+        cols = ['amount_produced', 'price']
+        titles = ['Cumulative sum of amount produced by firm, by month', 'Price values by firm, by month']
+        for col, title in zip(cols, titles):
+            dats_to_plot = [d.pivot(index='month', columns='firm_id', values=col).astype(float) for d in dats]
+            fig = self.make_plot(dats_to_plot, title, labels, y_label='Values in units')
+            self.save_fig(fig, 'temp_construction_{}'.format(col))
+
+        # Median of number of employees by firm, by region
+        title = 'Median of number of employees by firm, by month'
+        dats_to_plot = []
+        for d in dats:
+            firms_stats = d.groupby(['month', 'mun_id'], as_index=False).median()
+            dat_to_plot = firms_stats.pivot(index='month', columns='mun_id', values='number_employees').astype(float)
+            dats_to_plot.append(dat_to_plot)
+        names_mun = [mun_codes[v] for v in list(dats_to_plot[0].columns.values)]
+        fig = self.make_plot(dats_to_plot, title, labels=names_mun, y_label='Median of employees')
+        self.save_fig(fig, 'temp_construction_median_number_of_employees_by_firm_index')
+
+        # Mean of number of employees by firm, by region
+        title = 'Mean of number of employees by firm, by month'
+        dats_to_plot = []
+        for d in dats:
+            firms_stats = d.groupby(['month', 'mun_id'], as_index=False).mean()
+            dat_to_plot = firms_stats.pivot(index='month', columns='mun_id', values='number_employees').astype(float)
+            dats_to_plot.append(dat_to_plot)
+        fig = self.make_plot(dats_to_plot, title, labels=names_mun, y_label='Mean of employees')
+        self.save_fig(fig, 'temp_construction_mean_number_of_employees_by_firm_index')
 
     def plot_geo(self, sim, text):
         """Generate spatial plots"""

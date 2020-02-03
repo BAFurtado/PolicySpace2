@@ -25,7 +25,7 @@ class Output:
 
     def __init__(self, sim, output_path):
         files = ['stats', 'regional', 'time', 'firms', 'banks',
-                 'houses', 'agents', 'families', 'grave']
+                 'houses', 'agents', 'families', 'grave', 'construction']
 
         self.sim = sim
         self.times = []
@@ -117,8 +117,10 @@ class Output:
             # region.total_commute = commuting
 
             mun_cumulative_treasure = 0
+            licenses = 0
             for r in regions:
                 mun_cumulative_treasure += sum(r.cumulative_treasure.values())
+                licenses += r.licenses
 
             mun_applied_treasure = defaultdict(int)
             for k in ['equally', 'locally', 'fpm']:
@@ -127,12 +129,13 @@ class Output:
             # average QLI of regions
             mun_qli = sum(r.index for r in regions)/len(regions)
 
-            reports.append('%s;%s;%.3f;%d;%.3f;%.4f;%.3f;%.4f;%.5f;%.3f;%.6f;%.6f;%.6f;%.6f'
+            reports.append('%s;%s;%.3f;%d;%.3f;%.4f;%.3f;%.4f;%.5f;%.3f;%.6f;%.6f;%.6f;%.6f;%s'
                                 % (sim.clock.days, mun_id, commuting, mun_pop, mun_gdp, mun_gini, mun_house_values,
                                    mun_unemployment, mun_qli, GDP_mun_capita, mun_cumulative_treasure,
                                    mun_applied_treasure['equally'],
                                    mun_applied_treasure['locally'],
-                                   mun_applied_treasure['fpm']))
+                                   mun_applied_treasure['fpm'],
+                                   licenses))
 
         with open(self.regional_path, 'a') as f:
             f.write('\n'+'\n'.join(reports))
@@ -155,7 +158,17 @@ class Output:
                             firm.total_quantity, firm.amount_produced, firm.inventory[0].price,
                             firm.amount_sold, firm.revenue, firm.profit,
                             firm.wages_paid))
-            for firm in sim.firms.values()]
+            for firm in sim.consumer_firms.values()]
+
+        with open(self.construction_path, 'a') as f:
+            [f.write('%s; %s; %s; %s; %.3f; %.3f; %.3f; %s; %.3f; %.3f; %.3f ; %.3f; %.3f; %.3f; %.3f \n' %
+                            (sim.clock.days, firm.id, firm.region_id, firm.region_id[:7], firm.address.x,
+                            firm.address.y, firm.total_balance, firm.num_employees,
+                            firm.total_quantity, len(firm.houses), firm.mean_house_price(),
+                            firm.n_houses_sold, firm.revenue, firm.profit,
+                            firm.wages_paid))
+            for firm in sim.construction_firms.values()]
+
 
     def save_agents_data(self, sim):
         with open(self.agents_path, 'a') as f:

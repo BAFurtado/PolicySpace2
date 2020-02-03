@@ -1,8 +1,15 @@
+from enum import Enum
+
+class Owner(Enum):
+    FAMILY = 0
+    FIRM = 1
+
 class House:
     """Holds the fixed households.
     They may have changing owners and changing occupancy."""
+    Owner = Owner
 
-    def __init__(self, id, address, size, price, region_id, quality, family_id=None, owner_id=None):
+    def __init__(self, id, address, size, price, region_id, quality, family_id=None, owner_id=None, owner_type=Owner.FAMILY):
         self.id = id
         self.address = address
         self.size = size
@@ -11,6 +18,7 @@ class House:
         self.quality = quality
         self.family_id = family_id # owner may be the occupant or the house may be vacant
         self.owner_id = owner_id
+        self.owner_type = owner_type
         self.rent_data = None
         self.on_market = 0
 
@@ -34,14 +42,19 @@ class House:
     def pay_property_tax(self, sim):
         # Calculate taxes due of property paid in monthly in twelve installments
         tax = self.price * sim.PARAMS['TAX_PROPERTY'] / 12
-        # Withdraw from paying family (current occupant or owner when unoccupied)
+        # Withdraw from paying family or firm (current occupant or owner when unoccupied)
         # Only paying taxes when money is available
         if self.family_id is None:
-            family = sim.families[self.owner_id]
+            if self.owner_type is House.Owner.FAMILY:
+                payer = sim.families[self.owner_id]
+            else:
+                payer = sim.firms[self.owner_id]
         else:
-            family = sim.families[self.family_id]
-        if family.get_total_balance() > tax:
-            family.update_balance(-tax)
+            payer = sim.families[self.family_id]
+
+        if payer.get_total_balance() > tax:
+            payer.update_balance(-tax)
+
             # Transfer to region
             sim.regions[self.region_id].collect_taxes(tax, 'property')
 
@@ -57,3 +70,14 @@ class House:
 
     def calculate_distance(self, address):
         return self.address.distance(address)
+
+    @property
+    def family_owner(self):
+        return self.owner_type is Owner.FAMILY
+
+    @family_owner.setter
+    def family_owner(self, bool):
+        if bool:
+            self.owner_type = Owner.FAMILY
+        else:
+            self.owner_type = Owner.FIRM

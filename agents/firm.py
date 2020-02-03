@@ -1,3 +1,4 @@
+from .house import House
 from .product import Product
 
 
@@ -8,6 +9,7 @@ class Firm:
     well as cash flow. Decisions are based on endogenous variables and products are available when
     searched for by consumers.
     """
+    type = 'CONSUMER'
 
     def __init__(self, id,
                  address,
@@ -153,6 +155,12 @@ class Firm:
             base *= (1 - unemployment)
         return base
 
+    def update_balance(self, amount):
+        self.total_balance += amount
+
+    def get_total_balance(self):
+        return self.total_balance
+
     def make_payment(self, regions, unemployment, alpha, tax_labor, tax_consumption, ignore_unemployment):
         """Pay employees based on a base wage, relative employee qualification,
         consumption & labor taxes, and alpha param"""
@@ -199,3 +207,92 @@ class Firm:
                                                                             self.total_quantity,
                                                                             self.address,
                                                                             self.region_id)
+
+
+class ConstructionFirm(Firm):
+    type = 'CONSTRUCTION'
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.houses = []
+        self.houses_inventory = []
+        self.licenses = {}
+        self.building = False
+        self.building_region = None
+
+    def decide_buy_license(self, region):
+        """Firm decides whether to purchase
+        a land license from a region"""
+        can_purchase = region.licenses > 0 and self.total_balance > region.license_price
+        if can_purchase:
+            # TODO how does firm decide when to buy?
+            self.licenses[region.id] = self.licenses.get(region.id, 0) + 1
+            region.licenses -= 1
+        return can_purchase
+
+    def plan_house(self, regions, inputs_per_size, seed):
+        """Decide where to build"""
+        if self.building: return
+
+        # Choose out of regions where the firm has a license
+        candidate_regions = [region_id for region_id, licenses in self.licenses.items() if licenses > 0]
+        if not candidate_regions:
+            return
+
+        # Choose region with highest QLI b/c it will
+        # give the highest price
+        region_id = max(candidate_regions, key=lambda r_id: regions[r_id].index)
+        self.building_region = region_id
+        self.building = True
+
+        # Targets
+        # TODO random
+        self.building_size = seed.randrange(20, 120)
+        self.building_quality = seed.choice([1, 2, 3, 4])
+        self.building_cost = inputs_per_size * self.building_size * self.building_quality
+
+        # Use up license
+        self.licenses[region_id] -= 1
+
+    def build_house(self, regions, generator):
+        """Firm decides if house is finished"""
+        if not self.building: return
+
+        # Not finished
+        if self.total_quantity < self.building_cost: return
+
+        # Finished, expend inputs
+        for k, product in self.inventory.items():
+            paid = min(self.building_cost, product.quantity)
+            product.quantity -= paid
+            self.building_cost -= paid
+
+        # Choose random place in region
+        region = regions[self.building_region]
+        probability_urban = generator.prob_urban(region)
+        address = generator.random_address(region, probability_urban)
+
+        # Create the house
+        house_id = generator.gen_id()
+        size = self.building_size
+        quality = self.building_quality
+        price = size * quality * region.index
+        h = House(house_id, address, size, price, region.id, quality, owner_id=self.id, owner_type=House.Owner.FIRM)
+        self.houses.append(h)
+        self.houses_inventory.append(h)
+
+        self.building = False
+        return h
+
+    @property
+    def n_houses_sold(self):
+        return len(self.houses) - len(self.houses_inventory)
+
+    def update_balance(self, amount):
+        self.total_balance += amount
+        self.revenue += amount
+
+    def mean_house_price(self):
+        if not self.houses: return 0
+        t = sum(h.price for h in self.houses)
+        return t/len(self.houses)

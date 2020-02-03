@@ -31,6 +31,8 @@ class Simulation:
         self._seed = random.randrange(sys.maxsize) if conf.RUN['KEEP_RANDOM_SEED'] else conf.RUN.get('SEED', 0)
         self.seed = random.Random(self._seed)
 
+        self.generator = Generator(self)
+
         # Read necessary files
         self.m_men, self.m_women, self.f = {}, {}, {}
         for state in self.geo.states_on_process:
@@ -51,8 +53,6 @@ class Simulation:
 
     def generate(self):
         """Spawn or load regions, agents, houses, families, and firms"""
-        self.generator = Generator(self)
-
         save_file = '{}.agents'.format(self.output.save_name)
         if not os.path.isfile(save_file) or conf.RUN['FORCE_NEW_POPULATION']:
             self.logger.logger.info('Creating new agents')
@@ -95,6 +95,8 @@ class Simulation:
         self.housing = markets.HousingMarket()
         self.pops, self.total_pop = population.load_pops(self.geo.mun_codes, self.PARAMS)
         self.regions, self.agents, self.houses, self.families, self.firms, self.central = self.generate()
+        self.construction_firms = {f.id: f for f in self.firms.values() if f.type == 'CONSTRUCTION'}
+        self.consumer_firms = {f.id: f for f in self.firms.values() if f.type == 'CONSUMER'}
         self.logger.logger.info('Initializing...')
         self.initialize()
 
@@ -222,7 +224,6 @@ class Simulation:
         self.timer.start()
         markets.goods.consume(self)
 
-
         for fam in self.families.values():
             fam.invest(self.PARAMS['INTEREST_RATE'], self.central, present_year, (present_month % 12) + 1)
 
@@ -245,6 +246,18 @@ class Simulation:
                               self.PARAMS['TAX_CONSUMPTION'],
                               self.PARAMS['WAGE_IGNORE_UNEMPLOYMENT'])
             firm.update_prices(self.PARAMS['STICKY_PRICES'], self.PARAMS['MARKUP'], self.seed)
+
+        # Construction firms
+        for firm in self.construction_firms.values():
+            # Choose random region, decide if buying license
+            region = self.seed.choice(list(self.regions.values()))
+            firm.decide_buy_license(region)
+
+            # See if firm can build a house
+            firm.plan_house(self.regions, self.PARAMS['INPUTS_PER_SIZE'], self.seed)
+            house = firm.build_house(self.regions, self.generator)
+            if house is not None:
+                self.houses[house.id] = house
 
         self.logger.log_time('FIRMS PROCESS', self.timer, self.clock.months)
         self.output.times.append(self.timer.elapsed())

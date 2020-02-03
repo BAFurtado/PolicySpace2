@@ -171,14 +171,15 @@ def plot(input_paths, output_path, params, styles=None, sim=None):
         plotter.plot_housing()
         plotter.plot_families()
         plotter.plot_banks()
+        plotter.plot_construction()
         if sim is not None and conf.RUN['PLOT_REGIONAL']:
             plotter.plot_regional_stats()
 
-        # if conf.RUN['SAVE_AGENTS_DATA_MONTHLY'] \
-        #         or conf.RUN['SAVE_AGENTS_DATA_QUARTERLY'] \
-        #         or conf.RUN['SAVE_AGENTS_DATA_ANNUALLY']:
-        #     if sim is not None or conf.RUN['AVERAGE_ALL_DATA']:
-        #         plotter.plot_firms_diagnosis()
+        if conf.RUN['SAVE_AGENTS_DATA_MONTHLY'] \
+                or conf.RUN['SAVE_AGENTS_DATA_QUARTERLY'] \
+                or conf.RUN['SAVE_AGENTS_DATA_ANNUALLY']:
+            if sim is not None or conf.RUN['AVERAGE_ALL_DATA']:
+                plotter.plot_firms_diagnosis()
 
     # Checking whether to plot or not
     if conf.RUN['SAVE_SPATIAL_PLOTS'] and sim is not None:

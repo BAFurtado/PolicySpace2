@@ -74,7 +74,8 @@ class HousingMarket:
         [purchasing.append(f) if f.savings_with_loan > minimum_price else renting.append(f) for f in looking]
 
         # Extract houses to rental market from sales pool
-        for_rent = sim.seed.sample(self.on_sale, int(len(self.on_sale) * sim.PARAMS['RENTAL_SHARE']))
+        rentable = [h for h in self.on_sale if h.family_owner] # Only rent from families, not firms
+        for_rent = sim.seed.sample(rentable, int(len(rentable) * sim.PARAMS['RENTAL_SHARE']))
         self.on_sale = [h for h in self.on_sale if h not in for_rent]
 
         # Call Rental market ###############################################################
@@ -128,12 +129,22 @@ class HousingMarket:
                 taxes = price * sim.PARAMS['TAX_ESTATE_TRANSACTION']
                 sim.regions[house.region_id].collect_taxes(taxes, 'transaction')
 
-                # Deposit money on selling family
-                sim.families[house.owner_id].update_balance(price - taxes)
+                if house.family_owner:
+                    # Deposit money on selling family
+                    sim.families[house.owner_id].update_balance(price - taxes)
 
-                # Transfer ownership
-                sim.families[house.owner_id].owned_houses.remove(house)
+                    # Transfer ownership
+                    sim.families[house.owner_id].owned_houses.remove(house)
+                else: # Firm owner
+                    # Deposit money on selling firm
+                    sim.firms[house.owner_id].update_balance(price - taxes)
+
+                    # Transfer ownership
+                    sim.firms[house.owner_id].houses_inventory.remove(house)
+
+
                 house.owner_id = family.id
+                house.family_owner = True
                 family.owned_houses.append(house)
                 house.on_market = 0
 
