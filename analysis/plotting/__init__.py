@@ -116,6 +116,7 @@ class Plotter:
                 'mean_loan_age', 'mean_loan']
         titles = ['Bank taxes paid', 'Bank balance', 'Bank deposits', 'Bank active loans',
                   'Bank p delinquent loans', 'Bank mean loan age', 'Bank mean loan amount']
+        dats = [d.set_index('month') for d in dats]
         for col, title in zip(cols, titles):
             fig = self.make_plot([d[col] for d in dats], title, labels)
             self.save_fig(fig, 'temp_banks_{}'.format(title))
