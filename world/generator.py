@@ -6,7 +6,7 @@ Then, Agents are created and bundled into families, given population measures.
 Then, houses and firms are created and families are allocated to their first houses.
 """
 import math
-import binascii
+import uuid
 import logging
 
 import pandas as pd
@@ -60,10 +60,10 @@ class Generator:
         self.firm_data = FirmData()
         self.central = Central('central')
 
-    def gen_id(self, byt=4):
+    def gen_id(self):
         """Generate a random id that should
         avoid collisions"""
-        return binascii.hexlify(bytes(self.seed.randint(0, 255) for i in range(byt))).decode('utf8')
+        return str(uuid.uuid4())
 
     def create_regions(self):
         """Create regions"""
