@@ -70,7 +70,6 @@ mkl_fft=1.0.12=py37ha843d7b_0
 mkl_random=1.0.2=py37hd81dba3_0
 munch=2.3.2=py_0
 ncurses=6.1=he6710b0_1
-numba=0.45.0=py37h962f231_0
 numpy=1.16.4=py37h7e9f1db_0
 numpy-base=1.16.4=py37hde5b4d6_0
 openjpeg=2.3.0=h05c96fa_1

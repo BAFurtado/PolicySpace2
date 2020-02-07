@@ -1,4 +1,3 @@
-from numba import jit
 from agents import Agent
 from .population import marriage_data
 
@@ -38,7 +37,6 @@ def check_demographics(sim, birthdays, year, mortality_men, mortality_women, fer
     return births, deaths
 
 
-@jit
 def birth(sim):
     """Similar to create agent, but just one individual"""
     age = 0
