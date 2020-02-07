@@ -45,6 +45,20 @@ up to permanent income
 #### How do I get set up?
 
 We recommend using conda  and creating an environment that includes all libraries simultaneously.
+
+First create an environment and install Shapely and GDAL as such:
+
+`conda create --name ps2 python=3.7`
+
+Then add Shapely from conda-forge channel
+ `conda install shapely -c conda-forge`
+ `conda install gdal -c conda-forge`
+
+Then the other packages 
+`conda install fiona shapely numpy pandas geopandas numba
+descartes scipy seaborn pyproj matplotlib six cycler statsmodels
+joblib scikit-learn flask flask-wtf psutil -c conda-forge`
+ 
 Type on a terminal, after having downloaded and installed conda, choosing a name for your environment and replacing 
 <env> and using requirements.txt | requirements_linux.txt in place of <this file>
 

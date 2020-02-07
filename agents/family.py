@@ -82,7 +82,7 @@ class Family:
         return self.savings + estate_value
 
     def invest(self, r, bank, y, m):
-        liquid_money = self.savings > self.permanent_income(r) * 6
+        liquid_money = self.savings + self.permanent_income(r) * 6
         if self.savings > liquid_money:
             bank.deposit(self, self.savings - liquid_money, datetime.date(y, m, 1))
 

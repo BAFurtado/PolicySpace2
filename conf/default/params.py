@@ -3,7 +3,7 @@
 # Production function, labour with decaying exponent, Alpha for K. [0, 1]
 ALPHA = .24
 # By how much percentage to increase prices
-MARKUP = 0.15
+MARKUP = 0.025
 # Frequency firms change prices. Probability > than parameter
 STICKY_PRICES = .5
 # Order of magnitude correction of production. Production divided by parameter
