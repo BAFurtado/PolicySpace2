@@ -29,7 +29,7 @@ from simulation import Simulation
 from collections import defaultdict
 from itertools import product, chain
 from joblib import Parallel, delayed
-from analysis.plotting import Plotter
+from analysis.plotting import Plotter, MissingDataError
 from web import app
 
 logger = logging.getLogger('main')
@@ -166,20 +166,27 @@ def plot(input_paths, output_path, params, styles=None, sim=None):
     if conf.RUN['DESCRIPTIVE_STATS_CHOICE']:
         report.stats('')
 
-    if conf.RUN['SAVE_PLOTS_FIGURES']:
-        plotter.plot_general()
-        plotter.plot_housing()
-        plotter.plot_families()
-        plotter.plot_banks()
-        plotter.plot_construction()
+    save_agents = any(conf.RUN['SAVE_AGENTS_DATA_{}'.format(k)]
+                      for k in ['MONTHLY', 'QUARTERLY', 'ANNUALLY'])
+    if conf.RUN['SAVE_PLOTS_FIGURES'] and save_agents:
+        for k in ['general',
+                  'housing',
+                  'families',
+                  'banks',
+                  'construction']:
+            try:
+                logger.info('Plotting {}...'.format(k))
+                getattr(plotter, 'plot_{}'.format(k))()
+            except MissingDataError:
+                logger.warn('Missing data for "{}", skipping.'.format(k))
+                if any(p.endswith('avg') for _, p in input_paths):
+                    logger.warn('Missing data is average data. You may need to set AVERAGE_ALL_DATA=True')
+
         if sim is not None and conf.RUN['PLOT_REGIONAL']:
             plotter.plot_regional_stats()
 
-        if conf.RUN['SAVE_AGENTS_DATA_MONTHLY'] \
-                or conf.RUN['SAVE_AGENTS_DATA_QUARTERLY'] \
-                or conf.RUN['SAVE_AGENTS_DATA_ANNUALLY']:
-            if sim is not None or conf.RUN['AVERAGE_ALL_DATA']:
-                plotter.plot_firms_diagnosis()
+        if sim is not None or conf.RUN['AVERAGE_ALL_DATA']:
+            plotter.plot_firms_diagnosis()
 
     # Checking whether to plot or not
     if conf.RUN['SAVE_SPATIAL_PLOTS'] and sim is not None:

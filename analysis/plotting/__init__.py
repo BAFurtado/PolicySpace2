@@ -18,6 +18,7 @@ try:
 except AttributeError:
     pass
 
+class MissingDataError(Exception): pass
 
 class Plotter:
     """Manages all plotting of simulation outputs"""
@@ -79,7 +80,12 @@ class Plotter:
 
     def _prepare_datas(self, fname, columns):
         paths = [(label, os.path.join(path, fname)) for label, path in zip(self.labels, self.input_paths)]
-        labels, dats = zip(*[(label, self._prepare_data(path, columns)) for label, path in paths if os.path.exists(path)])
+        paths = [(label, self._prepare_data(path, columns))
+                                 for label, path in paths
+                                 if os.path.exists(path)]
+        if not paths:
+            raise MissingDataError
+        labels, dats = zip(*paths)
         return labels, dats
 
     def plot_general(self):
