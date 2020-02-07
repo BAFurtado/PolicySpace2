@@ -308,7 +308,7 @@ class Simulation:
         # Getting regional GDP
         self.output.save_regional_report(self)
 
-        if conf.RUN['SAVE_AGENTS_DATA_MONTHLY']:
+        if conf.RUN['SAVE_AGENTS_DATA'] == 'MONTHLY':
             self.output.save_data(self)
 
         self.logger.log_time('SAVING DATA', self.timer, self.clock.months)
@@ -318,9 +318,9 @@ class Simulation:
             self.logger.info(self.clock.days)
 
     def quarterly(self):
-        if conf.RUN['SAVE_AGENTS_DATA_QUARTERLY']:
+        if conf.RUN['SAVE_AGENTS_DATA'] == 'QUARTERLY':
             self.output.save_data(self)
 
     def yearly(self):
-        if conf.RUN['SAVE_AGENTS_DATA_ANNUALLY']:
+        if conf.RUN['SAVE_AGENTS_DATA'] == 'ANNUALLY':
             self.output.save_data(self)

@@ -31,15 +31,13 @@ SAVE_SPATIAL_PLOTS = False
 PLOT_FORMAT = 'png'
 PLOT_REGIONAL = False
 
-# NOTE THAT YOU NEED TO SAVE_AGENTS_DATA_MONTHLY to generate the plots, because this is what saves the output CSV data.
-# You can also use SAVE_AGENTS_DATA_QUARTERLY or SAVE_AGENTS_DATA_YEARLY to save less frequently.
+# NOTE THAT YOU NEED TO SAVE_AGENTS_DATA to generate the plots, because this is what saves the output CSV data.
+# You can also use set it to "QUARTERLY" or "ANNUALLY" to save less frequently.
 # SAVE_DATA lets you narrow down what data to save.
 # Firms and banks data are always saved, "agents", "grave", "house", "family" are optional.
 # If you don't save "house" data for instance you can't generate housing plots.
 # Save Agents data
-SAVE_AGENTS_DATA_MONTHLY = False
-SAVE_AGENTS_DATA_QUARTERLY = False
-SAVE_AGENTS_DATA_ANNUALLY = True
+SAVE_AGENTS_DATA = 'MONTHLY' # or 'QUARTERLY', 'ANNUALLY', or None
 
 # What extra data (i.e. not necessary plotting) to save
 # Can include: ['agents', 'grave', 'house', 'family', 'banks']

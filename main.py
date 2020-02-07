@@ -166,9 +166,7 @@ def plot(input_paths, output_path, params, styles=None, sim=None):
     if conf.RUN['DESCRIPTIVE_STATS_CHOICE']:
         report.stats('')
 
-    save_agents = any(conf.RUN['SAVE_AGENTS_DATA_{}'.format(k)]
-                      for k in ['MONTHLY', 'QUARTERLY', 'ANNUALLY'])
-    if conf.RUN['SAVE_PLOTS_FIGURES'] and save_agents:
+    if conf.RUN['SAVE_PLOTS_FIGURES'] and conf.RUN['SAVE_AGENTS_DATA'] is not None:
         for k in ['general',
                   'housing',
                   'families',
@@ -246,9 +244,7 @@ def gen_output_dir(command):
 @click.option('-p', '--params', help='JSON of params override')
 @click.option('-r', '--config', help='JSON of run config override')
 def main(ctx, runs, cpus, params, config):
-    if not conf.RUN['SAVE_AGENTS_DATA_MONTHLY'] \
-            and not conf.RUN['SAVE_AGENTS_DATA_QUARTERLY'] \
-            and not conf.RUN['SAVE_AGENTS_DATA_ANNUALLY']:
+    if conf.RUN['SAVE_AGENTS_DATA'] == None:
         logger.warn('Warning!!! Are you sure you do NOT want to save AGENTS\' data?')
 
     # apply any top-level overrides, if specified
