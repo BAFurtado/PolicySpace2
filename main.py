@@ -163,6 +163,7 @@ def plot(input_paths, output_path, params, styles=None, sim=None):
     """Generate plots based on data in specified output path"""
     plotter = Plotter(input_paths, output_path, params, styles=styles)
 
+    includes_avg = input_paths[0][-1].endswith('/avg')
 
     if conf.RUN['DESCRIPTIVE_STATS_CHOICE']:
         report.stats('')
@@ -174,15 +175,19 @@ def plot(input_paths, output_path, params, styles=None, sim=None):
                   'houses',
                   'families',
                   'banks']:
-                if k not in Plotter.SINGLE_ONLY or (sim is not None or k in conf.RUN['AVERAGE_DATA']):
-                    try:
-                        logger.info('Plotting {}...'.format(k))
-                        print(input_paths)
-                        getattr(plotter, 'plot_{}'.format(k))()
-                    except MissingDataError:
-                        logger.warn('Missing data for "{}", skipping.'.format(k))
-                        if any(p.endswith('avg') for _, p in input_paths):
-                            logger.warn('Missing data is average data. You may need to add {} to AVERAGE_DATA'.format(k))
+            if includes_avg:
+                avg_path = os.path.join(input_paths[0][-1], 'temp_{}.csv'.format(k))
+                avg_path = os.path.exists(avg_path)
+            else:
+                avg_path = False
+            if k not in Plotter.SINGLE_ONLY or (sim is not None or avg_path):
+                try:
+                    logger.info('Plotting {}...'.format(k))
+                    getattr(plotter, 'plot_{}'.format(k))()
+                except MissingDataError:
+                    logger.warn('Missing data for "{}", skipping.'.format(k))
+                    if any(p.endswith('avg') for _, p in input_paths):
+                        logger.warn('Missing data is average data. You may need to add {} to AVERAGE_DATA'.format(k))
 
         if sim is not None and conf.RUN['PLOT_REGIONAL']:
             plotter.plot_regional_stats()
