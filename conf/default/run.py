@@ -47,8 +47,8 @@ SAVE_DATA = ['house', 'family', 'banks']
 
 # What data to average
 # across all runs
-# Options: ['stats', 'families', 'housing', 'firms', 'regional', 'banks', 'construction']
-AVERAGE_DATA = ['stats', 'families', 'housing', 'banks']
+# Options: ['stats', 'families', 'houses', 'firms', 'regional', 'banks', 'construction']
+AVERAGE_DATA = ['stats', 'families', 'banks']
 
 # Whether or not to save data for the transit simulation
 SAVE_TRANSIT_DATA = False

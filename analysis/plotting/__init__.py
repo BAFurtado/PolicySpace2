@@ -25,7 +25,7 @@ class Plotter:
 
     # Data in SINGLE_ONLY is grouped by mun_id, so we can only plot
     # one run at a time (or one average run)
-    SINGLE_ONLY = ['housing', 'families', 'firms', 'construction']
+    SINGLE_ONLY = ['houses', 'families', 'firms', 'construction']
 
     def __init__(self, input_paths, output_path, params, styles=None):
         # Keep track of params that generated these plots for annotating/titling
@@ -133,12 +133,11 @@ class Plotter:
             fig = self.make_plot([d[col] for d in dats], title, labels)
             self.save_fig(fig, 'temp_banks_{}'.format(title))
 
-    def plot_housing(self):
+    def plot_houses(self):
         labels, dats = self._prepare_datas(
             'temp_houses.csv',
             ['month', 'id', 'x', 'y', 'size', 'price', 'on_market', 'family_id', 'region_id', 'mun_id']
         )
-        print('housing', labels)
 
         # Because we're plotting by mun_id,
         # can't plot multiple datasets at once
@@ -175,7 +174,6 @@ class Plotter:
             ['month', 'id', 'house_price', 'house_rent', 'house_id', 'house_owner_id', 'house_family_id',
              'region_id', 'mun_id', 'total_wage', 'savings', 'num_members']
         )
-        print(labels)
 
         for df in dats:
             df['renting'] = pd.notna(df['house_rent'])
