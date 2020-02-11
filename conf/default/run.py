@@ -49,6 +49,7 @@ SAVE_DATA = ['house', 'family', 'banks']
 # across all runs
 # Options: ['stats', 'families', 'houses', 'firms', 'regional', 'banks', 'construction']
 AVERAGE_DATA = ['stats', 'families', 'banks']
+AVERAGE_TYPE = 'median' # or 'mean'
 
 # Whether or not to save data for the transit simulation
 SAVE_TRANSIT_DATA = False

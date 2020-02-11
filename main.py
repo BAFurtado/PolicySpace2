@@ -96,7 +96,7 @@ def multiple_runs(overrides, runs, cpus, output_dir):
 
         # average run data and then plot
         runs = [p for p in glob('{}/*'.format(path)) if os.path.isdir(p)]
-        avg_path = average_run_data(path, avg='median')
+        avg_path = average_run_data(path, avg=conf.RUN['AVERAGE_TYPE'])
 
         # return result data, e.g. paths for plotting
         results.append({
@@ -105,7 +105,7 @@ def multiple_runs(overrides, runs, cpus, output_dir):
             'params': params,
             'overrides': o,
             'avg': avg_path,
-            'avg_type': 'median'
+            'avg_type': conf.RUN['AVERAGE_TYPE']
         })
     with open(os.path.join(output_dir, 'meta.json'), 'w') as f:
         json.dump(results, f)
@@ -134,9 +134,7 @@ def average_run_data(path, avg='mean'):
     # group by filename
     file_groups = defaultdict(list)
     for file in glob(os.path.join(path, '**/*.csv')):
-        # by default, only average stats files.
-        # the other files become way too large
-        # and take a very long time to average.
+        # average only specified data.
         if any(k in file for k in conf.RUN['AVERAGE_DATA']):
             fname = os.path.basename(file)
             file_groups[fname].append(file)
@@ -151,7 +149,9 @@ def average_run_data(path, avg='mean'):
             df = df.loc[:, 1:]
             dfs.append(df)
         df = pd.concat(dfs)
-        # Saving date before avering
+        if 'famil' in fname:
+            import ipdb; ipdb.set_trace()
+        # Saving date before averaging
         df = df.groupby(df.index)
         df = getattr(df, avg)()
         df.insert(0, 0, saved_date)
@@ -174,7 +174,7 @@ def plot(input_paths, output_path, params, styles=None, sim=None):
                   'houses',
                   'families',
                   'banks']:
-                if k not in Plotter.SINGLE_ONLY or (sim is not None or k in conf.RUN['AVERAGE_DATA']):
+                if k not in Plotter.PLOT_BY_MUNICIPALITY or (sim is not None or k in conf.RUN['AVERAGE_DATA']):
                     try:
                         logger.info('Plotting {}...'.format(k))
                         print(input_paths)

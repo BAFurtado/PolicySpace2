@@ -23,9 +23,9 @@ class MissingDataError(Exception): pass
 class Plotter:
     """Manages all plotting of simulation outputs"""
 
-    # Data in SINGLE_ONLY is grouped by mun_id, so we can only plot
+    # Data here is grouped by mun_id, so we can only plot
     # one run at a time (or one average run)
-    SINGLE_ONLY = ['houses', 'families', 'firms', 'construction']
+    PLOT_BY_MUNICIPALITY = ['houses', 'families', 'firms', 'construction']
 
     def __init__(self, input_paths, output_path, params, styles=None):
         # Keep track of params that generated these plots for annotating/titling
@@ -171,8 +171,9 @@ class Plotter:
     def plot_families(self):
         labels, dats = self._prepare_datas(
             'temp_families.csv',
-            ['month', 'id', 'house_price', 'house_rent', 'house_id', 'house_owner_id', 'house_family_id',
-             'region_id', 'mun_id', 'total_wage', 'savings', 'num_members']
+            ['month', 'id', 'mun_id',
+             'house_price', 'house_rent',
+             'total_wage', 'savings', 'num_members']
         )
 
         for df in dats:

@@ -211,13 +211,9 @@ class Output:
         with open(self.families_path, 'a') as f:
             [f.write('%s;%s;%s;%s;%s;%s;%s;%s;%s;%.2f;%.2f;%.2f\n' % (sim.clock.days,
                                                             family.id,
+                                                            family.region_id[:7],
                                                             family.house.price if family.house else '',
                                                             family.house.rent_data[0] if family.house.rent_data else '',
-                                                            family.house.id if family.house else '',
-                                                            family.house.owner_id if family.house else '',
-                                                            family.house.family_id if family.house else '',
-                                                            family.region_id,
-                                                            family.region_id[:7],
                                                             family.total_wage(),
                                                             family.savings,
                                                             family.num_members))
