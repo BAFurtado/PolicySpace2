@@ -95,7 +95,7 @@ def multiple_runs(overrides, runs, cpus, output_dir):
                 'PARAMS': params
             }, f, default=str)
 
-        # average run data and then plot # TODO
+        # average run data and then plot
         runs = [p for p in glob('{}/*'.format(path)) if os.path.isdir(p)]
         avg_path = average_run_data(path, avg=conf.RUN['AVERAGE_TYPE'])
 
