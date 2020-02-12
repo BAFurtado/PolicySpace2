@@ -6,6 +6,7 @@ import pandas as pd
 
 import conf
 from . import geo
+from ..output import OUTPUT_DATA_SPEC
 
 # map mun code -> name
 mun_codes = pd.read_csv('input/names_and_codes_municipalities.csv', sep=';')
@@ -20,22 +21,16 @@ except AttributeError:
 
 class MissingDataError(Exception): pass
 
+
 class Plotter:
     """Manages all plotting of simulation outputs"""
-
-    # Data here is grouped by mun_id, so we can only plot
-    # one run at a time (or one average run)
-    PLOT_BY_MUNICIPALITY = ['houses', 'families', 'firms', 'construction']
-
-    def __init__(self, input_paths, output_path, params, styles=None):
+    def __init__(self, run_paths, output_path, params, avg=None):
         # Keep track of params that generated these plots for annotating/titling
         self.params = params
 
         # List of (label, input data path)
-        self.labels, self.input_paths = zip(*input_paths)
-
-        # User can specify style overrides per plot, otherwise use defaults
-        self.styles = styles if styles is not None else ['' for _ in self.input_paths]
+        self.labels, self.run_paths = zip(*run_paths)
+        self.avg = avg
 
         # Create output path (if necessary) for plots
         self.output_path = output_path
@@ -58,9 +53,8 @@ class Plotter:
         p_pop = self.params.get('PERCENTAGE_ACTUAL_POP', conf.PARAMS['PERCENTAGE_ACTUAL_POP'])
         title = '{}\nAgents : {}% of Population'.format(title, p_pop * 100)
 
-        # Apply styles, if any
-        for d, style in zip(datas, self.styles):
-            plot = d.plot(style=style)
+        for d in datas:
+            plot = d.plot()
 
         # Create the plot
         plot.legend(loc='best', ncol=3, fancybox=True, shadow=False, framealpha=.25, labels=labels)
@@ -75,7 +69,10 @@ class Plotter:
 
     def _prepare_data(self, path, columns):
         # Just read the data
-        dat = pd.read_csv(path,  sep=';', decimal='.', header=None)
+        try:
+            dat = pd.read_csv(path,  sep=';', decimal='.', header=None)
+        except FileNotFoundError:
+            raise MissingDataError
         dat.columns = columns
 
         # # Time to be eliminated (adjustment of the model)
@@ -84,22 +81,47 @@ class Plotter:
         return dat
 
     def _prepare_datas(self, fname, columns):
-        paths = [(label, os.path.join(path, fname)) for label, path in zip(self.labels, self.input_paths)]
+        paths = [(label, os.path.join(path, fname)) for label, path in zip(self.labels, self.run_paths)]
         paths = [(label, self._prepare_data(path, columns))
                                  for label, path in paths
                                  if os.path.exists(path)]
-        if not paths:
-            raise MissingDataError
         labels, dats = zip(*paths)
         return labels, dats
 
+    def _load_multiple_runs(self, key, fname):
+        spec = OUTPUT_DATA_SPEC[key]
+        labels, dats = self._prepare_datas(fname, spec['columns'])
+        if self.avg:
+            avg_type, avg_path = self.avg
+            cols = spec['avg']['columns']
+            if cols == 'ALL':
+                cols = spec['columns']
+            else:
+                cols = spec['avg']['groupings'] + cols
+            avg_dat = self._prepare_data(os.path.join(avg_path, fname), cols)
+            labels = [avg_type] + list(labels)
+            dats = [avg_dat] + list(dats)
+        return labels, dats
+
+    def _load_single_run(self, key, fname):
+        """Some plots can only plot one run at a time.
+        Use average if available, otherwise default to first run data."""
+        spec = OUTPUT_DATA_SPEC[key]
+        if self.avg:
+            avg_type, avg_path = self.avg
+            cols = spec['avg']['columns']
+            if cols == 'ALL':
+                cols = spec['columns']
+            else:
+                cols = spec['avg']['groupings'] + cols
+            # return avg_type, self._prepare_data(os.path.join(avg_path, fname), cols)
+            return self._prepare_data(os.path.join(avg_path, fname), cols)
+        else:
+            # return 'run', self._prepare_data(os.path.join(self.run_paths[0], fname), spec['columns'])
+            return self._prepare_data(os.path.join(self.run_paths[0], fname), spec['columns'])
+
     def plot_general(self):
-        labels, dats = self._prepare_datas(
-            'temp_stats.csv',
-            ['month', 'price_index', 'gdp_index', 'gdp_growth', 'unemployment', 'average_workers',
-             'families_wealth', 'families_savings', 'firms_wealth', 'firms_profit', 'gini_index',
-             'average_utility', 'inflation', 'average_qli', 'equally', 'locally', 'fpm']
-        )
+        labels, dats = self._load_multiple_runs('stats', 'temp_stats.csv')
 
         cols = ['price_index', 'gdp_index', 'gdp_growth', 'unemployment', 'average_workers', 'families_wealth',
                 'families_savings', 'firms_wealth', 'firms_profit', 'gini_index', 'average_utility', 'inflation',
@@ -117,12 +139,8 @@ class Plotter:
             self.save_fig(fig, 'temp_general_{}'.format(title))
 
     def plot_banks(self):
-        labels, dats = self._prepare_datas(
-            'temp_banks.csv',
-            ['month', 'taxes', 'balance', 'deposits',
-             'active_loans', 'p_delinquent_loans',
-             'mean_loan_age', 'min_loan', 'max_loan', 'mean_loan']
-        )
+        labels, dats = self._load_multiple_runs('banks', 'temp_banks.csv')
+
         cols = ['taxes', 'balance', 'deposits',
                 'active_loans', 'p_delinquent_loans',
                 'mean_loan_age', 'mean_loan']
@@ -134,19 +152,7 @@ class Plotter:
             self.save_fig(fig, 'temp_banks_{}'.format(title))
 
     def plot_houses(self):
-        labels, dats = self._prepare_datas(
-            'temp_houses.csv',
-            ['month', 'id', 'x', 'y', 'size', 'price', 'on_market', 'family_id', 'region_id', 'mun_id']
-        )
-
-        # Because we're plotting by mun_id,
-        # can't plot multiple datasets at once
-        # Otherwise we have lines per mun_id, per run
-        # Which quickly becomes illegible.
-        # If you need to see each run's plots,
-        # you should plot each run (PLOT_EACH_RUN=True)
-        dat = dats[0]
-        label = labels[0]
+        dat = self._load_single_run('houses', 'temp_houses.csv')
 
         to_plot = {
             'price': {
@@ -160,7 +166,7 @@ class Plotter:
         }
         df = dat.groupby(['month', 'mun_id'], as_index=False).mean()
         for k, d in to_plot.items():
-            title = '{} ({})'.format(d['title'], label)
+            title = d['title']
             name = d['name']
             dat_to_plot = df.pivot(index='month', columns='mun_id', values=k).astype(float)
             dats_to_plot = [dat_to_plot[c] for c in dat_to_plot.columns.values]
@@ -169,26 +175,10 @@ class Plotter:
             self.save_fig(fig, 'temp_houses_{}'.format(name))
 
     def plot_families(self):
-        labels, dats = self._prepare_datas(
-            'temp_families.csv',
-            ['month', 'id', 'mun_id',
-             'house_price', 'house_rent',
-             'total_wage', 'savings', 'num_members']
-        )
-
-        for df in dats:
-            df['renting'] = pd.notna(df['house_rent'])
-            df['income_towards_rent'] = df['house_rent']/df['total_wage']
-            df['affordable_rent'] = (df['income_towards_rent'] <= 0.3) | (pd.isna(df['income_towards_rent']))
-
-        # Because we're plotting by mun_id,
-        # can't plot multiple datasets at once
-        # Otherwise we have lines per mun_id, per run
-        # Which quickly becomes illegible.
-        # If you need to see each run's plots,
-        # you should plot each run (PLOT_EACH_RUN=True)
-        dat = dats[0]
-        label = labels[0]
+        dat = self._load_single_run('families', 'temp_families.csv')
+        dat['renting'] = pd.notna(dat['house_rent'])
+        dat['income_towards_rent'] = dat['house_rent']/dat['total_wage']
+        dat['affordable_rent'] = (dat['income_towards_rent'] <= 0.3) | (pd.isna(dat['income_towards_rent']))
 
         to_plot = {
             'house_rent': {
@@ -219,7 +209,7 @@ class Plotter:
 
         df = dat.groupby(['month', 'mun_id'], as_index=False).mean()
         for k, d in to_plot.items():
-            title = '{} ({})'.format(d['title'], label)
+            title = d['title']
             name = d['name']
             dat_to_plot = df.pivot(index='month', columns='mun_id', values=k).astype(float)
             dats_to_plot = [dat_to_plot[c] for c in dat_to_plot.columns.values]
@@ -227,19 +217,14 @@ class Plotter:
             fig = self.make_plot(dats_to_plot, title, labels=names_mun, y_label='Mean {}'.format(name))
             self.save_fig(fig, 'temp_families_{}'.format(name))
 
-
     def plot_regional_stats(self):
-        labels, dats = self._prepare_datas(
-            'temp_regional.csv',
-            ['month', 'mun_id', 'commuting', 'pop', 'gdp_region', 'regional_gini', 'regional_house_values',
-            'regional_unemployment', 'qli_index', 'gdp_percapita', 'treasure', 'equally', 'locally', 'fpm',
-             'licenses']
-        )
+        dat = self._load_single_run('regional', 'temp_regional.csv')
 
         # commuting
         title = 'Evolution of commute by region, monthly'
-        dats_to_plot = [d.pivot(index='month', columns='mun_id', values='commuting') for d in dats]
-        names_mun = [mun_codes[v] for v in list(dats_to_plot[0].columns.values)]
+        dat_to_plot = dat.pivot(index='month', columns='mun_id', values='commuting')
+        names_mun = [mun_codes[v] for v in list(dat_to_plot.columns.values)]
+        dats_to_plot = [dat_to_plot[c] for c in dat_to_plot.columns.values]
         fig = self.make_plot(dats_to_plot, title, labels=names_mun, y_label='Regional commute')
         self.save_fig(fig, 'temp_regional_evolution_of_commute')
 
@@ -250,88 +235,58 @@ class Plotter:
                 'Total Taxes', 'Land licenses']
         for col, title in zip(cols, titles):
             title = 'Evolution of {} by region, monthly'.format(title)
-            dats_to_plot = [d.pivot(index='month', columns='mun_id', values=col).astype(float) for d in dats]
+            dat_to_plot = dat.pivot(index='month', columns='mun_id', values=col).astype(float)
+            dats_to_plot = [dat_to_plot[c] for c in dat_to_plot.columns.values]
             fig = self.make_plot(dats_to_plot, title, labels=names_mun, y_label='Regional {}'.format(title))
             self.save_fig(fig, 'temp_regional_{}'.format(title))
 
-        # Plotting
         taxes = ['equally', 'locally', 'fpm']
         taxes_labels = ['Taxes distributed Equally', 'Taxes distributed Locally', 'FPM invested']
-
         for i in taxes:
+            import ipdb; ipdb.set_trace()
             dats_to_plot = [d.groupby(by=['month']).sum()[i] for d in dats]
             fig = self.make_plot(dats_to_plot, 'Evolution of Taxes', labels=taxes_labels, y_label='Total Taxes')
         self.save_fig(fig, 'temp_TAXES')
 
     def plot_firms(self):
-        labels, dats = self._prepare_datas(
-            'temp_firms.csv',
-            ['month', 'firm_id', 'region_id', 'mun_id', 'long', 'lat', 'total_balance$', 'number_employees',
-            'stocks', 'amount_produced', 'price', 'amount_sold', 'revenue', 'profit', 'wages_paid']
-        )
+        dat = self._load_single_run('firms', 'temp_firms.csv')
 
         cols = ['amount_produced', 'price']
         titles = ['Cumulative sum of amount produced by firm, by month', 'Price values by firm, by month']
         for col, title in zip(cols, titles):
-            dats_to_plot = [d.pivot(index='month', columns='firm_id', values=col).astype(float) for d in dats]
-            fig = self.make_plot(dats_to_plot, title, labels, y_label='Values in units')
+            dat_to_plot = dat.pivot(index='month', columns='firm_id', values=col).astype(float)
+            dats_to_plot = [dat_to_plot[c] for c in dat_to_plot.columns.values]
+            labels = ['Firm {}'.format(i) for i, _ in enumerate(dat_to_plot.columns.values)]
+            fig = self.make_plot(dats_to_plot, title, labels=labels, y_label='Values in units')
             self.save_fig(fig, 'temp_general_{}'.format(col))
 
-        # Median of number of employees by firm, by region
         title = 'Median of number of employees by firm, by month'
-        dats_to_plot = []
-        for d in dats:
-            firms_stats = d.groupby(['month', 'mun_id'], as_index=False).median()
-            dat_to_plot = firms_stats.pivot(index='month', columns='mun_id', values='number_employees').astype(float)
-            dats_to_plot.append(dat_to_plot)
-        names_mun = [mun_codes[v] for v in list(dats_to_plot[0].columns.values)]
-        fig = self.make_plot(dats_to_plot, title, labels=names_mun, y_label='Median of employees')
+        firms_stats = dat.groupby(['month', 'firm_id'], as_index=False).median()
+        dat_to_plot = firms_stats.pivot(index='month', columns='firm_id', values='number_employees').astype(float)
+        dats_to_plot = [dat_to_plot[c] for c in dat_to_plot.columns.values]
+        labels = ['Firm {}'.format(i) for i, _ in enumerate(dat_to_plot.columns.values)]
+        fig = self.make_plot(dats_to_plot, title, labels=labels, y_label='Median of employees')
         self.save_fig(fig, 'temp_general_median_number_of_employees_by_firm_index')
 
-        # Mean of number of employees by firm, by region
-        title = 'Mean of number of employees by firm, by month'
-        dats_to_plot = []
-        for d in dats:
-            firms_stats = d.groupby(['month', 'mun_id'], as_index=False).mean()
-            dat_to_plot = firms_stats.pivot(index='month', columns='mun_id', values='number_employees').astype(float)
-            dats_to_plot.append(dat_to_plot)
-        fig = self.make_plot(dats_to_plot, title, labels=names_mun, y_label='Mean of employees')
-        self.save_fig(fig, 'temp_general_mean_number_of_employees_by_firm_index')
-
     def plot_construction(self):
-        labels, dats = self._prepare_datas(
-            'temp_construction.csv',
-            ['month', 'firm_id', 'region_id', 'mun_id', 'long', 'lat', 'total_balance$', 'number_employees',
-            'stocks', 'amount_produced', 'price', 'amount_sold', 'revenue', 'profit', 'wages_paid']
-        )
+        dat = self._load_single_run('construction', 'temp_construction.csv')
 
         cols = ['amount_produced', 'price']
         titles = ['Cumulative sum of amount produced by firm, by month', 'Price values by firm, by month']
         for col, title in zip(cols, titles):
-            dats_to_plot = [d.pivot(index='month', columns='firm_id', values=col).astype(float) for d in dats]
-            fig = self.make_plot(dats_to_plot, title, labels, y_label='Values in units')
+            dat_to_plot = dat.pivot(index='month', columns='firm_id', values=col).astype(float)
+            dats_to_plot = [dat_to_plot[c] for c in dat_to_plot.columns.values]
+            labels = ['Firm {}'.format(i) for i, _ in enumerate(dat_to_plot.columns.values)]
+            fig = self.make_plot(dats_to_plot, title, labels=labels, y_label='Values in units')
             self.save_fig(fig, 'temp_construction_{}'.format(col))
 
-        # Median of number of employees by firm, by region
-        title = 'Median of number of employees by region, by month'
-        dats_to_plot = []
-        for d in dats:
-            firms_stats = d.groupby(['month', 'mun_id'], as_index=False).median()
-            dat_to_plot = firms_stats.pivot(index='month', columns='firm_id', values='number_employees').astype(float)
-            dats_to_plot.append(dat_to_plot)
-        names_mun = [mun_codes[v] for v in list(dats_to_plot[0].columns.values)]
-        fig = self.make_plot(dats_to_plot, title, labels=names_mun, y_label='Median of employees')
+        title = 'Median of number of employees by firm, by month'
+        firms_stats = dat.groupby(['month', 'firm_id'], as_index=False).median()
+        dat_to_plot = firms_stats.pivot(index='month', columns='firm_id', values='number_employees').astype(float)
+        dats_to_plot = [dat_to_plot[c] for c in dat_to_plot.columns.values]
+        labels = ['Firm {}'.format(i) for i, _ in enumerate(dat_to_plot.columns.values)]
+        fig = self.make_plot(dats_to_plot, title, labels=labels, y_label='Median of employees')
         self.save_fig(fig, 'temp_construction_median_number_of_employees_by_firm_index')
-
-        # Mean of number of employees by firm, by region
-        title = 'Mean of number of employees by firm, by month'
-        dats_to_plot = []
-        for d in dats:
-            firms_stats = d.groupby(['month', 'mun_id'], as_index=False).mean()
-            dat_to_plot = firms_stats.pivot(index='month', columns='firm_id', values='number_employees').astype(float)
-            dats_to_plot.append(dat_to_plot)
-        fig = self.make_plot(dats_to_plot, title, labels=names_mun, y_label='Mean of employees')
-        self.save_fig(fig, 'temp_construction_mean_number_of_employees_by_firm_index')
 
     def plot_geo(self, sim, text):
         """Generate spatial plots"""
