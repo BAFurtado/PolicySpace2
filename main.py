@@ -161,20 +161,21 @@ def average_run_data(path, avg='mean'):
     return output_path
 
 
-def plot(input_paths, output_path, params, avg=None, sim=None):
+def plot(input_paths, output_path, params, avg=None, sim=None, only=None):
     """Generate plots based on data in specified output path"""
     plotter = Plotter(input_paths, output_path, params, avg=avg)
 
     if conf.RUN['DESCRIPTIVE_STATS_CHOICE']:
         report.stats('')
 
+    keys = ['general', 'firms',
+            'construction', 'houses',
+            'families', 'banks']
+    if only is not None:
+        keys = [k for k in keys if k in only]
+
     if conf.RUN['SAVE_PLOTS_FIGURES'] and conf.RUN['SAVE_AGENTS_DATA'] is not None:
-        for k in ['general',
-                  'firms',
-                  'construction',
-                  'houses',
-                  'families',
-                  'banks']:
+        for k in keys:
             try:
                 logger.info('Plotting {}...'.format(k))
                 getattr(plotter, 'plot_{}'.format(k))()
@@ -216,6 +217,10 @@ def plot_results(output_dir):
         label = conf_to_str(r['overrides'], delimiter='\n')
         avgs.append((label, r['avg']))
 
+    # plot averages
+    if len(avgs) > 1:
+        output_path = os.path.join(output_dir, 'plots')
+        plot(avgs, output_path, {}, only=['general'])
 
 def impute(data):
     """very naive/imprecise data imputation, can be improved"""
