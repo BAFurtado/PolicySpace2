@@ -30,6 +30,7 @@ from collections import defaultdict
 from itertools import product, chain
 from joblib import Parallel, delayed
 from analysis.plotting import Plotter, MissingDataError
+from analysis.output import OUTPUT_DATA_SPEC
 from web import app
 
 logger = logging.getLogger('main')
@@ -94,7 +95,7 @@ def multiple_runs(overrides, runs, cpus, output_dir):
                 'PARAMS': params
             }, f, default=str)
 
-        # average run data and then plot
+        # average run data and then plot # TODO
         runs = [p for p in glob('{}/*'.format(path)) if os.path.isdir(p)]
         avg_path = average_run_data(path, avg=conf.RUN['AVERAGE_TYPE'])
 
@@ -133,36 +134,36 @@ def average_run_data(path, avg='mean'):
 
     # group by filename
     file_groups = defaultdict(list)
+    keep_files = {'temp_{}.csv'.format(k): k for k in conf.RUN['AVERAGE_DATA']}
     for file in glob(os.path.join(path, '**/*.csv')):
-        # average only specified data.
-        if any(k in file for k in conf.RUN['AVERAGE_DATA']):
-            fname = os.path.basename(file)
+        fname = os.path.basename(file)
+        if fname in keep_files:
             file_groups[fname].append(file)
 
     # merge
     for fname, files in file_groups.items():
+        spec = OUTPUT_DATA_SPEC[keep_files[fname]]
         dfs = []
-        saved_date = []
         for f in files:
             df = pd.read_csv(f,  sep=';', decimal='.', header=None)
-            saved_date = df[0]
-            df = df.loc[:, 1:]
             dfs.append(df)
         df = pd.concat(dfs)
-        if 'famil' in fname:
-            import ipdb; ipdb.set_trace()
+        df.columns = spec['columns']
+
         # Saving date before averaging
-        df = df.groupby(df.index)
-        df = getattr(df, avg)()
-        df.insert(0, 0, saved_date)
+        dfg = df.groupby(spec['avg']['groupings'])
+        avg_cols = spec['avg']['columns']
+        if avg_cols == 'ALL': avg_cols = [c for c in spec['columns'] if c not in spec['avg']['groupings']]
+        dfg = dfg[avg_cols]
+        df = getattr(dfg, avg)()
+        df = df.reset_index() # "ungroup" by
         df.to_csv(os.path.join(output_path, fname), header=False, index=False, sep=';')
     return output_path
 
 
-def plot(input_paths, output_path, params, styles=None, sim=None):
+def plot(input_paths, output_path, params, avg=None, sim=None):
     """Generate plots based on data in specified output path"""
-    plotter = Plotter(input_paths, output_path, params, styles=styles)
-
+    plotter = Plotter(input_paths, output_path, params, avg=avg)
 
     if conf.RUN['DESCRIPTIVE_STATS_CHOICE']:
         report.stats('')
@@ -174,15 +175,13 @@ def plot(input_paths, output_path, params, styles=None, sim=None):
                   'houses',
                   'families',
                   'banks']:
-                if k not in Plotter.PLOT_BY_MUNICIPALITY or (sim is not None or k in conf.RUN['AVERAGE_DATA']):
-                    try:
-                        logger.info('Plotting {}...'.format(k))
-                        print(input_paths)
-                        getattr(plotter, 'plot_{}'.format(k))()
-                    except MissingDataError:
-                        logger.warn('Missing data for "{}", skipping.'.format(k))
-                        if any(p.endswith('avg') for _, p in input_paths):
-                            logger.warn('Missing data is average data. You may need to add {} to AVERAGE_DATA'.format(k))
+            try:
+                logger.info('Plotting {}...'.format(k))
+                getattr(plotter, 'plot_{}'.format(k))()
+            except MissingDataError:
+                logger.warn('Missing data for "{}", skipping.'.format(k))
+                if avg is not None:
+                    logger.warn('You may need to add "{}" to AVERAGE_DATA.'.format(k))
 
         if sim is not None and conf.RUN['PLOT_REGIONAL']:
             plotter.plot_regional_stats()
@@ -195,23 +194,19 @@ def plot(input_paths, output_path, params, styles=None, sim=None):
 def plot_runs_with_avg(run_data):
     """Plot results of simulations sharing a configuration,
     with their average results"""
-    # load avg data path, then paths for individual runs
-    # and pair with labels
-    labels_paths = [(run_data['avg_type'], run_data['avg'])] + list(enumerate(run_data['runs']))
-
-    # set the avg to solid and the rest to dashed lines
-    styles = ['-'] + ['--' for _ in run_data['runs']]
+    # individual runs
+    labels_paths = list(enumerate(run_data['runs']))
 
     # output to the run directory + /plots
     output_path = os.path.join(run_data['path'], 'plots')
 
     # plot
-    plot(labels_paths, output_path, {}, styles)
+    plot(labels_paths, output_path, {}, avg=(run_data['avg_type'], run_data['avg']))
 
 
 def plot_results(output_dir):
     """Plot results of multiple simulations"""
-    logger.info('Plotting results...')
+    logger.info('Plotting results...') # TODO
     results = json.load(open(os.path.join(output_dir, 'meta.json'), 'r'))
     avgs = []
     for r in results:
