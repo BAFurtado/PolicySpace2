@@ -19,6 +19,79 @@ GENERATOR_PARAMS = [
     'PERCENTAGE_ACTUAL_POP'
 ]
 
+OUTPUT_DATA_SPEC = {
+    'stats': {
+        'avg': {
+            'groupings': ['month'],
+            'columns': 'ALL'
+        },
+        'columns': ['month', 'price_index', 'gdp_index', 'gdp_growth', 'unemployment', 'average_workers',
+                    'families_wealth', 'families_savings', 'firms_wealth', 'firms_profit', 'gini_index',
+                    'average_utility', 'inflation', 'average_qli', 'equally', 'locally', 'fpm']
+    },
+    'families': {
+        'avg': {
+            'groupings': ['month', 'mun_id'],
+            'columns': ['house_price', 'house_rent',
+                        'total_wage', 'savings', 'num_members']
+        },
+        'columns': ['month', 'id', 'mun_id',
+                    'house_price', 'house_rent',
+                    'total_wage', 'savings', 'num_members']
+    },
+    'banks': {
+        'avg': {
+            'groupings': ['month'],
+            'columns': 'ALL'
+        },
+        'columns': ['month', 'taxes', 'balance', 'deposits',
+                    'active_loans', 'p_delinquent_loans',
+                    'mean_loan_age', 'min_loan', 'max_loan', 'mean_loan']
+    },
+    'houses': {
+        'avg': {
+            'groupings': ['month', 'mun_id'],
+            'columns': ['price', 'on_market']
+        },
+        'columns': ['month', 'id', 'x', 'y', 'size', 'price',
+                    'on_market', 'family_id', 'region_id', 'mun_id']
+    },
+    'firms': {
+        'avg': {
+            'groupings': ['month', 'firm_id'],
+            'columns': ['total_balance$', 'number_employees',
+                        'stocks', 'amount_produced', 'price', 'amount_sold',
+                        'revenue', 'profit', 'wages_paid']
+        },
+        'columns':  ['month', 'firm_id', 'region_id', 'mun_id',
+                     'long', 'lat', 'total_balance$', 'number_employees',
+                     'stocks', 'amount_produced', 'price', 'amount_sold',
+                     'revenue', 'profit', 'wages_paid']
+    },
+    'construction': {
+        'avg': {
+            'groupings': ['month', 'firm_id'],
+            'columns': ['total_balance$', 'number_employees',
+                        'stocks', 'amount_produced', 'price', 'amount_sold',
+                        'revenue', 'profit', 'wages_paid']
+        },
+        'columns':  ['month', 'firm_id', 'region_id', 'mun_id',
+                     'long', 'lat', 'total_balance$', 'number_employees',
+                     'stocks', 'amount_produced', 'price', 'amount_sold',
+                     'revenue', 'profit', 'wages_paid']
+    },
+    'regional': {
+        'avg': {
+            'groupings': ['month', 'mun_id'],
+            'columns': 'ALL'
+        },
+        'columns': ['month', 'mun_id', 'commuting', 'pop', 'gdp_region',
+                    'regional_gini', 'regional_house_values', 'regional_unemployment',
+                    'qli_index', 'gdp_percapita', 'treasure', 'equally', 'locally', 'fpm',
+                    'licenses']
+    }
+}
+
 
 class Output:
     """Manages simulation outputs"""
@@ -209,15 +282,11 @@ class Output:
 
     def save_family_data(self, sim):
         with open(self.families_path, 'a') as f:
-            [f.write('%s;%s;%s;%s;%s;%s;%s;%s;%s;%.2f;%.2f;%.2f\n' % (sim.clock.days,
+            [f.write('%s;%s;%s;%s;%s;%.2f;%.2f;%.2f\n' % (sim.clock.days,
                                                             family.id,
+                                                            family.region_id[:7],
                                                             family.house.price if family.house else '',
                                                             family.house.rent_data[0] if family.house.rent_data else '',
-                                                            family.house.id if family.house else '',
-                                                            family.house.owner_id if family.house else '',
-                                                            family.house.family_id if family.house else '',
-                                                            family.region_id,
-                                                            family.region_id[:7],
                                                             family.total_wage(),
                                                             family.savings,
                                                             family.num_members))

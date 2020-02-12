@@ -45,9 +45,11 @@ SAVE_AGENTS_DATA = 'MONTHLY' # or 'QUARTERLY', 'ANNUALLY', or None
 # SAVE_DATA = []
 SAVE_DATA = ['house', 'family', 'banks']
 
-# Average all data (not just general data)
+# What data to average
 # across all runs
-AVERAGE_ALL_DATA = False
+# Options: ['stats', 'families', 'houses', 'firms', 'regional', 'banks', 'construction']
+AVERAGE_DATA = ['stats', 'families', 'banks']
+AVERAGE_TYPE = 'median' # or 'mean'
 
 # Whether or not to save data for the transit simulation
 SAVE_TRANSIT_DATA = False
