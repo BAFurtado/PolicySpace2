@@ -216,11 +216,6 @@ def plot_results(output_dir):
         label = conf_to_str(r['overrides'], delimiter='\n')
         avgs.append((label, r['avg']))
 
-    # plot averages
-    if len(avgs) > 1:
-        output_path = os.path.join(output_dir, 'plots')
-        plot(avgs, output_path, {})
-
 
 def impute(data):
     """very naive/imprecise data imputation, can be improved"""
