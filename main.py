@@ -151,9 +151,13 @@ def average_run_data(path, avg='mean'):
         df.columns = spec['columns']
 
         # Saving date before averaging
-        dfg = df.groupby(spec['avg']['groupings'])
         avg_cols = spec['avg']['columns']
         if avg_cols == 'ALL': avg_cols = [c for c in spec['columns'] if c not in spec['avg']['groupings']]
+
+        # Ensure these columns are numeric
+        df[avg_cols] = df[avg_cols].apply(pd.to_numeric)
+
+        dfg = df.groupby(spec['avg']['groupings'])
         dfg = dfg[avg_cols]
         df = getattr(dfg, avg)()
         df = df.reset_index() # "ungroup" by
