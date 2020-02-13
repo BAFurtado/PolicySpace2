@@ -163,6 +163,7 @@ def average_run_data(path, avg='mean'):
 
 def plot(input_paths, output_path, params, avg=None, sim=None, only=None):
     """Generate plots based on data in specified output path"""
+    logger.info('Plotting to {}'.format(output_path))
     plotter = Plotter(input_paths, output_path, params, avg=avg)
 
     if conf.RUN['DESCRIPTIVE_STATS_CHOICE']:
