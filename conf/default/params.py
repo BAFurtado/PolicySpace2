@@ -23,8 +23,7 @@ WAGE_IGNORE_UNEMPLOYMENT = False
 HIRING_SAMPLE_SIZE = 100
 
 # Percentage of households pursuing new location
-# PERCENTAGE_CHECK_NEW_LOCATION = 0.002
-PERCENTAGE_CHECK_NEW_LOCATION = 0.02
+PERCENTAGE_CHECK_NEW_LOCATION = 0.002
 
 # TAXES
 TAX_CONSUMPTION = 3.9E-04
@@ -38,8 +37,9 @@ MAX_LOAN_AGE = 80
 MAX_LOAN_REPAYMENT_PERCENT_INCOME = 0.05
 
 # GOVERNMENT
-# ANNUAL Real interest rate of the economy (SELIC minus INFLATION) for the Brazilian case
-INTEREST_RATE = round(0.06 - 0.055, 4)
+# MONTHLY Real interest rate of the economy (SELIC minus INFLATION) for the Brazilian case
+# REAL INTEREST RATE OF 1.5% YEARLY TRANSFORMED INTO MONTHS' VALUES: = ((1.05-.035)**(1/12)) - 1 = 0.0012415
+INTEREST_RATE = .0012415
 # ALTERNATIVE OF DISTRIBUTION OF TAXES COLLECTED. REPLICATING THE NOTION OF A COMMON POOL OF RESOURCES ################
 # Alternative0 is True, municipalities are just normal as INPUT
 # Alternative0 is False, municipalities are all together
@@ -68,7 +68,7 @@ LIST_NEW_AGE_GROUPS = [6, 12, 17, 25, 35, 45, 65, 100]
 
 # Percentage of actual population to run the simulation
 # Minimum value to run depends on the size of municipality 0,001 is recommended minimum
-PERCENTAGE_ACTUAL_POP = 0.002
+PERCENTAGE_ACTUAL_POP = 0.007
 
 # Consumption_equal: ratio of consumption tax distributed at state level (equal)
 # Fpm: ratio of 'labor' and 'firm' taxes distributed per the fpm ruling

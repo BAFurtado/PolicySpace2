@@ -68,12 +68,14 @@ class Plotter:
         return fig
 
     def _prepare_data(self, path, columns):
+        print(columns)
         # Just read the data
         try:
             dat = pd.read_csv(path,  sep=';', decimal='.', header=None)
         except FileNotFoundError:
             raise MissingDataError
         dat.columns = columns
+
 
         # # Time to be eliminated (adjustment of the model)
         if conf.RUN['TIME_TO_BE_ELIMINATED'] > 0:

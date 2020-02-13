@@ -51,7 +51,7 @@ class Central:
         # Compute future values
         interest = 0
         for amount, date in self.wallet[client]:
-            interest += fv(self.interest/12,
+            interest += fv(self.interest,
                             (datetime.date(y, m, 1) - date).days // 30,
                             0,
                             amount * -1)

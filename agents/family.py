@@ -89,20 +89,19 @@ class Family:
     def total_wage(self):
         return sum(member.last_wage for member in self.members.values() if member.last_wage is not None)
 
-    def human_capital(self, r):
-        # Using retiring age minus current age as exponent s
+    def human_capital(self):
         # Using last wage available as base for permanent income calculus
-        ts = sum([np.pv(r/12, (74 - member.age) * 12, -member.last_wage)
-                  for member in self.members.values()
-                  if member.last_wage is not None])
+        # t0 is the sum of salaries of the family now
         t0 = sum(member.last_wage for member in self.members.values() if member.last_wage is not None)
-        return t0, ts
+        return t0
 
     def permanent_income(self, r):
         # Equals Consumption (Bielefeld, 2018, pp.13-14)
-        t0, ts = self.human_capital(r)
+        t0 = self.human_capital()
         r_1_r = r/(1 + r)
-        return r_1_r * t0 + r_1_r * ts + self.get_wealth() * r
+        # Calculated as "discouted some of current income and expected future income" plus "financial wealth"
+        # Perpetuity of income is a fraction (r_1_r) of income t0 divided by interest r
+        return r_1_r * t0 + r_1_r * (t0 / r) + self.get_wealth() * r
 
     def average_study(self):
         """Averages the years of study of the family"""
@@ -146,7 +145,8 @@ class Family:
             self.savings = 0
             return money_to_spend
         else:
-        # If there is no cash and no savings, pass
+            # If there is no cash and no savings, pass
+            # TODO: should keep tabs on how many families go hungry
             return None
 
     def consume(self, firms, regions, params, seed):
