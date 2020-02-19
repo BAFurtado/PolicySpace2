@@ -270,7 +270,10 @@ class Generator:
         while unclaimed:
             for family in families.values():
                 if house_id is None:
-                    house_id = unclaimed.pop(0)
+                    try:
+                        house_id = unclaimed.pop(0)
+                    except IndexError:
+                        break
                 house = households[house_id]
                 if not house.is_occupied:
                     family.move_in(house)
