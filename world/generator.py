@@ -267,15 +267,16 @@ class Generator:
         unclaimed = list(households)
         self.seed.shuffle(unclaimed)
         house_id = None
-        for family in families.values():
-            if house_id is None:
-                house_id = unclaimed.pop(0)
-            house = households[house_id]
-            if not house.is_occupied:
-                family.move_in(house)
-                house.owner_id = family.id
-                family.owned_houses.append(house)
-                house_id = None
+        while unclaimed:
+            for family in families.values():
+                if house_id is None:
+                    house_id = unclaimed.pop(0)
+                house = households[house_id]
+                if not house.is_occupied:
+                    family.move_in(house)
+                    house.owner_id = family.id
+                    family.owned_houses.append(house)
+                    house_id = None
         assert len(unclaimed) == 0
         return families
 
