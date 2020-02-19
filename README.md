@@ -50,19 +50,20 @@ First create an environment and install Shapely and GDAL as such:
 
 `conda create --name ps2 python=3.7`
 
+Activate the environmnet
+
+`conda activate ps2`
+
 Then add Shapely from conda-forge channel
- `conda install shapely -c conda-forge`
- `conda install gdal -c conda-forge`
+ `conda install shapely gdal -c conda-forge`
 
 Then the other packages 
-`conda install fiona shapely numpy pandas geopandas numba
-descartes scipy seaborn pyproj matplotlib six cycler statsmodels
+`conda install fiona pandas geopandas numba descartes scipy seaborn pyproj matplotlib six cycler statsmodels
 joblib scikit-learn flask flask-wtf psutil -c conda-forge`
- 
-Type on a terminal, after having downloaded and installed conda, choosing a name for your environment and replacing 
-<env> and using requirements.txt | requirements_linux.txt in place of <this file>
 
-`conda create --name <env> --file <this file>`
+Alternatively, type on a terminal 
+
+`conda create --name <env> --file conda_requirements.txt`
 
 ## How to run the model ##
 
