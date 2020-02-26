@@ -68,7 +68,6 @@ class Plotter:
         return fig
 
     def _prepare_data(self, path, columns):
-        print(columns)
         # Just read the data
         try:
             dat = pd.read_csv(path,  sep=';', decimal='.', header=None)
@@ -171,7 +170,6 @@ class Plotter:
             title = d['title']
             name = d['name']
             dat_to_plot = df.pivot(index='month', columns='mun_id', values=k).astype(float)
-            dats_to_plot = [dat_to_plot[c] for c in dat_to_plot.columns.values]
             names_mun = [mun_codes[v] for v in list(dat_to_plot.columns.values)]
             fig = self.make_plot([dat_to_plot], title, labels=names_mun, y_label='Mean {}'.format(name))
             self.save_fig(fig, 'temp_houses_{}'.format(name))
@@ -245,8 +243,7 @@ class Plotter:
         taxes = ['equally', 'locally', 'fpm']
         taxes_labels = ['Taxes distributed Equally', 'Taxes distributed Locally', 'FPM invested']
         for i in taxes:
-            import ipdb; ipdb.set_trace()
-            dats_to_plot = [d.groupby(by=['month']).sum()[i] for d in dats]
+            dats_to_plot = [dat.groupby(by=['month']).sum()[i]]
             fig = self.make_plot(dats_to_plot, 'Evolution of Taxes', labels=taxes_labels, y_label='Total Taxes')
         self.save_fig(fig, 'temp_TAXES')
 
