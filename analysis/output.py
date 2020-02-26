@@ -220,6 +220,8 @@ class Output:
         self.save_banks_data(sim)
 
         for type in conf.RUN['SAVE_DATA']:
+            # Skip b/c they are saved anyways above
+            if type in ['firms', 'banks']: continue
             save_fn = getattr(self, 'save_{}_data'.format(type))
             save_fn(sim)
 
