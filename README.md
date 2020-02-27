@@ -1,35 +1,46 @@
-# PolicySpace2
+PolicySpace2
+------
+<img alt="GitHub stars" src="https://img.shields.io/github/stars/bafurtado/policyspace2.svg?color=orange">  ![GitHub All Releases](https://img.shields.io/github/downloads/bafurtado/policyspace2/total) ![GitHub](https://img.shields.io/github/license/bafurtado/policyspace2)  ![GitHub forks](https://img.shields.io/github/forks/bafurtado/policyspace2)
+------
 
-This is an evolution of:
+This is an evolution of PolicySpace  
+<img alt="GitHub stars" src="https://img.shields.io/github/stars/bafurtado/policyspace.svg?color=orange">  ![GitHub forks](https://img.shields.io/github/forks/bafurtado/policyspace)
+ ---
 
-**FURTADO, Bernardo Alves. PolicySpace: agent-based modeling. IPEA: Brasília, 2018.** available at https://github.com/BAFurtado/PolicySpace
+Available here: https://github.com/BAFurtado/PolicySpace and published as a book 
+here: https://www.researchgate.net/publication/324991027_PolicySpace_agent-based_modeling
 
-This is an open agent-based model (ABM) with three markets and a tax scheme that empirically simulates 46 Brazilian
-metropolitan regions.
+ 
+ **FURTADO, Bernardo Alves. PolicySpace: agent-based modeling. IPEA: Brasília, 2018.** 
 
-Developed by Bernardo Alves Furtado, funded by Institute of Applied Economic Research (IPEA).
-The author acknowledges receiving a grant of productivity by National Council of Research (CNPq).
+This was an open agent-based model (ABM) with three markets and a tax scheme that empirically simulates 46 Brazilian
+metropolitan regions. Now, we have also **added a credit market, a housing construction scheme and an incipient 
+land market mechanism**. 
 
-This work is licensed under GNU General Public License v3.0
+Developed by Bernardo Alves Furtado, funded by Institute of Applied Economic Research (IPEA) [www.ipea.gov.br] and 
+CEPAL-Brasília The author acknowledges receiving a grant of productivity by National Council of Research (CNPq)
+ [www.cnpq.br].
+
+### Collaborators
+Bernardo Alves Furtado -- https://sites.google.com/view/bernardo-alves-furtado
+
+Francis Tseng --  http://frnsys.com
+
+![GitHub labels](https://img.shields.io/github/labels/atom/atom/help-wanted)
 
 #### Recent publication
 
-Furtado, B. A. (2019). Modeling tax distribution in metropolitan regions with PolicySpace. Journal on Policy and Complex Systems, 5(1). https://doi.org/10.18278/jpcs.5.1.6
+Furtado, B. A. (2019). Modeling tax distribution in metropolitan regions with PolicySpace. 
+Journal on Policy and Complex Systems, 5(1). https://doi.org/10.18278/jpcs.5.1.6
 
-#### Repository of produced texts
-https://www.researchgate.net/profile/Bernardo_Furtado
-
-### Previous collaborator after PolicySpace
-Francis Tseng (automating, general fixtures and improvements, transport, plots, output) [April-July 2018]
-
-### Major changes, since PolicySpace
+### Major changes
 
 1. PolicySpace2 generates data that can be applied at https://github.com/frnsys/transit_demand_model. 
 The transit model in turn generates private and public transport routes, visualization and congestion times.
 2. Now data is read at the **intraurban** level of 'áreas de ponderação' (census track/block) from IBGE.
 3. There is exogenous migration embedded in the model (creating new houses)
 4. Exogenous growth of firms
-5. [Marriage disabled]
+5. Marriage 
 6. Better support for plot formats
 7. House prices (supply) are included into families' wealth and updated every month
 8. Consumption decisions now follow Bielefeld, 2018 and is now a 
@@ -41,6 +52,9 @@ The transit model in turn generates private and public transport routes, visuali
 12. When no cash available, families can withdraw from savings for consumption (if any at savings) 
 up to permanent income
 13. Internal clock updated to use datetime
+14. Introduced a rental market 
+15. Included construction companies. 
+16. Financial (mortgage, credit) market structures
 
 #### How do I get set up?
 
@@ -48,7 +62,7 @@ We recommend using conda  and creating an environment that includes all librarie
 
 First create an environment and install Shapely and GDAL as such:
 
-`conda create --name ps2 python=3.7`
+`conda create --name ps2 python=3.6`
 
 Activate the environmnet
 
@@ -170,7 +184,5 @@ To run the server:
 
 ```
 python main.py web
-```
 
 Then open `localhost:5000` in your browser.
----
