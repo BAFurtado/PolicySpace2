@@ -24,12 +24,12 @@ SAVE_PLOTS_FIGURES = True
 
 # If plots should be generated separately
 # for each simulation run or just aggregated
-PLOT_EACH_RUN = False
+PLOT_EACH_RUN = True
 # Spatial plots only works when PLOT_EACH_RUN is True
-SAVE_SPATIAL_PLOTS = False
+SAVE_SPATIAL_PLOTS = True
 # 'png' or 'eps'
 PLOT_FORMAT = 'png'
-PLOT_REGIONAL = False
+PLOT_REGIONAL = True
 
 # NOTE THAT YOU NEED TO SAVE_AGENTS_DATA to generate the plots, because this is what saves the output CSV data.
 # You can also use set it to "QUARTERLY" or "ANNUALLY" to save less frequently.
@@ -48,7 +48,7 @@ SAVE_DATA = ['house', 'family', 'banks']
 # What data to average
 # across all runs
 # Options: ['stats', 'families', 'houses', 'firms', 'regional', 'banks', 'construction']
-AVERAGE_DATA = ['stats', 'families', 'banks']
+AVERAGE_DATA = ['construction', 'banks', 'regional']
 AVERAGE_TYPE = 'median' # or 'mean'
 
 # Whether or not to save data for the transit simulation

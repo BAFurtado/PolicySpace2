@@ -287,8 +287,8 @@ def sensitivity(ctx, params):
             p_min, p_max, p_step = (float(v) for v in [p_min, p_max, p_step])
             p_vals = np.linspace(p_min, p_max, p_step)
 
-            # round to 4 decimal places
-            p_vals = [round(v, 4) for v in p_vals]
+            # round to 8 decimal places
+            p_vals = [round(v, 8) for v in p_vals]
 
         # else, assume boolean
         else:

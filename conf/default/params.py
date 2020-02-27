@@ -1,13 +1,13 @@
 # MODEL PARAMETERS
 # FIRMS
 # Production function, labour with decaying exponent, Alpha for K. [0, 1]
-ALPHA = .24
+ALPHA = .67
 # By how much percentage to increase prices
 MARKUP = 0.025
 # Frequency firms change prices. Probability > than parameter
 STICKY_PRICES = .5
 # Order of magnitude correction of production. Production divided by parameter
-PRODUCTION_MAGNITUDE = 76
+PRODUCTION_MAGNITUDE = 500
 
 # Number of firms consulted before consumption
 SIZE_MARKET = 10
@@ -23,14 +23,14 @@ WAGE_IGNORE_UNEMPLOYMENT = False
 HIRING_SAMPLE_SIZE = 100
 
 # Percentage of households pursuing new location
-PERCENTAGE_CHECK_NEW_LOCATION = 0.002
+PERCENTAGE_CHECK_NEW_LOCATION = 0.001
 
 # TAXES
-TAX_CONSUMPTION = 3.9E-04
-TAX_LABOR = 1.3E-04
-TAX_ESTATE_TRANSACTION = 1.5E-06
-TAX_FIRM = 4.4E-04
-TAX_PROPERTY = 1.4E-06
+TAX_CONSUMPTION = 3.9E-05
+TAX_LABOR = 1.3E-05
+TAX_ESTATE_TRANSACTION = 1.5E-07
+TAX_FIRM = 4.4E-05
+TAX_PROPERTY = 1.4E-07
 
 # LOANS
 MAX_LOAN_AGE = 80
@@ -68,7 +68,7 @@ LIST_NEW_AGE_GROUPS = [6, 12, 17, 25, 35, 45, 65, 100]
 
 # Percentage of actual population to run the simulation
 # Minimum value to run depends on the size of municipality 0,001 is recommended minimum
-PERCENTAGE_ACTUAL_POP = 0.007
+PERCENTAGE_ACTUAL_POP = 0.01
 
 # Consumption_equal: ratio of consumption tax distributed at state level (equal)
 # Fpm: ratio of 'labor' and 'firm' taxes distributed per the fpm ruling
@@ -76,7 +76,7 @@ TAXES_STRUCTURE = {'consumption_equal': .1875,
                    'fpm': .235}
 
 # Order of magnitude parameter
-TREASURE_INTO_SERVICES = 1
+TREASURE_INTO_SERVICES = .5
 
 # selecting the ACPs (Population Concentration Areas)
 # ACPs and their STATES - ALL ACPs written in UPPER CASE and whiteout  ACCENT
