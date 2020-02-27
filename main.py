@@ -52,6 +52,7 @@ def single_run(params, path):
     if conf.RUN['PRINT_STATISTICS_AND_RESULTS_DURING_PROCESS']:
         logging.basicConfig(level=logging.INFO)
     sim = Simulation(params, path)
+    sim.initialize()
     sim.run()
 
     if conf.RUN['PLOT_EACH_RUN']:
