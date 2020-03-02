@@ -91,15 +91,6 @@ class Simulation:
         timer = analysis.Timer()
         timer.start()
 
-        self.labor_market = markets.LaborMarket(self.seed)
-        self.housing = markets.HousingMarket()
-        self.pops, self.total_pop = population.load_pops(self.geo.mun_codes, self.PARAMS)
-        self.regions, self.agents, self.houses, self.families, self.firms, self.central = self.generate()
-        self.construction_firms = {f.id: f for f in self.firms.values() if f.type == 'CONSTRUCTION'}
-        self.consumer_firms = {f.id: f for f in self.firms.values() if f.type == 'CONSUMER'}
-        self.logger.logger.info('Initializing...')
-        self.initialize()
-
         self.logger.logger.info('Running...')
         while self.clock.days < conf.RUN['STARTING_DAY'] + datetime.timedelta(days=conf.RUN['TOTAL_DAYS']):
             self.daily()
@@ -123,7 +114,15 @@ class Simulation:
 
     def initialize(self):
         """Initiating simulation"""
+        self.logger.logger.info('Initializing...')
         self.grave = []
+
+        self.labor_market = markets.LaborMarket(self.seed)
+        self.housing = markets.HousingMarket()
+        self.pops, self.total_pop = population.load_pops(self.geo.mun_codes, self.PARAMS)
+        self.regions, self.agents, self.houses, self.families, self.firms, self.central = self.generate()
+        self.construction_firms = {f.id: f for f in self.firms.values() if f.type == 'CONSTRUCTION'}
+        self.consumer_firms = {f.id: f for f in self.firms.values() if f.type == 'CONSUMER'}
 
         # Group regions into their municipalities
         self.mun_to_regions = defaultdict(set)
