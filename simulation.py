@@ -163,6 +163,10 @@ class Simulation:
         present_year = self.clock.year
         current_unemployment = self.stats.global_unemployment_rate / 100
 
+        # Create new land licenses
+        for region in self.regions.values():
+            region.licenses += self.PARAMS['NEW_LICENSE_RATE']
+
         # Update firm products
         for firm in self.firms.values():
             firm.update_product_quantity(self.PARAMS['ALPHA'], self.PARAMS['PRODUCTION_MAGNITUDE'])
