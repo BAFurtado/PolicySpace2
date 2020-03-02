@@ -1,4 +1,4 @@
-PolicySpace2: real estate modeling
+PolicySpace2: Real Estate Modeling
 ------
 <img alt="GitHub stars" src="https://img.shields.io/github/stars/bafurtado/policyspace2.svg?color=orange">  ![GitHub All Releases](https://img.shields.io/github/downloads/bafurtado/policyspace2/total) ![GitHub](https://img.shields.io/github/license/bafurtado/policyspace2)  ![GitHub forks](https://img.shields.io/github/forks/bafurtado/policyspace2)
 ------
@@ -17,16 +17,19 @@ This was an open agent-based model (ABM) with three markets and a tax scheme tha
 metropolitan regions. Now, we have also **added a credit market, a housing construction scheme and an incipient 
 land market mechanism**. 
 
-Developed by Bernardo Alves Furtado, funded by Institute of Applied Economic Research (IPEA) [www.ipea.gov.br] and 
-CEPAL-Brasília The author acknowledges receiving a grant of productivity by National Council of Research (CNPq)
- [www.cnpq.br].
-
 ### Collaborators
 Bernardo Alves Furtado -- https://sites.google.com/view/bernardo-alves-furtado
 
 Francis Tseng --  http://frnsys.com
 
 ![GitHub labels](https://img.shields.io/github/labels/atom/atom/help-wanted)
+
+### Funding
+
+Developed by Bernardo Alves Furtado, funded primarily by Institute of Applied Economic Research (IPEA) 
+[www.ipea.gov.br] with one-period grant from [https://www.cepal.org/pt-br/sedes-e-escritorios/cepal-brasilia] 
+(CEPAL-Brasília) and International Policy Centre (https://ipcig.org/). 
+BAF acknowledges receiving a grant of productivity by National Council of Research (CNPq) [www.cnpq.br].
 
 #### Recent publication
 
