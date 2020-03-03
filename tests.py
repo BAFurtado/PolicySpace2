@@ -2,9 +2,11 @@ import conf
 import tempfile
 from simulation import Simulation
 
+
 def check(label, cond):
     res = 'PASS' if cond(sim) else 'FAIL'
     print(res, label)
+
 
 print('Verifying...')
 

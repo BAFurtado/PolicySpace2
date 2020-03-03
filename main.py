@@ -228,6 +228,7 @@ def plot_results(output_dir):
         output_path = os.path.join(output_dir, 'plots')
         plot(avgs, output_path, {}, only=['general'])
 
+
 def impute(data):
     """very naive/imprecise data imputation, can be improved"""
     return data.interpolate(limit_direction='both').fillna(method='bfill')

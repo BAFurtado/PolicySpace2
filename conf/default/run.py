@@ -48,7 +48,8 @@ SAVE_DATA = ['house', 'family', 'banks']
 # What data to average
 # across all runs
 # Options: ['stats', 'families', 'houses', 'firms', 'regional', 'banks', 'construction']
-AVERAGE_DATA = ['construction', 'banks', 'regional']
+# You need to INCLUDE STATS to generate SPATIAL PLOTS
+AVERAGE_DATA = ['construction', 'banks', 'regional', 'stats']
 AVERAGE_TYPE = 'median' # or 'mean'
 
 # Whether or not to save data for the transit simulation
