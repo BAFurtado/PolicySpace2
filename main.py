@@ -217,7 +217,8 @@ def plot_results(output_dir):
     results = json.load(open(os.path.join(output_dir, 'meta.json'), 'r'))
     avgs = []
     for r in results:
-        plot_runs_with_avg(r)
+        if not conf.RUN.get('SKIP_PARAM_GROUP_PLOTS'):
+            plot_runs_with_avg(r)
 
         # group averages, with labels, to plot together
         label = conf_to_str(r['overrides'], delimiter='\n')
@@ -300,6 +301,7 @@ def sensitivity(ctx, params):
 
         # fix the same seed for each run
         conf.RUN['KEEP_RANDOM_SEED'] = False
+        conf.RUN['SKIP_PARAM_GROUP_PLOTS'] = True
 
         logger.info('Sensitivity run over {} for values: {}, {} run(s) each'.format(p_name, p_vals, ctx.obj['runs']))
         multiple_runs(confs, ctx.obj['runs'], ctx.obj['cpus'], ctx.obj['output_dir'])
