@@ -252,12 +252,8 @@ class Simulation:
 
         # Construction firms
         for firm in self.construction_firms.values():
-            # Choose random region, decide if buying license
-            region = self.seed.choice(list(self.regions.values()))
-            firm.decide_buy_license(region)
-
             # See if firm can build a house
-            firm.plan_house(self.regions, self.PARAMS['INPUTS_PER_SIZE'], self.seed)
+            firm.plan_house(self.regions.values(), self.houses.values(), self.PARAMS['INPUTS_PER_SIZE'], self.seed)
             house = firm.build_house(self.regions, self.generator)
             if house is not None:
                 self.houses[house.id] = house
