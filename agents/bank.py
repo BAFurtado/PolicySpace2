@@ -121,6 +121,7 @@ class Central:
         # Add loan balance
         monthly_payment = self._max_monthly_payment(family)
         self.loans[family.id].append(Loan(amount, self.interest, monthly_payment))
+        family.monthly_loan_payments = sum(l.payment for l in self.loans[family.id])
         self.balance -= amount
         return True
 
@@ -136,12 +137,7 @@ class Central:
 
     def _max_monthly_payment(self, family):
         # Max % of income on loan repayments
-        income = family.permanent_income(self.interest) * conf.PARAMS['MAX_LOAN_REPAYMENT_PERCENT_INCOME']
-
-        # Account for existing loans
-        for l in self.loans[family.id]:
-            income -= l.payment
-        return income
+        return family.permanent_income(self.interest) * conf.PARAMS['MAX_LOAN_REPAYMENT_PERCENT_INCOME']
 
     def collect_loan_payments(self, sim):
         for family_id, loans in self.loans.items():
@@ -169,6 +165,7 @@ class Central:
                 if not done:
                     remaining_loans.append(loan)
             self.loans[family_id] = remaining_loans
+            family.monthly_loan_payments = sum(l.payment for l in remaining_loans)
 
 
 class Bank(Central):
