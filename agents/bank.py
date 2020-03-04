@@ -84,6 +84,10 @@ class Central:
     def total_deposits(self):
         return sum(sum(amount for amount, _ in deposits) for deposits in self.wallet.values())
 
+    def loan_balance(self, family_id):
+        """Get total loan balance for a family"""
+        return sum(l.balance for l in self.loans.get(family_id, []))
+
     def n_loans(self):
         return sum(len(ls) for ls in self.loans.values())
 
