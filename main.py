@@ -195,6 +195,7 @@ def plot(input_paths, output_path, params, avg=None, sim=None, only=None):
 
     # Checking whether to plot or not
     if conf.RUN['SAVE_SPATIAL_PLOTS'] and sim is not None:
+        logger.info('Plotting spatial...')
         plotter.plot_geo(sim, 'final')
 
 

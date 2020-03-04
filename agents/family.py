@@ -210,3 +210,7 @@ class Family:
     def __repr__(self):
         return 'Family ID %s, House ID %s, Savings $ %.2f, Balance $ %.2f' % \
                (self.id, self.house.id if self.house else None, self.savings, self.get_total_balance())
+
+    @property
+    def is_renting(self):
+        return self.house.rent_data is not None
