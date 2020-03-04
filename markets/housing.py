@@ -57,6 +57,8 @@ class HousingMarket:
             return
 
         for f in looking:
+            # TODO RELEVANT. Check if we could cap the loan by limiting the amount of the monthly payment to
+            #  30% of the permanent income of the family
             f.savings_with_loan = f.savings + sim.central.max_loan(f)
 
         # Sorting. Those with less savings first
@@ -141,7 +143,6 @@ class HousingMarket:
 
                     # Transfer ownership
                     sim.firms[house.owner_id].houses_inventory.remove(house)
-
 
                 house.owner_id = family.id
                 house.family_owner = True

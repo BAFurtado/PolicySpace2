@@ -51,5 +51,5 @@ Real estate and microeconomics (preferences: renting/owning
 7. Decision on bonds (selic), stocks (ações) or real estate
 8. Maintenance, depreciation 
 
-** Como que a população de diferentes camadas de renda 
-se mexem em variações no prazo e na taxa de juros do crédito imobiliário
+** How population from different parts of the income distribution react to variations in 
+timing and level of real estate interest rates

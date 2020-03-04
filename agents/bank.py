@@ -14,7 +14,7 @@ class Loan:
     def __init__(self, principal, interest_rate, payment):
         self.age = 0
         self.principal = principal
-        self.balance = principal * (1+interest_rate)
+        self.balance = principal * (1 + interest_rate)
         self.payment = payment
 
         self.paid_off = False
@@ -141,16 +141,18 @@ class Central:
 
     def collect_loan_payments(self, sim):
         for family_id, loans in self.loans.items():
-            if not loans: continue
+            if not loans:
+                continue
             family = sim.families[family_id]
             remaining_loans = []
             for loan in loans:
-                if loan.paid_off: continue
+                if loan.paid_off:
+                    continue
                 loan.age += 1
 
                 money = family.savings
                 if money < loan.payment:
-                    money = family.grab_savings(self, sim.clock.year,(sim.clock.months % 12) + 1)
+                    money = family.grab_savings(self, sim.clock.year, (sim.clock.months % 12) + 1)
                     family.savings = money
                 payment = min(money, loan.payment)
                 done = loan.pay(payment)

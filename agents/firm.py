@@ -219,6 +219,9 @@ class ConstructionFirm(Firm):
         self.licenses = {}
         self.building = False
         self.building_region = None
+        self.building_size = None
+        self.building_cost = None
+        self.building_quality = None
 
     def decide_buy_license(self, region):
         """Firm decides whether to purchase
@@ -256,10 +259,12 @@ class ConstructionFirm(Firm):
 
     def build_house(self, regions, generator):
         """Firm decides if house is finished"""
-        if not self.building: return
+        if not self.building:
+            return
 
         # Not finished
-        if self.total_quantity < self.building_cost: return
+        if self.total_quantity < self.building_cost:
+            return
 
         # Finished, expend inputs
         for k, product in self.inventory.items():
@@ -293,6 +298,7 @@ class ConstructionFirm(Firm):
         self.revenue += amount
 
     def mean_house_price(self):
-        if not self.houses: return 0
+        if not self.houses:
+            return 0
         t = sum(h.price for h in self.houses)
         return t/len(self.houses)

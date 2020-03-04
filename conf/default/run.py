@@ -37,20 +37,22 @@ PLOT_REGIONAL = True
 # Firms and banks data are always saved, "agents", "grave", "house", "family" are optional.
 # If you don't save "house" data for instance you can't generate housing plots.
 # Save Agents data
-SAVE_AGENTS_DATA = 'MONTHLY' # or 'QUARTERLY', 'ANNUALLY', or None
+# 'MONTHLY' or 'QUARTERLY', 'ANNUALLY', or None
+SAVE_AGENTS_DATA = 'MONTHLY'
 
 # What extra data (i.e. not necessary plotting) to save
 # Can include: ['agents', 'grave', 'house', 'family', 'banks']
 # If None, set to empty list: []
 # SAVE_DATA = []
-SAVE_DATA = ['house', 'family', 'banks']
+SAVE_DATA = ['banks', 'house']
 
 # What data to average
 # across all runs
 # Options: ['stats', 'families', 'houses', 'firms', 'regional', 'banks', 'construction']
 # You need to INCLUDE STATS to generate SPATIAL PLOTS
-AVERAGE_DATA = ['construction', 'banks', 'regional', 'stats']
-AVERAGE_TYPE = 'median' # or 'mean'
+AVERAGE_DATA = ['families', 'construction', 'banks', 'regional', 'stats', 'houses', 'firms']
+# 'median' or 'mean'
+AVERAGE_TYPE = 'mean'
 
 # Whether or not to save data for the transit simulation
 SAVE_TRANSIT_DATA = False

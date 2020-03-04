@@ -79,6 +79,7 @@ class Family:
 
     def get_wealth(self):
         """ Calculate current wealth, including real estate. """
+        # TODO RELEVANT. Include deduction of total outstanding loan from wealth
         estate_value = sum(h.price for h in self.owned_houses)
         return self.savings + estate_value
 
@@ -126,6 +127,10 @@ class Family:
         """Grabs all money from all members"""
         money = sum(m.grab_money() for m in self.members.values())
         permanent_income = self.permanent_income(r)
+        # TODO: RELEVANT. If outstanding loans payment, deduce monthly loan payment from monthly calculated permanent
+        # TODO: income on given month. So actual spending money is less than usual permanent income.
+        # Having loans will impact on a lower long-run permanent income consumption and on a monthly strongly
+        # reduction of consumption. However, the price of the house may be appreciating in the market.
         # If cash at hand is positive consume it capped to permanent income
         if money > 0:
             if money > permanent_income:
