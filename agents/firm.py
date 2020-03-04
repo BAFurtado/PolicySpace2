@@ -231,6 +231,7 @@ class ConstructionFirm(Firm):
             # TODO how does firm decide when to buy?
             self.licenses[region.id] = self.licenses.get(region.id, 0) + 1
             region.licenses -= 1
+            self.total_balance -= region.license_price
         return can_purchase
 
     def plan_house(self, regions, inputs_per_size, seed):
