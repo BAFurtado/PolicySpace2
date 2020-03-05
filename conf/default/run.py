@@ -69,4 +69,4 @@ STARTING_DAY = datetime.date(2000, 1, 1)
 TOTAL_DAYS = (datetime.date(2020, 1, 1) - STARTING_DAY).days
 
 # Force generation of new population
-FORCE_NEW_POPULATION = False
+FORCE_NEW_POPULATION = True

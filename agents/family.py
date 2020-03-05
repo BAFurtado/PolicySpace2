@@ -78,11 +78,10 @@ class Family:
         s += bank.withdraw(self, y, m)
         return s
 
-    def get_wealth(self):
+    def get_wealth(self, bank):
         """ Calculate current wealth, including real estate. """
-        # TODO RELEVANT. Include deduction of total outstanding loan from wealth
         estate_value = sum(h.price for h in self.owned_houses)
-        return self.savings + estate_value
+        return self.savings + estate_value - bank.loan_balance(self.id)
 
     def invest(self, r, bank, y, m):
         # Savings is updated during consumption as the fraction of above permanent income that is not consumed
@@ -101,7 +100,7 @@ class Family:
         r_1_r = r/(1 + r)
         # Calculated as "discounted some of current income and expected future income" plus "financial wealth"
         # Perpetuity of income is a fraction (r_1_r) of income t0 divided by interest r
-        return r_1_r * t0 + r_1_r * (t0 / r) + self.get_wealth() * r + bank.loan_balance(self.id)
+        return r_1_r * t0 + r_1_r * (t0 / r) + self.get_wealth(bank) * r
 
     def average_study(self):
         """Averages the years of study of the family"""
