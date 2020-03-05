@@ -87,21 +87,21 @@ class Family:
     def invest(self, r, bank, y, m):
         # Savings is updated during consumption as the fraction of above permanent income that is not consumed
         # If savings is above a six-month period reserve money, the surplus is invested in the bank.
-        reserve_money = self.permanent_income(r) * 6
+        reserve_money = self.permanent_income(bank, r) * 6
         if self.savings > reserve_money:
             bank.deposit(self, self.savings - reserve_money, datetime.date(y, m, 1))
 
     def total_wage(self):
         return sum(member.last_wage for member in self.members.values() if member.last_wage is not None)
 
-    def permanent_income(self, r):
+    def permanent_income(self, bank, r):
         # Equals Consumption (Bielefeld, 2018, pp.13-14)
         # Using last wage available as base for permanent income calculus: total_wage = Human Capital
         t0 = self.total_wage()
         r_1_r = r/(1 + r)
         # Calculated as "discounted some of current income and expected future income" plus "financial wealth"
         # Perpetuity of income is a fraction (r_1_r) of income t0 divided by interest r
-        return r_1_r * t0 + r_1_r * (t0 / r) + self.get_wealth() * r
+        return r_1_r * t0 + r_1_r * (t0 / r) + self.get_wealth() * r + bank.loan_balance(self.id)
 
     def average_study(self):
         """Averages the years of study of the family"""
@@ -124,13 +124,11 @@ class Family:
             return employed / (employed + unemployed)
 
     # Consumption ####################################################################################################
-    def to_consume(self, r):
+    def to_consume(self, central, r):
         """Grabs all money from all members"""
         money = sum(m.grab_money() for m in self.members.values())
-        permanent_income = self.permanent_income(r)
+        permanent_income = self.permanent_income(central, r)
         permanent_income -= self.monthly_loan_payments
-        # TODO: RELEVANT. If outstanding loans payment, deduce monthly loan payment from monthly calculated permanent
-        # TODO: income on given month. So actual spending money is less than usual permanent income.
         # Having loans will impact on a lower long-run permanent income consumption and on a monthly strongly
         # reduction of consumption. However, the price of the house may be appreciating in the market.
         # If cash at hand is positive consume it capped to permanent income
@@ -155,11 +153,11 @@ class Family:
             # TODO: should keep tabs on how many families go hungry
             return None
 
-    def consume(self, firms, regions, params, seed):
+    def consume(self, firms, central, regions, params, seed):
         """Family consumes its permanent income, based on members wages, working life expectancy
         and real estate and savings real interest
         """
-        money_to_spend = self.to_consume(params['INTEREST_RATE'])
+        money_to_spend = self.to_consume(central, params['INTEREST_RATE'])
         # Decision on how much money to consume or save
 
         if money_to_spend is not None:
