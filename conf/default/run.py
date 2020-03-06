@@ -22,35 +22,33 @@ TIME_TO_BE_ELIMINATED = 0.0
 # Saving adjustments
 SAVE_PLOTS_FIGURES = True
 
-# If plots should be generated separately
-# for each simulation run or just aggregated
-PLOT_EACH_RUN = True
+# If plots should be generated separately for each simulation run or just aggregated
+# When PLOT_EACH_RUN is True, DATA for banks, construction, firms, regional, stats are also SAVED
+# *be aware of theirs sizes*
+PLOT_EACH_RUN = False
 # Spatial plots only works when PLOT_EACH_RUN is True
-SAVE_SPATIAL_PLOTS = True
+SAVE_SPATIAL_PLOTS = False
 # 'png' or 'eps'
 PLOT_FORMAT = 'png'
-PLOT_REGIONAL = True
+PLOT_REGIONAL = False
 
-# NOTE THAT YOU NEED TO SAVE_AGENTS_DATA to generate the plots, because this is what saves the output CSV data.
-# You can also use set it to "QUARTERLY" or "ANNUALLY" to save less frequently.
-# SAVE_DATA lets you narrow down what data to save.
-# Firms and banks data are always saved, "agents", "grave", "house", "family" are optional.
-# If you don't save "house" data for instance you can't generate housing plots.
-# Save Agents data
-# 'MONTHLY' or 'QUARTERLY', 'ANNUALLY', or None
+
+# Save Agents data 'MONTHLY' or 'QUARTERLY', 'ANNUALLY', or None
 SAVE_AGENTS_DATA = 'MONTHLY'
 
-# What extra data (i.e. not necessary plotting) to save
+# What extra CSV data (i.e. not necessary plotting) to save
+# 'firms', 'banks', 'construction', 'regional' and 'stats' data are always saved,
+# "agents", "grave", "house", "family" are optional.
+# If you don't save "house" data for instance you can't generate housing plots.
 # Can include: ['agents', 'grave', 'house', 'family', 'banks']
 # If None, set to empty list: []
 # SAVE_DATA = []
-SAVE_DATA = ['banks', 'house']
+SAVE_DATA = []
 
-# What data to average
-# across all runs
+# What data to average across all runs. If plotting, needs to include them in SAVE_DATA as well
 # Options: ['stats', 'families', 'houses', 'firms', 'regional', 'banks', 'construction']
-# You need to INCLUDE STATS to generate SPATIAL PLOTS
-AVERAGE_DATA = ['families', 'construction', 'banks', 'regional', 'stats', 'houses', 'firms']
+# You need to INCLUDE STATS to generate SPATIAL PLOTS. 'stats' also refer to general averaged plots
+AVERAGE_DATA = ['stats']
 # 'median' or 'mean'
 AVERAGE_TYPE = 'mean'
 
@@ -66,7 +64,7 @@ LIMIT_SAVED_TRANSIT_REGIONS = None
 STARTING_DAY = datetime.date(2000, 1, 1)
 
 # Maximum running time (restrained by official data) is 30 years,
-TOTAL_DAYS = (datetime.date(2020, 1, 1) - STARTING_DAY).days
+TOTAL_DAYS = (datetime.date(2002, 1, 1) - STARTING_DAY).days
 
 # Force generation of new population
-FORCE_NEW_POPULATION = True
+FORCE_NEW_POPULATION = False

@@ -169,7 +169,7 @@ class Generator:
                     qualification = self.qual(code)
                     r_age = self.seed.randint(list_of_possible_ages[(list_of_possible_ages.index(age, ) - 1)] + 1,
                                                 age)
-                    money = self.seed.randrange(50, 100)
+                    money = self.seed.randrange(1, 34)
                     month = self.seed.randrange(1, 13, 1)
                     agent_id = self.gen_id()
                     a = Agent(agent_id, gender, r_age, qualification, money, month)
@@ -288,7 +288,7 @@ class Generator:
         num_construction_firms = math.ceil(num_firms * self.sim.PARAMS['PERCENT_CONSTRUCTION_FIRMS'])
         for i in range(num_firms):
             address = self.get_random_point_in_polygon(region)
-            total_balance = self.seed.betavariate(1.5, 10) * 100000
+            total_balance = self.seed.betavariate(1.5, 10) * 10000
             firm_id = self.gen_id()
             if i < num_construction_firms:
                 f = ConstructionFirm(firm_id, address, total_balance, region.id)
