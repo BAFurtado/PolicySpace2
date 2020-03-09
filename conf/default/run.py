@@ -32,6 +32,9 @@ SAVE_SPATIAL_PLOTS = False
 PLOT_FORMAT = 'png'
 PLOT_REGIONAL = False
 
+# Plot DPI. Lower ones will plot faster
+PLOT_DPI = 600
+
 
 # Save Agents data 'MONTHLY' or 'QUARTERLY', 'ANNUALLY', or None
 SAVE_AGENTS_DATA = 'MONTHLY'

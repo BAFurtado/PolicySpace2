@@ -43,7 +43,7 @@ class Plotter:
         fig.savefig(
             os.path.join(self.output_path, '{}.{}'.format(name, conf.RUN['PLOT_FORMAT'])),
             format=conf.RUN['PLOT_FORMAT'],
-            dpi=600,
+            dpi=conf.RUN['PLOT_DPI'],
             bbox_inches='tight')
 
         if clear:
