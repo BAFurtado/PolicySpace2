@@ -189,10 +189,11 @@ def marriage(sim):
     """Adjust families for marriages"""
     to_marry = []
     for agent in sim.agents.values():
-        # Compute probability that this agent will marry
-        # NOTE we don't consider whether or not they are already married
-        if sim.seed.random() < agent.p_marriage:
-            to_marry.append(agent)
+        if sim.seed.random() < sim.PARAMS['MARRIAGE_CHECK_PROBABILITY']:
+            # Compute probability that this agent will marry
+            # NOTE we don't consider whether or not they are already married
+            if sim.seed.random() < agent.p_marriage:
+                to_marry.append(agent)
 
     # Marry individuals
     # NOTE individuals are paired randomly

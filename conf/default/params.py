@@ -63,6 +63,7 @@ INITIAL_RENTAL_PRICE = .03
 SIMPLIFY_POP_EVOLUTION = True
 # Defines the superior limit of age groups, the first value is always ZERO and is omitted from the list.
 LIST_NEW_AGE_GROUPS = [6, 12, 17, 25, 35, 45, 65, 100]
+MARRIAGE_CHECK_PROBABILITY = 1/30
 
 # Consumption_equal: ratio of consumption tax distributed at state level (equal)
 # Fpm: ratio of 'labor' and 'firm' taxes distributed per the fpm ruling
