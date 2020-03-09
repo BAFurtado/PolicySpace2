@@ -7,8 +7,10 @@ Disclaimer:
 This code was generated for research purposes only.
 It is licensed under GNU v3 license
 """
+import sys
 import copy
 import json
+import random
 import logging
 import os
 
@@ -27,7 +29,7 @@ from analysis import report
 from datetime import datetime
 from simulation import Simulation
 from collections import defaultdict
-from itertools import product, chain
+from itertools import product
 from joblib import Parallel, delayed
 from analysis.plotting import Plotter, MissingDataError
 from analysis.output import OUTPUT_DATA_SPEC
@@ -60,9 +62,14 @@ def single_run(params, path):
         plot([('run', path)], os.path.join(path, 'plots'), params, sim=sim)
 
 
-def multiple_runs(overrides, runs, cpus, output_dir):
+def multiple_runs(overrides, runs, cpus, output_dir, fix_seeds=False):
     """Run multiple configurations, each `runs` times"""
     logger.info('Running simulation {} times'.format(len(overrides) * runs))
+
+    if fix_seeds:
+        seeds = [random.randrange(sys.maxsize) for _ in range(runs)]
+    else:
+        seeds = []
 
     # calculate output paths and params with overrides
     paths = [os.path.join(output_dir, conf_to_str(o, delimiter=';'))
@@ -78,12 +85,16 @@ def multiple_runs(overrides, runs, cpus, output_dir):
         # run serially if cpus==1, easier debugging
         for p, path in zip(params, paths):
             for i in range(runs):
+                if seeds:
+                    p['SEED'] = seeds[i]
                 single_run(p, os.path.join(path, str(i)))
     else:
-        jobs = [
-            [(delayed(single_run)(p, os.path.join(path, str(i)))) for i in range(runs)]
-            for p, path in zip(params, paths)]
-        jobs = chain(*jobs)
+        jobs = []
+        for p, path in zip(params, paths):
+            for i in range(runs):
+                if seeds:
+                    p['SEED'] = seeds[i]
+                jobs.append((delayed(single_run)(p, os.path.join(path, str(i)))))
         Parallel(n_jobs=cpus)(jobs)
 
     logger.info('Averaging run data...')
@@ -302,10 +313,11 @@ def sensitivity(ctx, params):
 
         # fix the same seed for each run
         conf.RUN['KEEP_RANDOM_SEED'] = False
+        # conf.RUN['FORCE_NEW_POPULATION'] = False # Ideally this is True, but it slows things down a lot
         conf.RUN['SKIP_PARAM_GROUP_PLOTS'] = True
 
         logger.info('Sensitivity run over {} for values: {}, {} run(s) each'.format(p_name, p_vals, ctx.obj['runs']))
-        multiple_runs(confs, ctx.obj['runs'], ctx.obj['cpus'], ctx.obj['output_dir'])
+        multiple_runs(confs, ctx.obj['runs'], ctx.obj['cpus'], ctx.obj['output_dir'], fix_seeds=True)
 
 
 @main.command()
