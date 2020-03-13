@@ -117,7 +117,7 @@ class HousingMarket:
                 # Get loan to make up the difference
                 if savings < price:
                     loan_amount = price - savings
-                    success = sim.central.request_loan(family, loan_amount)
+                    success = sim.central.request_loan(family, loan_amount, sim.seed)
                     change = 0
                     if not success:
                         continue

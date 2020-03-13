@@ -32,6 +32,7 @@ TAX_PROPERTY = 1.4E-07
 # LOANS
 MAX_LOAN_AGE = 80
 MAX_LOAN_REPAYMENT_PERCENT_INCOME = 0.3
+MAX_LOAN_BANK_PERCENT = 0.3
 
 # GOVERNMENT
 # MONTHLY Real interest rate of the economy (SELIC minus INFLATION) for the Brazilian case

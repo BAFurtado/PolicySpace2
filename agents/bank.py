@@ -91,6 +91,9 @@ class Central:
     def n_loans(self):
         return sum(len(ls) for ls in self.loans.values())
 
+    def outstanding_loan_balance(self):
+        return sum(l.balance for l in self.all_loans())
+
     def all_loans(self):
         for ls in self.loans.values():
             yield from ls
@@ -109,7 +112,7 @@ class Central:
             return min(amounts), max(amounts), mean
         return 0, 0, 0
 
-    def request_loan(self, family, amount):
+    def request_loan(self, family, amount, seed):
         # Can't loan more than on hand
         if amount > self.balance:
             return False
@@ -117,6 +120,18 @@ class Central:
         # If they have outstanding loans, don't lend
         if self.loans[family.id]:
             return False
+
+        # Can't loan more than x% of total deposits
+        outstanding_loans = self.outstanding_loan_balance()
+        total_deposits = self.total_deposits()
+        if outstanding_loans + amount > total_deposits * conf.PARAMS['MAX_LOAN_BANK_PERCENT']:
+            return False
+
+        # Probabilty of giving loan depends on
+        # amount compared to family wealth
+        p = 1 - (amount/family.get_wealth(self))
+        if seed.random() > p:
+            return
 
         # Add loan balance
         monthly_payment = self._max_monthly_payment(family)
