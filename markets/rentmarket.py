@@ -31,15 +31,6 @@ class RentalMarket:
                         # This family is done
                         break
 
-        # Not enough houses to rent due to marriage and creation of new families.
-        shortage = [f for f in families if f.house is None]
-        if len(shortage) > 0:
-            for f in shortage:
-                new_houses = sim.generator.create_houses(1, sim.regions[sim.seed.choice(list(sim.regions.keys()))])
-                sim.generator.allocate_to_households({f.id: f}, new_houses)
-                for h_id, house in new_houses.items():
-                    sim.houses[h_id] = house
-
     def collect_rent(self, houses, sim):
         for house in houses:
             rent = house.rent_data[0]
