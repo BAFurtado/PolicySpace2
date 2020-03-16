@@ -1,4 +1,5 @@
 import datetime
+from world.regions import distance_to_firm
 
 
 class Family:
@@ -29,6 +30,12 @@ class Family:
         self.study = None
         self.monthly_loan_payments = 0
 
+        # Previous region id
+        if house is not None:
+            self.region_id = house.region_id
+        else:
+            self.region_id = None
+
     def add_agent(self, agent):
         """Adds a new agent to the set"""
         self.members[agent.id] = agent
@@ -41,6 +48,7 @@ class Family:
     def move_in(self, house):
         self.house = house
         house.family_id = self.id
+        self.region_id = house.region_id
 
     def move_out(self):
         self.house.empty()
@@ -50,11 +58,6 @@ class Family:
     def address(self):
         if self.house is not None:
             return self.house.address
-
-    @property
-    def region_id(self):
-        if self.house is not None:
-            return self.house.region_id
 
     # Budget operations ##############################################################################################
     def get_total_balance(self):
@@ -169,7 +172,10 @@ class Family:
                 chosen_firm = min(market, key=lambda firm: firm.prices)
             else:
                 # Choose closest firm
-                chosen_firm = min(market, key=lambda firm: self.house.distance_to_firm(firm))
+                if self.house is not None:
+                    chosen_firm = min(market, key=lambda firm: self.house.distance_to_firm(firm))
+                else:
+                    chosen_firm = min(market, key=lambda firm: distance_to_firm(self.region_id, firm))
 
             # Buy from chosen company
             change = chosen_firm.sale(money_to_spend, regions, params['TAX_CONSUMPTION'])

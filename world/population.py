@@ -164,19 +164,15 @@ def immigration(sim):
         sim.generator.allocate_to_family(new_agents, new_families)
 
         # Keep track of new agents & families
+        families = []
         for f in new_families.values():
             # Not all families might get members, skip those
             if not f.members: continue
-
             sim.families[f.id] = f
+            families.append(f)
 
-            # Create and assign homes
-            # Choose random region in this municipality
-            region_id = sim.seed.choice(sim.mun_to_regions[mun_code])
-            region = sim.regions[region_id]
-            new_houses = sim.generator.create_houses(1, region)
-            sim.generator.allocate_to_households({f.id: f}, new_houses)
-            sim.houses.update(new_houses)
+        # Start as renters
+        sim.housing.rental.rental_market(families, sim)
 
         # Has to come after we allocate households
         # so we know where the agents live

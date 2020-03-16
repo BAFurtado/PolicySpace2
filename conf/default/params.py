@@ -50,14 +50,14 @@ FPM_DISTRIBUTION = True
 # Results     fpm + eq. + loc,  locally,  fpm + eq,   eq
 
 # CONSTRUCTION
-LICENSES_PER_REGION = 5
-NEW_LICENSE_RATE = 1
-PERCENT_CONSTRUCTION_FIRMS = 0.05
-INPUTS_PER_SIZE = 1
+LICENSES_PER_REGION = 50
+NEW_LICENSE_RATE = 10
+PERCENT_CONSTRUCTION_FIRMS = 0.25
+INPUTS_PER_SIZE = 0.01
 
 # Families run parameters
 MEMBERS_PER_FAMILY = 2.5                             # (on average)
-HOUSE_VACANCY = .1                                   # percentage of vacant houses
+HOUSE_VACANCY = .25                                   # percentage of vacant houses
 RENTAL_SHARE = 0.1
 INITIAL_RENTAL_PRICE = .03
 # Definition to simplify population by group age groups(TRUE) or including all ages (FALSE)
