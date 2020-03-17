@@ -169,10 +169,16 @@ def immigration(sim):
             # Not all families might get members, skip those
             if not f.members: continue
             sim.families[f.id] = f
+            f.savings = sum(m.grab_money() for m in f.members.values())
             families.append(f)
 
-        # Start as renters
-        sim.housing.rental.rental_market(families, sim)
+        # Pass through housing market
+        sim.housing.allocate_houses(sim, families)
+
+        # Some might have tried to buy houses but failed,
+        # pass to rental market
+        houseless = [f for f in families if f.house is None]
+        sim.housing.rental.rental_market(houseless, sim)
 
         # Has to come after we allocate households
         # so we know where the agents live

@@ -33,7 +33,8 @@ class HousingMarket:
     def make_move(self, family, house, sim):
         # Make the move
         old_r_id = family.region_id
-        family.move_out()
+        if family.house is not None:
+            family.move_out()
         family.move_in(house)
         # Only after simulation has begun, it is necessary to update population, not at generation time
         try:
@@ -42,17 +43,20 @@ class HousingMarket:
         except AttributeError:
             pass
 
-    def allocate_houses(self, sim):
-        # Clear list of past houses for sale
-        self.update_on_sale(sim)
-
+    def housing_market(self, sim):
         """Allocation of houses on the market"""
+        # Clear list of past houses for sale
         # BUYING FAMILIES
         # Select sample of families looking for houses at this time, given parameter
         looking = sim.seed.sample(list(sim.families.values()),
                                   int(len(sim.families) * sim.PARAMS['PERCENTAGE_CHECK_NEW_LOCATION']))
 
+        self.allocate_houses(sim, looking)
+
+    def allocate_houses(self, sim, looking):
         # If empty lists, stop procedure
+        self.update_on_sale(sim)
+
         if not looking or not self.on_sale:
             return
 
@@ -64,28 +68,33 @@ class HousingMarket:
         # Sorting. Those with less savings first
         looking.sort(key=lambda f: f.savings_with_loan, reverse=True)
 
-        # Minimum price on market
-        minimum_price = self.on_sale[-1].price
-
         # Family with larger savings
         maximum_purchasing_power = looking[0].savings_with_loan
 
-        # Families that can afford to buy, remain on the list
-        # Those without funds, try the rental market.
-        purchasing, renting = list(), list()
-        [purchasing.append(f) if f.savings_with_loan > minimum_price else renting.append(f) for f in looking]
-
-        # Extract houses to rental market from sales pool
         rentable = [h for h in self.on_sale if h.family_owner] # Only rent from families, not firms
         for_rent = sim.seed.sample(rentable, int(len(rentable) * sim.PARAMS['RENTAL_SHARE']))
+
+        # Extract houses to rental market from sales pool
         self.on_sale = [h for h in self.on_sale if h not in for_rent]
+
+        # Continue procedures for purchasing market
+        self.on_sale = [h for h in self.on_sale if h.price < maximum_purchasing_power]
+
+        if not self.on_sale:
+            purchasing = []
+            renting = looking
+        else:
+            # Minimum price on market
+            minimum_price = self.on_sale[-1].price
+
+            # Families that can afford to buy, remain on the list
+            # Those without funds, try the rental market.
+            purchasing, renting = list(), list()
+            [purchasing.append(f) if f.savings_with_loan > minimum_price else renting.append(f) for f in looking]
 
         # Call Rental market ###############################################################
         if renting and for_rent:
             self.rental.rental_market(renting, sim, for_rent)
-
-        # Continue procedures for purchasing market
-        self.on_sale = [h for h in self.on_sale if h.price < maximum_purchasing_power]
 
         # Second check. If empty lists, stop procedure
         if not purchasing or not self.on_sale:
@@ -164,7 +173,7 @@ class HousingMarket:
         # Leave only empty houses or currently occupied by the same family. Exclude rentals
         options = [h for h in options if (h.family_id is None) or (h.family_id == family.id)]
         prop_employed = family.prop_employed()
-        if len(options) > 1:
+        if len(options) > 1 or family.house is None:
 
             # Sort by price, which captures quality, size, and location
             # This puts the cheapest house first

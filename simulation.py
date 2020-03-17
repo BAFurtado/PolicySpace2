@@ -285,7 +285,7 @@ class Simulation:
         # Tax transaction taxes (ITBI) when selling house
         # Property tax (IPTU) collected. One twelfth per month
         self.timer.start()
-        self.housing.allocate_houses(self)
+        self.housing.housing_market(self)
         self.housing.process_monthly_rent(self)
         for house in self.houses.values():
             house.pay_property_tax(self)
