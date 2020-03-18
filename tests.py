@@ -23,3 +23,11 @@ sim.run()
 
 check('Construction increases housing supply', lambda sim: len(sim.houses) > N_HOUSES)
 check('Bank is loaning money', lambda sim: sim.central.n_loans() > 0)
+
+
+conf.PARAMS['PERCENT_CONSTRUCTION_FIRMS'] = 0.0
+sim = Simulation(conf.PARAMS, path)
+sim.initialize()
+N_HOUSES = len(sim.houses)
+sim.run()
+check('No construction firms leads to no new houses', lambda sim: len(sim.houses) == N_HOUSES)
