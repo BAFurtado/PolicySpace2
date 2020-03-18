@@ -169,7 +169,6 @@ def immigration(sim):
             # Not all families might get members, skip those
             if not f.members:
                 continue
-            sim.families[f.id] = f
             f.savings = sum(m.grab_money() for m in f.members.values())
             families.append(f)
 
@@ -181,9 +180,16 @@ def immigration(sim):
         houseless = [f for f in families if f.house is None]
         sim.housing.rental.rental_market(houseless, sim)
 
+        # Only keep families that have houses
+        families = [f for f in families if f.house is not None]
+        for f in families:
+            sim.families[f.id] = f
+
+        agents = [a for a in new_agents.values() if a.family in families]
+
         # Has to come after we allocate households
         # so we know where the agents live
-        for a in new_agents.values():
+        for a in agents:
             sim.agents[a.id] = a
             sim.update_pop(None, a.region_id)
 
@@ -210,18 +216,27 @@ def marriage(sim):
             b_to_move_out = len([m for m in b.family.members.values() if m.age >= 21]) >= 2
             if a_to_move_out and b_to_move_out:
                 new_family = list(sim.generator.create_families(1).values())[0]
+                old_a = a.family
+                old_b = b.family
                 a.family.remove_agent(a)
                 b.family.remove_agent(b)
                 new_family.add_agent(a)
                 new_family.add_agent(b)
                 new_family.relatives.add(a.id)
                 new_family.relatives.add(b.id)
-                sim.families[new_family.id] = new_family
                 sim.housing.rental.rental_market([new_family], sim)
-                a_region_id = a.family.region_id
-                b_region_id = b.family.region_id
-                sim.update_pop(a_region_id, a.region_id)
-                sim.update_pop(b_region_id, b.region_id)
+
+                # Reverse marriage if they can't find house
+                if new_family.house is None:
+                    old_a.add_agent(a)
+                    old_b.add_agent(b)
+                else:
+                    sim.families[new_family.id] = new_family
+                    a_region_id = a.family.region_id
+                    b_region_id = b.family.region_id
+                    sim.update_pop(a_region_id, a.region_id)
+                    sim.update_pop(b_region_id, b.region_id)
+
             elif b_to_move_out:
                 b.family.remove_agent(b)
                 a.family.add_agent(b)
