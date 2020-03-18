@@ -167,7 +167,8 @@ def immigration(sim):
         families = []
         for f in new_families.values():
             # Not all families might get members, skip those
-            if not f.members: continue
+            if not f.members:
+                continue
             sim.families[f.id] = f
             f.savings = sum(m.grab_money() for m in f.members.values())
             families.append(f)

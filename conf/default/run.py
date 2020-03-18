@@ -25,16 +25,15 @@ SAVE_PLOTS_FIGURES = True
 # If plots should be generated separately for each simulation run or just aggregated
 # When PLOT_EACH_RUN is True, DATA for banks, construction, firms, regional, stats are also SAVED
 # *be aware of theirs sizes*
-PLOT_EACH_RUN = False
+PLOT_EACH_RUN = True
 # Spatial plots only works when PLOT_EACH_RUN is True
-SAVE_SPATIAL_PLOTS = False
+SAVE_SPATIAL_PLOTS = True
 # 'png' or 'eps'
 PLOT_FORMAT = 'png'
-PLOT_REGIONAL = False
+PLOT_REGIONAL = True
 
 # Plot DPI. Lower ones will plot faster
-PLOT_DPI = 600
-
+PLOT_DPI = 200
 
 # Save Agents data 'MONTHLY' or 'QUARTERLY', 'ANNUALLY', or None
 SAVE_AGENTS_DATA = 'MONTHLY'
@@ -46,12 +45,12 @@ SAVE_AGENTS_DATA = 'MONTHLY'
 # Can include: ['agents', 'grave', 'house', 'family', 'banks']
 # If None, set to empty list: []
 # SAVE_DATA = []
-SAVE_DATA = []
+SAVE_DATA = ['family', 'banks', 'house']
 
 # What data to average across all runs. If plotting, needs to include them in SAVE_DATA as well
 # Options: ['stats', 'families', 'houses', 'firms', 'regional', 'banks', 'construction']
 # You need to INCLUDE STATS to generate SPATIAL PLOTS. 'stats' also refer to general averaged plots
-AVERAGE_DATA = ['stats']
+AVERAGE_DATA = ['stats', 'regional', 'construction', 'banks', 'families', 'houses']
 # 'median' or 'mean'
 AVERAGE_TYPE = 'mean'
 
@@ -67,7 +66,7 @@ LIMIT_SAVED_TRANSIT_REGIONS = None
 STARTING_DAY = datetime.date(2000, 1, 1)
 
 # Maximum running time (restrained by official data) is 30 years,
-TOTAL_DAYS = (datetime.date(2002, 1, 1) - STARTING_DAY).days
+TOTAL_DAYS = (datetime.date(2020, 1, 1) - STARTING_DAY).days
 
 # Force generation of new population
 FORCE_NEW_POPULATION = False

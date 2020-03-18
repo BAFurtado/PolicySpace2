@@ -7,7 +7,7 @@ MARKUP = 0.15
 # Frequency firms change prices. Probability > than parameter
 STICKY_PRICES = .5
 # Number of firms consulted before consumption
-SIZE_MARKET = 10
+SIZE_MARKET = 15
 
 # Frequency firms enters in the market
 LABOR_MARKET = 0.05
@@ -52,12 +52,12 @@ FPM_DISTRIBUTION = True
 # CONSTRUCTION
 LICENSES_PER_REGION = 50
 NEW_LICENSE_RATE = 10
-PERCENT_CONSTRUCTION_FIRMS = 0.25
+PERCENT_CONSTRUCTION_FIRMS = 0.05
 INPUTS_PER_SIZE = 0.01
 
 # Families run parameters
 MEMBERS_PER_FAMILY = 2.5                             # (on average)
-HOUSE_VACANCY = .25                                   # percentage of vacant houses
+HOUSE_VACANCY = .05                                   # percentage of vacant houses
 RENTAL_SHARE = 0.1
 INITIAL_RENTAL_PRICE = .03
 # Definition to simplify population by group age groups(TRUE) or including all ages (FALSE)
@@ -75,7 +75,7 @@ TAXES_STRUCTURE = {'consumption_equal': .1875,
 # Order of magnitude parameter of input into municipality investment
 TREASURE_INTO_SERVICES = 1
 # Order of magnitude correction of production. Production divided by parameter
-PRODUCTION_MAGNITUDE = 76
+PRODUCTION_MAGNITUDE = 100
 
 # selecting the ACPs (Population Concentration Areas)
 # ACPs and their STATES - ALL ACPs written in UPPER CASE and whiteout  ACCENT
@@ -108,7 +108,7 @@ PRODUCTION_MAGNITUDE = 76
 
 # Percentage of actual population to run the simulation
 # Minimum value to run depends on the size of municipality 0,001 is recommended minimum
-PERCENTAGE_ACTUAL_POP = 0.001
+PERCENTAGE_ACTUAL_POP = 0.02
 
 # Write exactly like the list
 PROCESSING_ACPS = ['IPATINGA']
