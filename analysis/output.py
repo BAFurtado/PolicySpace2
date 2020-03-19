@@ -246,7 +246,6 @@ class Output:
                             firm.wages_paid))
             for firm in sim.construction_firms.values()]
 
-
     def save_agents_data(self, sim):
         with open(self.agents_path, 'a') as f:
             [f.write('%s;%s;%s;%.3f;%.3f;%d;%d;%d;%s;%s;%.3f;%.3f;%s\n' % (sim.clock.days, agent.region_id,
