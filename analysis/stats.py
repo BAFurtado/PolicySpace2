@@ -30,8 +30,8 @@ class Statistics(object):
             for key in list(firms[firm].inventory.keys()):
                 if firms[firm].inventory[key].quantity == 0 or firms[firm].num_employees == 0:
                     break
-            dummy_average_price += firms[firm].inventory[key].price
-            dummy_num_products += 1
+                dummy_average_price += firms[firm].inventory[key].price
+                dummy_num_products += 1
         if dummy_average_price == 0 or dummy_num_products == 0:
             average_price = 0
         else:

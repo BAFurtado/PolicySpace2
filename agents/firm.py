@@ -221,6 +221,7 @@ class ConstructionFirm(Firm):
         self.building_size = None
         self.building_cost = None
         self.building_quality = None
+        self._last_revenue = 0
 
     def plan_house(self, regions, houses, inputs_per_size, seed):
         """Decide where to build"""
@@ -311,10 +312,18 @@ class ConstructionFirm(Firm):
 
     def update_balance(self, amount):
         self.total_balance += amount
-        self.revenue += amount
+        self._last_revenue += amount
 
     def mean_house_price(self):
         if not self.houses:
             return 0
         t = sum(h.price for h in self.houses)
         return t/len(self.houses)
+
+    def calculate_revenue(self):
+        self.revenue = self._last_revenue
+        print('REVENUE', self.revenue)
+        self._last_revenue = 0
+
+    def update_prices(self, *args):
+        pass # Not relevant for construction firms
