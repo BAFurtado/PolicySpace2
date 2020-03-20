@@ -7,7 +7,7 @@ MARKUP = 0.15
 # Frequency firms change prices. Probability > than parameter
 STICKY_PRICES = .5
 # Number of firms consulted before consumption
-SIZE_MARKET = 15
+SIZE_MARKET = 10
 
 # Frequency firms enters in the market
 LABOR_MARKET = 0.05
@@ -51,9 +51,9 @@ FPM_DISTRIBUTION = True
 
 # CONSTRUCTION
 LICENSES_PER_REGION = 50
-NEW_LICENSE_RATE = 10
-PERCENT_CONSTRUCTION_FIRMS = 0.05
-INPUTS_PER_SIZE = 0.01
+NEW_LICENSE_RATE = 0
+PERCENT_CONSTRUCTION_FIRMS = 0.16
+INPUTS_PER_SIZE = 0.835
 
 # Families run parameters
 MEMBERS_PER_FAMILY = 2.5                             # (on average)
@@ -75,7 +75,7 @@ TAXES_STRUCTURE = {'consumption_equal': .1875,
 # Order of magnitude parameter of input into municipality investment
 TREASURE_INTO_SERVICES = 1
 # Order of magnitude correction of production. Production divided by parameter
-PRODUCTION_MAGNITUDE = 100
+PRODUCTION_MAGNITUDE = 200
 
 # selecting the ACPs (Population Concentration Areas)
 # ACPs and their STATES - ALL ACPs written in UPPER CASE and whiteout  ACCENT
