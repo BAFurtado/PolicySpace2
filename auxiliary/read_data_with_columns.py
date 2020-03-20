@@ -35,16 +35,18 @@ houses = ['sim.clock.days', 'house.id', 'house.address.x', 'house.address.y', 'h
 def read_allocate_cols(path, cols):
     output = pd.read_csv(path, sep=';')
     output.columns = cols
-    output.to_csv(path, ignore_index=True, sep=';')
+    output.to_csv(path, index=False, sep=';')
     return output
 
 
 if __name__ == '__main__':
     all = ['banks', 'construction', 'families', 'firms', 'houses', 'regional', 'stats']
     cols = [banks, construction, families, firms, houses, regional, stats]
+    # all = ['stats']
+    # cols = [stats]
     p = run.OUTPUT_PATH
-    p2 = r'\run__2020-03-18T17_44_07.607273\0'
-    p3 = r'\temp_'
+    p2 = r'\run__2020-03-20T13_14_17.548359'
+    p3 = r'\0\temp_'
     p4 = '.csv'
-    for each in all:
-        out = read_allocate_cols(p + p2 + p3 + each + p4, cols)
+    for i in range(len(all)):
+        out = read_allocate_cols(p + p2 + p3 + all[i] + p4, cols[i])
