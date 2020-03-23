@@ -322,7 +322,6 @@ class ConstructionFirm(Firm):
 
     def calculate_revenue(self):
         self.revenue = self._last_revenue
-        print('REVENUE', self.revenue)
         self._last_revenue = 0
 
     def update_prices(self, *args):

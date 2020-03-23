@@ -31,8 +31,8 @@ TAX_PROPERTY = 1.4E-07
 
 # LOANS
 MAX_LOAN_AGE = 80
-MAX_LOAN_REPAYMENT_PERCENT_INCOME = 0.1
-MAX_LOAN_BANK_PERCENT = 0.3
+MAX_LOAN_REPAYMENT_PERCENT_INCOME = 0.3
+MAX_LOAN_BANK_PERCENT = 0.7
 
 # GOVERNMENT
 # MONTHLY Real interest rate of the economy (SELIC minus INFLATION) for the Brazilian case
@@ -51,15 +51,15 @@ FPM_DISTRIBUTION = True
 
 # CONSTRUCTION
 LICENSES_PER_REGION = 50
-NEW_LICENSE_RATE = 0
-PERCENT_CONSTRUCTION_FIRMS = 0.16
+NEW_LICENSE_RATE = 10
+PERCENT_CONSTRUCTION_FIRMS = 0.05
 INPUTS_PER_SIZE = 0.835
 
 # Families run parameters
 MEMBERS_PER_FAMILY = 2.5                             # (on average)
-HOUSE_VACANCY = .05                                   # percentage of vacant houses
-RENTAL_SHARE = 0.1
-INITIAL_RENTAL_PRICE = .03
+HOUSE_VACANCY = .11                                   # percentage of vacant houses
+RENTAL_SHARE = 0.3
+INITIAL_RENTAL_PRICE = .0029
 # Definition to simplify population by group age groups(TRUE) or including all ages (FALSE)
 SIMPLIFY_POP_EVOLUTION = True
 # Defines the superior limit of age groups, the first value is always ZERO and is omitted from the list.

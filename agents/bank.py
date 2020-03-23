@@ -135,7 +135,7 @@ class Central:
         if self._outstanding_loans + amount > self._total_deposits * conf.PARAMS['MAX_LOAN_BANK_PERCENT']:
             return False
 
-        # Probabilty of giving loan depends on
+        # Probability of giving loan depends on
         # amount compared to family wealth
         p = 1 - (amount/family.get_wealth(self))
         if seed.random() > p:
@@ -156,7 +156,7 @@ class Central:
         max_years = conf.PARAMS['MAX_LOAN_AGE'] - max([m.age for m in family.members.values()])
         max_months = max_years * 12
         max_total = income * max_months
-        max_principal = max_total/(1+self.interest)
+        max_principal = max_total/(1 + self.interest)
         return min(max_principal, self.balance)
 
     def _max_monthly_payment(self, family):
