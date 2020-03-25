@@ -58,7 +58,7 @@ INPUTS_PER_SIZE = 0.835
 # Families run parameters
 MEMBERS_PER_FAMILY = 2.5                             # (on average)
 HOUSE_VACANCY = .11                                   # percentage of vacant houses
-RENTAL_SHARE = 0.3
+RENTAL_SHARE = 0.4
 INITIAL_RENTAL_PRICE = .0029
 # Definition to simplify population by group age groups(TRUE) or including all ages (FALSE)
 SIMPLIFY_POP_EVOLUTION = True
@@ -73,9 +73,9 @@ TAXES_STRUCTURE = {'consumption_equal': .1875,
 
 # GENERAL CALIBRATION PARAMETERS
 # Order of magnitude parameter of input into municipality investment
-TREASURE_INTO_SERVICES = 1
+TREASURE_INTO_SERVICES = .05
 # Order of magnitude correction of production. Production divided by parameter
-PRODUCTION_MAGNITUDE = 200
+PRODUCTION_MAGNITUDE = 1
 
 # selecting the ACPs (Population Concentration Areas)
 # ACPs and their STATES - ALL ACPs written in UPPER CASE and whiteout  ACCENT
