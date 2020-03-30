@@ -173,7 +173,7 @@ def immigration(sim):
             families.append(f)
 
         # Pass through housing market
-        sim.housing.allocate_houses(sim, families)
+        sim.housing.allocate_houses(sim, families, for_living_only=True)
 
         # Some might have tried to buy houses but failed,
         # pass to rental market

@@ -53,7 +53,7 @@ class HousingMarket:
 
         self.allocate_houses(sim, looking)
 
-    def allocate_houses(self, sim, looking):
+    def allocate_houses(self, sim, looking, for_living_only=False):
         # If empty lists, stop procedure
         self.update_on_sale(sim)
 
@@ -103,6 +103,8 @@ class HousingMarket:
 
         for family in purchasing:
             for house in self.on_sale:
+                # Skip houses that are being rented
+                if for_living_only and house.rent_data is not None: continue
                 s = family.savings
                 S = family.savings_with_loan
                 p = house.price
