@@ -1,14 +1,11 @@
 # MODEL PARAMETERS
 # FIRMS
 # Production function, labour with decaying exponent, Alpha for K. [0, 1]
-ALPHA = .67
+ALPHA = .24
 # By how much percentage to increase prices
-MARKUP = 0.025
+MARKUP = 0.15
 # Frequency firms change prices. Probability > than parameter
 STICKY_PRICES = .5
-# Order of magnitude correction of production. Production divided by parameter
-PRODUCTION_MAGNITUDE = 500
-
 # Number of firms consulted before consumption
 SIZE_MARKET = 10
 
@@ -23,18 +20,19 @@ WAGE_IGNORE_UNEMPLOYMENT = False
 HIRING_SAMPLE_SIZE = 100
 
 # Percentage of households pursuing new location
-PERCENTAGE_CHECK_NEW_LOCATION = 0.001
+PERCENTAGE_CHECK_NEW_LOCATION = 0.005
 
 # TAXES
 TAX_CONSUMPTION = 3.9E-05
-TAX_LABOR = 1.3E-05
+TAX_LABOR = 1.5E-05
 TAX_ESTATE_TRANSACTION = 1.5E-07
 TAX_FIRM = 4.4E-05
 TAX_PROPERTY = 1.4E-07
 
 # LOANS
 MAX_LOAN_AGE = 80
-MAX_LOAN_REPAYMENT_PERCENT_INCOME = 0.05
+MAX_LOAN_REPAYMENT_PERCENT_INCOME = 0.3
+MAX_LOAN_BANK_PERCENT = 0.7
 
 # GOVERNMENT
 # MONTHLY Real interest rate of the economy (SELIC minus INFLATION) for the Brazilian case
@@ -55,29 +53,29 @@ FPM_DISTRIBUTION = True
 LICENSES_PER_REGION = 50
 NEW_LICENSE_RATE = 10
 PERCENT_CONSTRUCTION_FIRMS = 0.05
-INPUTS_PER_SIZE = 1
+INPUTS_PER_SIZE = 0.835
 
 # Families run parameters
 MEMBERS_PER_FAMILY = 2.5                             # (on average)
-HOUSE_VACANCY = .1                                   # percentage of vacant houses
-RENTAL_SHARE = .2
-INITIAL_RENTAL_PRICE = .05
+HOUSE_VACANCY = .11                                   # percentage of vacant houses
+RENTAL_SHARE = 0.4
+INITIAL_RENTAL_PRICE = .0029
 # Definition to simplify population by group age groups(TRUE) or including all ages (FALSE)
 SIMPLIFY_POP_EVOLUTION = True
 # Defines the superior limit of age groups, the first value is always ZERO and is omitted from the list.
 LIST_NEW_AGE_GROUPS = [6, 12, 17, 25, 35, 45, 65, 100]
-
-# Percentage of actual population to run the simulation
-# Minimum value to run depends on the size of municipality 0,001 is recommended minimum
-PERCENTAGE_ACTUAL_POP = 0.01
+MARRIAGE_CHECK_PROBABILITY = 1/30
 
 # Consumption_equal: ratio of consumption tax distributed at state level (equal)
 # Fpm: ratio of 'labor' and 'firm' taxes distributed per the fpm ruling
 TAXES_STRUCTURE = {'consumption_equal': .1875,
                    'fpm': .235}
 
-# Order of magnitude parameter
-TREASURE_INTO_SERVICES = .5
+# GENERAL CALIBRATION PARAMETERS
+# Order of magnitude parameter of input into municipality investment
+TREASURE_INTO_SERVICES = .05
+# Order of magnitude correction of production. Production divided by parameter
+PRODUCTION_MAGNITUDE = 1
 
 # selecting the ACPs (Population Concentration Areas)
 # ACPs and their STATES - ALL ACPs written in UPPER CASE and whiteout  ACCENT
@@ -107,6 +105,10 @@ TREASURE_INTO_SERVICES = .5
 # "MT"     -      "CUIABA"
 # "GO"     -      "GOIANIA", "BRASILIA"
 # "DF"     -      "BRASILIA"
+
+# Percentage of actual population to run the simulation
+# Minimum value to run depends on the size of municipality 0,001 is recommended minimum
+PERCENTAGE_ACTUAL_POP = 0.02
 
 # Write exactly like the list
 PROCESSING_ACPS = ['IPATINGA']

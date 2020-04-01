@@ -15,8 +15,7 @@ from world import Generator, demographics, clock, population
 from world.firms import firm_growth
 from world.funds import Funds
 from world.geography import Geography, STATES_CODES, state_string
-from world.houses import update_housing_supply
-
+from world.regions import REGION_CACHE
 
 class Simulation:
     def __init__(self, params, output_path):
@@ -124,6 +123,10 @@ class Simulation:
         self.construction_firms = {f.id: f for f in self.firms.values() if f.type == 'CONSTRUCTION'}
         self.consumer_firms = {f.id: f for f in self.firms.values() if f.type == 'CONSUMER'}
 
+        for region in self.regions.values():
+            REGION_CACHE['centers'][region.id] = region.center
+            REGION_CACHE['firm_distances'][region.id] = {}
+
         # Group regions into their municipalities
         self.mun_to_regions = defaultdict(set)
         for region_id in self.regions.keys():
@@ -196,10 +199,6 @@ class Simulation:
         # Adjust families for marriages
         population.marriage(self)
 
-        # Check if house vacancy level is correct,
-        # if not, create new houses until it is correct
-        update_housing_supply(self)
-
         self.logger.log_time('DEMOGRAPHICS', self.timer, self.clock.months)
         self.output.times.append(self.timer.elapsed())
 
@@ -215,17 +214,17 @@ class Simulation:
         self.logger.log_time('FIRMS INITIALIZATION', self.timer, self.clock.months)
         self.output.times.append(self.timer.elapsed())
 
-        # Collect loan repayments
-        self.timer.start()
-        self.central.collect_loan_payments(self)
-        self.logger.log_time('LOAN REPAYMENTS', self.timer, self.clock.months)
-        self.output.times.append(self.timer.elapsed())
-
         # FAMILIES CONSUMPTION
         # Equalize money within family members
         # Tax firms when doing sales
         self.timer.start()
         markets.goods.consume(self)
+
+        # Collect loan repayments
+        self.timer.start()
+        self.central.collect_loan_payments(self)
+        self.logger.log_time('LOAN REPAYMENTS', self.timer, self.clock.months)
+        self.output.times.append(self.timer.elapsed())
 
         for fam in self.families.values():
             fam.invest(self.PARAMS['INTEREST_RATE'], self.central, present_year, (present_month % 12) + 1)
@@ -252,12 +251,8 @@ class Simulation:
 
         # Construction firms
         for firm in self.construction_firms.values():
-            # Choose random region, decide if buying license
-            region = self.seed.choice(list(self.regions.values()))
-            firm.decide_buy_license(region)
-
             # See if firm can build a house
-            firm.plan_house(self.regions, self.PARAMS['INPUTS_PER_SIZE'], self.seed)
+            firm.plan_house(self.regions.values(), self.houses.values(), self.PARAMS['INPUTS_PER_SIZE'], self.seed)
             house = firm.build_house(self.regions, self.generator)
             if house is not None:
                 self.houses[house.id] = house
@@ -290,7 +285,7 @@ class Simulation:
         # Tax transaction taxes (ITBI) when selling house
         # Property tax (IPTU) collected. One twelfth per month
         self.timer.start()
-        self.housing.allocate_houses(self)
+        self.housing.housing_market(self)
         self.housing.process_monthly_rent(self)
         for house in self.houses.values():
             house.pay_property_tax(self)

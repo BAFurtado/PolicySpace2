@@ -1,4 +1,5 @@
 from world.population import marriage_data
+from world.regions import distance_to_firm
 from .family import Family
 from .house import House
 from .region import Region
@@ -94,4 +95,8 @@ class Agent:
                (self.id, self.gender, self.qualification, self.age, self.money, self.firm_id, self.utility)
 
     def distance_to_firm(self, firm):
-        return self.family.house.distance_to_firm(firm)
+        # If no house, use region center
+        if self.family.house is not None:
+            return self.family.house.distance_to_firm(firm)
+        else:
+            return distance_to_firm(self.region_id, firm)

@@ -16,7 +16,9 @@ GENERATOR_PARAMS = [
     'MEMBERS_PER_FAMILY',
     'HOUSE_VACANCY',
     'SIMPLIFY_POP_EVOLUTION',
-    'PERCENTAGE_ACTUAL_POP'
+    'PERCENTAGE_ACTUAL_POP',
+    'LICENSES_PER_REGION',
+    'PERCENT_CONSTRUCTION_FIRMS'
 ]
 
 OUTPUT_DATA_SPEC = {
@@ -243,7 +245,6 @@ class Output:
                             firm.n_houses_sold, firm.revenue, firm.profit,
                             firm.wages_paid))
             for firm in sim.construction_firms.values()]
-
 
     def save_agents_data(self, sim):
         with open(self.agents_path, 'a') as f:

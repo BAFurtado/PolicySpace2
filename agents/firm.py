@@ -1,6 +1,6 @@
 from .house import House
 from .product import Product
-
+from collections import defaultdict
 
 class Firm:
     """
@@ -216,46 +216,63 @@ class ConstructionFirm(Firm):
         super().__init__(*args, **kwargs)
         self.houses = []
         self.houses_inventory = []
-        self.licenses = {}
         self.building = False
         self.building_region = None
         self.building_size = None
         self.building_cost = None
         self.building_quality = None
+        self._last_revenue = 0
 
-    def decide_buy_license(self, region):
-        """Firm decides whether to purchase
-        a land license from a region"""
-        can_purchase = region.licenses > 0 and self.total_balance > region.license_price
-        if can_purchase:
-            # TODO how does firm decide when to buy?
-            self.licenses[region.id] = self.licenses.get(region.id, 0) + 1
-            region.licenses -= 1
-        return can_purchase
-
-    def plan_house(self, regions, inputs_per_size, seed):
+    def plan_house(self, regions, houses, inputs_per_size, seed):
         """Decide where to build"""
         if self.building: return
 
-        # Choose out of regions where the firm has a license
-        candidate_regions = [region_id for region_id, licenses in self.licenses.items() if licenses > 0]
-        if not candidate_regions:
+        # Candidate regions for licenses
+        regions = [r for r in regions if r.licenses > 0 and self.total_balance > r.license_price]
+        if not regions:
             return
-
-        # Choose region with highest QLI b/c it will
-        # give the highest price
-        region_id = max(candidate_regions, key=lambda r_id: regions[r_id].index)
-        self.building_region = region_id
-        self.building = True
 
         # Targets
         # TODO random
-        self.building_size = seed.randrange(20, 120)
-        self.building_quality = seed.choice([1, 2, 3, 4])
-        self.building_cost = inputs_per_size * self.building_size * self.building_quality
+        building_size = seed.randrange(20, 120)
+        building_quality = seed.choice([1, 2, 3, 4])
+        building_cost = inputs_per_size * building_size * building_quality
 
-        # Use up license
-        self.licenses[region_id] -= 1
+        # Get information about region house prices
+        region_ids = [r.id for r in regions]
+        region_prices = defaultdict(list)
+        for h in houses:
+            # In correct region,
+            # within 10 size units,
+            # within 1 quality
+            if h.region_id in region_ids\
+                    and abs(h.size-building_size) <= 10\
+                    and abs(h.quality-building_quality) <= 1:
+                region_prices[h.region_id].append(h.price)
+                if len(region_prices[h.region_id]) > 100: # Only take a sample
+                    region_ids.remove(h.region_id)
+                    if not region_ids:
+                        break
+
+        # Choose region where construction is most profitable
+        # There might not be samples for all regions, so fallback to price of 0
+        region_mean_prices = {r_id: sum(vs)/len(vs) for r_id, vs in region_prices.items()}
+        region_profitability = [region_mean_prices.get(r.id, 0) - (r.license_price + building_cost) for r in regions]
+        regions = [(r, p) for r, p in zip(regions, region_profitability) if p > 0]
+        if not regions: # No profitable regions
+            return
+
+        # Choose region with highest profitability
+        region = max(regions, key=lambda rp: rp[1])[0]
+        self.building_region = region.id
+        self.building_size = building_size
+        self.building_quality = building_quality
+        self.building_cost = building_cost
+        self.building = True
+
+        # Buy license
+        region.licenses -= 1
+        self.total_balance -= region.index
 
     def build_house(self, regions, generator):
         """Firm decides if house is finished"""
@@ -281,7 +298,7 @@ class ConstructionFirm(Firm):
         house_id = generator.gen_id()
         size = self.building_size
         quality = self.building_quality
-        price = size * quality * region.index
+        price = size * quality + region.index
         h = House(house_id, address, size, price, region.id, quality, owner_id=self.id, owner_type=House.Owner.FIRM)
         self.houses.append(h)
         self.houses_inventory.append(h)
@@ -295,10 +312,17 @@ class ConstructionFirm(Firm):
 
     def update_balance(self, amount):
         self.total_balance += amount
-        self.revenue += amount
+        self._last_revenue += amount
 
     def mean_house_price(self):
         if not self.houses:
             return 0
         t = sum(h.price for h in self.houses)
         return t/len(self.houses)
+
+    def calculate_revenue(self):
+        self.revenue = self._last_revenue
+        self._last_revenue = 0
+
+    def update_prices(self, *args):
+        pass # Not relevant for construction firms

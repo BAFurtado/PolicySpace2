@@ -164,23 +164,32 @@ def immigration(sim):
         sim.generator.allocate_to_family(new_agents, new_families)
 
         # Keep track of new agents & families
+        families = []
         for f in new_families.values():
             # Not all families might get members, skip those
-            if not f.members: continue
+            if not f.members:
+                continue
+            f.savings = sum(m.grab_money() for m in f.members.values())
+            families.append(f)
 
+        # Pass through housing market
+        sim.housing.allocate_houses(sim, families, for_living_only=True)
+
+        # Some might have tried to buy houses but failed,
+        # pass to rental market
+        houseless = [f for f in families if f.house is None]
+        sim.housing.rental.rental_market(houseless, sim)
+
+        # Only keep families that have houses
+        families = [f for f in families if f.house is not None]
+        for f in families:
             sim.families[f.id] = f
 
-            # Create and assign homes
-            # Choose random region in this municipality
-            region_id = sim.seed.choice(sim.mun_to_regions[mun_code])
-            region = sim.regions[region_id]
-            new_houses = sim.generator.create_houses(1, region)
-            sim.generator.allocate_to_households({f.id: f}, new_houses)
-            sim.houses.update(new_houses)
+        agents = [a for a in new_agents.values() if a.family in families]
 
         # Has to come after we allocate households
         # so we know where the agents live
-        for a in new_agents.values():
+        for a in agents:
             sim.agents[a.id] = a
             sim.update_pop(None, a.region_id)
 
@@ -189,10 +198,11 @@ def marriage(sim):
     """Adjust families for marriages"""
     to_marry = []
     for agent in sim.agents.values():
-        # Compute probability that this agent will marry
-        # NOTE we don't consider whether or not they are already married
-        if sim.seed.random() < agent.p_marriage:
-            to_marry.append(agent)
+        if sim.seed.random() < sim.PARAMS['MARRIAGE_CHECK_PROBABILITY']:
+            # Compute probability that this agent will marry
+            # NOTE we don't consider whether or not they are already married
+            if sim.seed.random() < agent.p_marriage:
+                to_marry.append(agent)
 
     # Marry individuals
     # NOTE individuals are paired randomly
@@ -206,18 +216,27 @@ def marriage(sim):
             b_to_move_out = len([m for m in b.family.members.values() if m.age >= 21]) >= 2
             if a_to_move_out and b_to_move_out:
                 new_family = list(sim.generator.create_families(1).values())[0]
+                old_a = a.family
+                old_b = b.family
                 a.family.remove_agent(a)
                 b.family.remove_agent(b)
                 new_family.add_agent(a)
                 new_family.add_agent(b)
                 new_family.relatives.add(a.id)
                 new_family.relatives.add(b.id)
-                sim.families[new_family.id] = new_family
                 sim.housing.rental.rental_market([new_family], sim)
-                a_region_id = a.family.region_id
-                b_region_id = b.family.region_id
-                sim.update_pop(a_region_id, a.region_id)
-                sim.update_pop(b_region_id, b.region_id)
+
+                # Reverse marriage if they can't find house
+                if new_family.house is None:
+                    old_a.add_agent(a)
+                    old_b.add_agent(b)
+                else:
+                    sim.families[new_family.id] = new_family
+                    a_region_id = a.family.region_id
+                    b_region_id = b.family.region_id
+                    sim.update_pop(a_region_id, a.region_id)
+                    sim.update_pop(b_region_id, b.region_id)
+
             elif b_to_move_out:
                 b.family.remove_agent(b)
                 a.family.add_agent(b)

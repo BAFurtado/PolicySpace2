@@ -1,15 +1,19 @@
 import json
-from shapely.geometry import shape
+from shapely.geometry import Point, shape
 from collections import defaultdict
 
 
 class Region:
     """Collects taxes and applies to ameliorate quality of life"""
+    centers = {}
+    firm_distances = {}
 
     def __init__(self, region, index=1, gdp=0, pop=0, total_commute=0, licenses=0):
         # A region is an OSGEO object that contains Fields and Geometry
         self.address_envelope = region.geometry().GetEnvelope()
         self.addresses = region.geometry()
+        lat, lng, _ = self.addresses.Centroid().GetPoint()
+        self.center = Point(lat, lng)
         self.name = region.name
         self.id = region.id
         self.addresses = shape(json.loads(self.addresses.ExportToJson()))

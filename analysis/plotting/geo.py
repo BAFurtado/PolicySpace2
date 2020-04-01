@@ -11,7 +11,7 @@ scaler = MinMaxScaler(feature_range=(0, 1))
 def gen_coords(group, family_factor=False):
     coords = pd.DataFrame(columns=[
         'lat', 'long', 'savings', 'house_values', 'members',
-        'balance', 'employees', 'taxes_paid', 'profit'
+        'balance', 'employees', 'taxes_paid', 'profit', 'renting'
     ])
 
     # Selecting the coordinates of firms
@@ -23,7 +23,8 @@ def gen_coords(group, family_factor=False):
                     'long': item.address.x,
                     'savings': item.savings,
                     'house_values': item.house.price,
-                    'members': item.num_members
+                    'members': item.num_members,
+                    'renting': item.is_renting
                 }])
         else:
             coords = coords.append([{
@@ -58,8 +59,8 @@ def plot(sim, text):
     full_region = geopandas.read_file('input/shapes/mun_ACPS_ibge_2014_latlong_wgs1984_fixed.shp')
     urban_region = geopandas.read_file('input/shapes/URBAN_IBGE_ACPs.shp')
 
-    family_plots = ['savings', 'house_values', 'members']
-    plots = ['savings', 'house_values', 'members', 'balance', 'employees', 'taxes_paid', 'profit']
+    family_plots = ['savings', 'house_values', 'members', 'renting']
+    plots = ['savings', 'house_values', 'members', 'renting', 'balance', 'employees', 'taxes_paid', 'profit']
     figs = []
 
     for p in plots:

@@ -1,6 +1,5 @@
 import datetime
-
-import numpy as np
+from world.regions import distance_to_firm
 
 
 class Family:
@@ -29,6 +28,13 @@ class Family:
         self.house = house
         self.average_utility = 0
         self.study = None
+        self.monthly_loan_payments = 0
+
+        # Previous region id
+        if house is not None:
+            self.region_id = house.region_id
+        else:
+            self.region_id = None
 
     def add_agent(self, agent):
         """Adds a new agent to the set"""
@@ -42,6 +48,7 @@ class Family:
     def move_in(self, house):
         self.house = house
         house.family_id = self.id
+        self.region_id = house.region_id
 
     def move_out(self):
         self.house.empty()
@@ -51,11 +58,6 @@ class Family:
     def address(self):
         if self.house is not None:
             return self.house.address
-
-    @property
-    def region_id(self):
-        if self.house is not None:
-            return self.house.region_id
 
     # Budget operations ##############################################################################################
     def get_total_balance(self):
@@ -77,30 +79,29 @@ class Family:
         s += bank.withdraw(self, y, m)
         return s
 
-    def get_wealth(self):
+    def get_wealth(self, bank):
         """ Calculate current wealth, including real estate. """
-        # TODO RELEVANT. Include deduction of total outstanding loan from wealth
         estate_value = sum(h.price for h in self.owned_houses)
-        return self.savings + estate_value
+        return self.savings + estate_value - bank.loan_balance(self.id)
 
     def invest(self, r, bank, y, m):
         # Savings is updated during consumption as the fraction of above permanent income that is not consumed
         # If savings is above a six-month period reserve money, the surplus is invested in the bank.
-        reserve_money = self.permanent_income(r) * 6
+        reserve_money = self.permanent_income(bank, r) * 6
         if self.savings > reserve_money:
             bank.deposit(self, self.savings - reserve_money, datetime.date(y, m, 1))
 
     def total_wage(self):
         return sum(member.last_wage for member in self.members.values() if member.last_wage is not None)
 
-    def permanent_income(self, r):
+    def permanent_income(self, bank, r):
         # Equals Consumption (Bielefeld, 2018, pp.13-14)
         # Using last wage available as base for permanent income calculus: total_wage = Human Capital
         t0 = self.total_wage()
         r_1_r = r/(1 + r)
         # Calculated as "discounted some of current income and expected future income" plus "financial wealth"
         # Perpetuity of income is a fraction (r_1_r) of income t0 divided by interest r
-        return r_1_r * t0 + r_1_r * (t0 / r) + self.get_wealth() * r
+        return r_1_r * t0 + r_1_r * (t0 / r) + self.get_wealth(bank) * r
 
     def average_study(self):
         """Averages the years of study of the family"""
@@ -123,12 +124,11 @@ class Family:
             return employed / (employed + unemployed)
 
     # Consumption ####################################################################################################
-    def to_consume(self, r):
+    def to_consume(self, central, r):
         """Grabs all money from all members"""
         money = sum(m.grab_money() for m in self.members.values())
-        permanent_income = self.permanent_income(r)
-        # TODO: RELEVANT. If outstanding loans payment, deduce monthly loan payment from monthly calculated permanent
-        # TODO: income on given month. So actual spending money is less than usual permanent income.
+        permanent_income = self.permanent_income(central, r)
+        permanent_income -= self.monthly_loan_payments
         # Having loans will impact on a lower long-run permanent income consumption and on a monthly strongly
         # reduction of consumption. However, the price of the house may be appreciating in the market.
         # If cash at hand is positive consume it capped to permanent income
@@ -153,11 +153,11 @@ class Family:
             # TODO: should keep tabs on how many families go hungry
             return None
 
-    def consume(self, firms, regions, params, seed):
+    def consume(self, firms, central, regions, params, seed):
         """Family consumes its permanent income, based on members wages, working life expectancy
         and real estate and savings real interest
         """
-        money_to_spend = self.to_consume(params['INTEREST_RATE'])
+        money_to_spend = self.to_consume(central, params['INTEREST_RATE'])
         # Decision on how much money to consume or save
 
         if money_to_spend is not None:
@@ -172,7 +172,10 @@ class Family:
                 chosen_firm = min(market, key=lambda firm: firm.prices)
             else:
                 # Choose closest firm
-                chosen_firm = min(market, key=lambda firm: self.house.distance_to_firm(firm))
+                if self.house is not None:
+                    chosen_firm = min(market, key=lambda firm: self.house.distance_to_firm(firm))
+                else:
+                    chosen_firm = min(market, key=lambda firm: distance_to_firm(self.region_id, firm))
 
             # Buy from chosen company
             change = chosen_firm.sale(money_to_spend, regions, params['TAX_CONSUMPTION'])
@@ -208,3 +211,7 @@ class Family:
     def __repr__(self):
         return 'Family ID %s, House ID %s, Savings $ %.2f, Balance $ %.2f' % \
                (self.id, self.house.id if self.house else None, self.savings, self.get_total_balance())
+
+    @property
+    def is_renting(self):
+        return self.house.rent_data is not None

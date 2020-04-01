@@ -16,14 +16,19 @@ class Loan:
         self.principal = principal
         self.balance = principal * (1 + interest_rate)
         self.payment = payment
+        self.missed = 0
 
         self.paid_off = False
         self.delinquent = False
 
     def pay(self, amount):
         self.balance -= amount
-        if amount < self.payment:
+        if amount < self.payment + self.missed:
             self.delinquent = True
+            self.missed = self.payment - amount
+        else:
+            self.delinquent = False
+            self.missed = 0
 
         # Fully paid off
         self.paid_off = self.balance <= 0
@@ -41,6 +46,9 @@ class Central:
         self.interest = conf.PARAMS['INTEREST_RATE']
         self.wallet = defaultdict(list)
         self.taxes = 0
+
+        self._outstanding_loans = 0
+        self._total_deposits = 0
 
         # Track remaining loan balances
         self.loans = defaultdict(list)
@@ -68,6 +76,7 @@ class Central:
         """
         self.wallet[client].append((amount, date))
         self.balance += amount
+        self._total_deposits += amount
 
     def withdraw(self, client, y, m):
         """ Gives the money back to the client
@@ -76,6 +85,7 @@ class Central:
         amount = self.sum_deposits(client)
         del self.wallet[client]
         self.balance -= amount
+        self._total_deposits -= amount
         return amount + interest
 
     def sum_deposits(self, client):
@@ -84,8 +94,15 @@ class Central:
     def total_deposits(self):
         return sum(sum(amount for amount, _ in deposits) for deposits in self.wallet.values())
 
+    def loan_balance(self, family_id):
+        """Get total loan balance for a family"""
+        return sum(l.balance for l in self.loans.get(family_id, []))
+
     def n_loans(self):
         return sum(len(ls) for ls in self.loans.values())
+
+    def outstanding_loan_balance(self):
+        return sum(l.balance for l in self.all_loans())
 
     def all_loans(self):
         for ls in self.loans.values():
@@ -105,7 +122,7 @@ class Central:
             return min(amounts), max(amounts), mean
         return 0, 0, 0
 
-    def request_loan(self, family, amount):
+    def request_loan(self, family, amount, seed):
         # Can't loan more than on hand
         if amount > self.balance:
             return False
@@ -114,10 +131,22 @@ class Central:
         if self.loans[family.id]:
             return False
 
+        # Can't loan more than x% of total deposits
+        if self._outstanding_loans + amount > self._total_deposits * conf.PARAMS['MAX_LOAN_BANK_PERCENT']:
+            return False
+
+        # Probability of giving loan depends on
+        # amount compared to family wealth
+        p = 1 - (amount/family.get_wealth(self))
+        if seed.random() > p:
+            return
+
         # Add loan balance
         monthly_payment = self._max_monthly_payment(family)
         self.loans[family.id].append(Loan(amount, self.interest, monthly_payment))
+        family.monthly_loan_payments = sum(l.payment for l in self.loans[family.id])
         self.balance -= amount
+        self._outstanding_loans += amount
         return True
 
     def max_loan(self, family):
@@ -127,17 +156,12 @@ class Central:
         max_years = conf.PARAMS['MAX_LOAN_AGE'] - max([m.age for m in family.members.values()])
         max_months = max_years * 12
         max_total = income * max_months
-        max_principal = max_total/(1+self.interest)
+        max_principal = max_total/(1 + self.interest)
         return min(max_principal, self.balance)
 
     def _max_monthly_payment(self, family):
         # Max % of income on loan repayments
-        income = family.permanent_income(self.interest) * conf.PARAMS['MAX_LOAN_REPAYMENT_PERCENT_INCOME']
-
-        # Account for existing loans
-        for l in self.loans[family.id]:
-            income -= l.payment
-        return income
+        return family.permanent_income(self, self.interest) * conf.PARAMS['MAX_LOAN_REPAYMENT_PERCENT_INCOME']
 
     def collect_loan_payments(self, sim):
         for family_id, loans in self.loans.items():
@@ -151,20 +175,22 @@ class Central:
                 loan.age += 1
 
                 money = family.savings
-                if money < loan.payment:
+                if money < loan.payment + loan.missed:
                     money = family.grab_savings(self, sim.clock.year, (sim.clock.months % 12) + 1)
                     family.savings = money
-                payment = min(money, loan.payment)
+                payment = min(money, loan.payment + loan.missed)
                 done = loan.pay(payment)
                 family.savings -= payment
 
                 # Add to bank balance
                 self.balance += payment
+                self._outstanding_loans -= payment
 
                 # Remove loans that are paid off
                 if not done:
                     remaining_loans.append(loan)
             self.loans[family_id] = remaining_loans
+            family.monthly_loan_payments = sum(l.payment for l in remaining_loans)
 
 
 class Bank(Central):
