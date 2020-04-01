@@ -6,6 +6,7 @@ import pickle
 import random
 from collections import defaultdict
 
+import math
 import numpy as np
 import pandas as pd
 
@@ -277,9 +278,11 @@ class Simulation:
         self.output.times.append(self.timer.elapsed())
 
         # Job Matching
-        # For wage deciles, could do a sample instead of full population
         self.timer.start()
-        last_wages = [a.last_wage for a in self.agents.values() if a.last_wage is not None]
+        sample_size = math.floor(len(self.agents) * 0.5)
+        last_wages = [self.agents[a].last_wage
+                for a in self.seed.sample(self.agents.keys(), sample_size)
+                if self.agents[a].last_wage is not None]
         wage_deciles = np.percentile(last_wages, np.arange(0, 100, 10))
         self.labor_market.assign_post(current_unemployment, wage_deciles, self.PARAMS)
         self.logger.log_time('JOB MATCH', self.timer, self.clock.months)
