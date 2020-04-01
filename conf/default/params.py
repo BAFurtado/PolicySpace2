@@ -112,3 +112,18 @@ PERCENTAGE_ACTUAL_POP = 0.02
 
 # Write exactly like the list
 PROCESSING_ACPS = ['IPATINGA']
+
+WAGE_TO_CAR_OWNERSHIP_QUANTILES = [
+    0.1174,
+    0.1429,
+    0.2303,
+    0.2883,
+    0.3395,
+    0.4667,
+    0.5554,
+    0.6508,
+    0.7779,
+    0.9135,
+]
+PRIVATE_TRANSIT_COST = 0.5
+PUBLIC_TRANSIT_COST = 0.2

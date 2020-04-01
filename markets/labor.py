@@ -28,7 +28,7 @@ class LaborMarket:
         self.available_postings = []
         self.candidates = []
 
-    def assign_post(self, unemployment, params):
+    def assign_post(self, unemployment, wage_deciles, params):
         """Rank positions by wage and rank employees by qualifications
         Make a match """
         pct_distance_hiring = params['PCT_DISTANCE_HIRING']
@@ -37,6 +37,19 @@ class LaborMarket:
         hiring_sample_size = int(round(params['HIRING_SAMPLE_SIZE']))
 
         self.seed.shuffle(self.candidates)
+        if wage_deciles is not None:
+            for c in self.candidates:
+                if c.last_wage:
+                    for i, d in enumerate(wage_deciles):
+                        if d > c.last_wage:
+                            break
+                    p_car = params['WAGE_TO_CAR_OWNERSHIP_QUANTILES'][i]
+                    c.has_car = self.seed.random() < p_car
+                else:
+                    c.has_car = False
+        else:
+            for c in self.candidates:
+                c.has_car = False
 
         if len(self.candidates) >= 2:
             split = int(len(self.candidates) * (1 - pct_distance_hiring))
@@ -45,23 +58,47 @@ class LaborMarket:
         else:
             return
 
-        self.available_postings.sort(key=lambda f: f.wage_base(unemployment, tax_consumption, ignore_unemployment), reverse=True)
+        available_postings = [(f, f.wage_base(unemployment, tax_consumption, ignore_unemployment)) for f in self.available_postings]
+        available_postings.sort(key=lambda p: p[1], reverse=True)
         by_qual.sort(key=lambda c: c.qualification, reverse=False)
 
         # Choosing by qualification
-        for firm, candidate in zip(self.available_postings[0::2], by_qual):
-            self.apply_assign(candidate, firm)
+        offers = []
+        done_firms = set()
+        done_cands = set()
+        for firm, wage in available_postings[0::2]:
+            candidates = self.seed.sample(by_qual, min(len(by_qual), hiring_sample_size))
+            for c in candidates:
+                transit_cost = params['PRIVATE_TRANSIT_COST'] if c.has_car else params['PUBLIC_TRANSIT_COST']
+                score = wage - (c.distance_to_firm(firm) * transit_cost)
+                offers.append((firm, c, c.qualification + score))
+        sorted(offers, key=lambda o: o[2], reverse=True)
+        for firm, candidate, _ in offers:
+            if firm not in done_firms and candidate not in done_cands:
+                self.apply_assign(candidate, firm)
+                done_firms.add(firm)
+                done_cands.add(candidate)
 
-        for firm in self.available_postings[1::2]:
+        offers = []
+        done_firms = set()
+        done_cands = set()
+        for firm, wage in available_postings[1::2]:
             if not by_dist:
                 break
 
             # sample candidates
             candidates = self.seed.sample(by_dist, min(len(by_dist), hiring_sample_size))
-            # Choosing by distance
-            chosen_candidate = fast_closest(candidates, firm)
-            by_dist.remove(chosen_candidate)
-            self.apply_assign(chosen_candidate, firm)
+            for c in candidates:
+                dist = c.distance_to_firm(firm)
+                transit_cost = params['PRIVATE_TRANSIT_COST'] if c.has_car else params['PUBLIC_TRANSIT_COST']
+                score = wage - (dist * transit_cost)
+                offers.append((firm, c, score - dist))
+        sorted(offers, key=lambda o: o[2], reverse=True)
+        for firm, candidate, _ in offers:
+            if firm not in done_firms and candidate not in done_cands:
+                self.apply_assign(candidate, firm)
+                done_firms.add(firm)
+                done_cands.add(candidate)
 
         self.available_postings = []
         self.candidates = []

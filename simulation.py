@@ -6,6 +6,7 @@ import pickle
 import random
 from collections import defaultdict
 
+import numpy as np
 import pandas as pd
 
 import analysis
@@ -148,7 +149,7 @@ class Simulation:
         # Simple average of 6 Metropolitan regions Brazil January 2000
         while actual / total > .086:
             self.labor_market.hire_fire(self.firms, self.PARAMS['LABOR_MARKET'])
-            self.labor_market.assign_post(actual_unemployment, self.PARAMS)
+            self.labor_market.assign_post(actual_unemployment, None, self.PARAMS)
             self.labor_market.look_for_jobs(self.agents)
             actual = self.labor_market.num_candidates
         self.labor_market.reset()
@@ -276,8 +277,11 @@ class Simulation:
         self.output.times.append(self.timer.elapsed())
 
         # Job Matching
+        # For wage deciles, could do a sample instead of full population
         self.timer.start()
-        self.labor_market.assign_post(current_unemployment, self.PARAMS)
+        last_wages = [a.last_wage for a in self.agents.values() if a.last_wage is not None]
+        wage_deciles = np.percentile(last_wages, np.arange(0, 100, 10))
+        self.labor_market.assign_post(current_unemployment, wage_deciles, self.PARAMS)
         self.logger.log_time('JOB MATCH', self.timer, self.clock.months)
         self.output.times.append(self.timer.elapsed())
 
