@@ -77,7 +77,6 @@ class Plotter:
             raise MissingDataError
         dat.columns = columns
 
-
         # # Time to be eliminated (adjustment of the model)
         if conf.RUN['TIME_TO_BE_ELIMINATED'] > 0:
             dat = dat.loc[len(dat['month']) * conf.RUN['TIME_TO_BE_ELIMINATED']:, :]
@@ -128,11 +127,11 @@ class Plotter:
 
         cols = ['price_index', 'gdp_index', 'gdp_growth', 'unemployment', 'average_workers', 'families_wealth',
                 'families_savings', 'firms_wealth', 'firms_profit', 'gini_index', 'average_utility', 'inflation',
-                'average_qli','equally', 'locally', 'fpm']
+                'average_qli', 'equally', 'locally', 'fpm']
         titles = ['Average prices\' level', 'GDP absolute value', 'GDP growth in % m-m', 'Unemployment',
-                'Average workers per firm', 'Families\' disposable cash', 'Families\' absolute savings',
-                'Firms\' abolute capital', 'Firms\' profit', 'GINI index', 'Average families\' utility',
-                'Monthly inflation', 'Average QLI index value', 'Taxes invested equally', 'Taxes invested locally',
+                  'Average workers per firm', 'Families\' disposable cash', 'Families\' absolute savings',
+                  'Firms\' absolute capital', 'Firms\' profit', 'GINI index', 'Average families\' utility',
+                  'Monthly inflation', 'Average QLI index value', 'Taxes invested equally', 'Taxes invested locally',
                   'Taxes invested via FPM']
 
         # General plotting

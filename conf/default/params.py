@@ -24,7 +24,7 @@ PERCENTAGE_CHECK_NEW_LOCATION = 0.005
 
 # TAXES
 TAX_CONSUMPTION = 3.9E-05
-TAX_LABOR = 1.5E-05
+TAX_LABOR = 1.3E-05
 TAX_ESTATE_TRANSACTION = 1.5E-07
 TAX_FIRM = 4.4E-05
 TAX_PROPERTY = 1.4E-07
@@ -64,7 +64,7 @@ INITIAL_RENTAL_PRICE = .0029
 SIMPLIFY_POP_EVOLUTION = True
 # Defines the superior limit of age groups, the first value is always ZERO and is omitted from the list.
 LIST_NEW_AGE_GROUPS = [6, 12, 17, 25, 35, 45, 65, 100]
-MARRIAGE_CHECK_PROBABILITY = 1/30
+MARRIAGE_CHECK_PROBABILITY = .034
 
 # Consumption_equal: ratio of consumption tax distributed at state level (equal)
 # Fpm: ratio of 'labor' and 'firm' taxes distributed per the fpm ruling
@@ -73,7 +73,7 @@ TAXES_STRUCTURE = {'consumption_equal': .1875,
 
 # GENERAL CALIBRATION PARAMETERS
 # Order of magnitude parameter of input into municipality investment
-TREASURE_INTO_SERVICES = .05
+TREASURE_INTO_SERVICES = .04
 # Order of magnitude correction of production. Production divided by parameter
 PRODUCTION_MAGNITUDE = 1
 
@@ -108,7 +108,7 @@ PRODUCTION_MAGNITUDE = 1
 
 # Percentage of actual population to run the simulation
 # Minimum value to run depends on the size of municipality 0,001 is recommended minimum
-PERCENTAGE_ACTUAL_POP = 0.02
+PERCENTAGE_ACTUAL_POP = 0.1
 
 # Write exactly like the list
 PROCESSING_ACPS = ['IPATINGA']

@@ -33,7 +33,7 @@ PLOT_FORMAT = 'png'
 PLOT_REGIONAL = True
 
 # Plot DPI. Lower ones will plot faster
-PLOT_DPI = 100
+PLOT_DPI = 150
 
 # Save Agents data 'MONTHLY' or 'QUARTERLY', 'ANNUALLY', or None
 SAVE_AGENTS_DATA = 'MONTHLY'
