@@ -298,7 +298,7 @@ class ConstructionFirm(Firm):
         house_id = generator.gen_id()
         size = self.building_size
         quality = self.building_quality
-        price = size * quality + region.index
+        price = (size * quality) * region.index
         h = House(house_id, address, size, price, region.id, quality, owner_id=self.id, owner_type=House.Owner.FIRM)
         self.houses.append(h)
         self.houses_inventory.append(h)
