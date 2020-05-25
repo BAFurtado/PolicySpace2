@@ -78,7 +78,7 @@ TREASURE_INTO_SERVICES = .04
 PRODUCTION_MAGNITUDE = 1
 
 # selecting the ACPs (Population Concentration Areas)
-# ACPs and their STATES - ALL ACPs written in UPPER CASE and whiteout  ACCENT
+# ACPs and their STATES - ALL ACPs written in UPPER CASE and without  ACCENT
 # STATE    -       ACPs
 # ------------------------
 # "AM"     -      "MANAUS"
@@ -108,7 +108,7 @@ PRODUCTION_MAGNITUDE = 1
 
 # Percentage of actual population to run the simulation
 # Minimum value to run depends on the size of municipality 0,001 is recommended minimum
-PERCENTAGE_ACTUAL_POP = 0.1
+PERCENTAGE_ACTUAL_POP = 0.02
 
 # Write exactly like the list
 PROCESSING_ACPS = ['IPATINGA']

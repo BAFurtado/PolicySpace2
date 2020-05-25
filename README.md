@@ -75,12 +75,7 @@ Then add Shapely from conda-forge channel
  `conda install shapely gdal -c conda-forge`
 
 Then the other packages 
-`conda install fiona pandas geopandas numba descartes scipy seaborn pyproj matplotlib six cycler statsmodels
-joblib scikit-learn flask flask-wtf psutil -c conda-forge`
-
-Alternatively, type on a terminal 
-
-`conda create --name <env> --file conda_requirements.txt`
+`conda install fiona pandas geopandas numba descartes scipy seaborn pyproj matplotlib six cycler statsmodels joblib scikit-learn flask flask-wtf psutil -c conda-forge`
 
 ## How to run the model ##
 

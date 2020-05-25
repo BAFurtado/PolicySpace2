@@ -41,8 +41,8 @@ def simplify_pops(pops, params):
 
 def format_pops(pops):
     """Rename the columns names to be compatible as the pop simplification modification"""
-    list_of_columns = ['code']+[int(x) for x in list(pops[0].columns)[1:len(list(pops[0].columns))]]
     for pop in pops.values():
+        list_of_columns = ['code'] + [int(x) for x in list(pop.columns)[1: len(list(pop.columns))]]
         pop.columns = list_of_columns
     return pops
 
