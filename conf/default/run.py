@@ -45,12 +45,12 @@ SAVE_AGENTS_DATA = 'MONTHLY'
 # Can include: ['agents', 'grave', 'house', 'family', 'banks']
 # If None, set to empty list: []
 # SAVE_DATA = []
-SAVE_DATA = ['family', 'banks', 'house']
+SAVE_DATA = ['family', 'banks', 'house', 'firms']
 
 # What data to average across all runs. If plotting, needs to include them in SAVE_DATA as well
 # Options: ['stats', 'families', 'houses', 'firms', 'regional', 'banks', 'construction']
 # You need to INCLUDE STATS to generate SPATIAL PLOTS. 'stats' also refer to general averaged plots
-AVERAGE_DATA = ['stats', 'regional', 'construction', 'banks', 'families', 'houses']
+AVERAGE_DATA = ['stats', 'regional', 'construction', 'banks', 'families', 'houses', 'firms']
 # 'median' or 'mean'
 AVERAGE_TYPE = 'median'
 

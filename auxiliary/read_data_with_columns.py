@@ -1,12 +1,13 @@
-""" This script reads all databases and rewrites them with columns
+""" This script reads all databases and rewrites them with columns' names
 """
 
-
+import os
 import pandas as pd
 
 from conf.default import run
 
 pd.set_option('display.max_columns', 13)
+pd.set_option('display.max_rows', 240)
 
 files = ['stats', 'regional', 'time', 'firms', 'banks',
          'houses', 'agents', 'families', 'grave', 'construction']
@@ -39,20 +40,24 @@ houses = ['sim.clock.days', 'house.id', 'house.address.x', 'house.address.y', 'h
 
 def read_allocate_cols(path, cols=None):
     output = pd.read_csv(path, sep=';')
-    # output.columns = cols
-    # output.to_csv(path, index=False, sep=';')
+    output.columns = cols
+    output.to_csv(path, index=False, sep=';')
     return output
 
 
 if __name__ == '__main__':
-    # all = ['banks', 'construction', 'families', 'firms', 'houses', 'regional', 'stats']
-    # cols = [banks, construction, families, firms, houses, regional, stats]
-    all = ['firms']
+    all = ['banks', 'construction', 'families', 'firms', 'houses', 'regional', 'stats']
+    cols = [banks, construction, families, firms, houses, regional, stats]
+    # all = ['firms']
     # cols = [stats]
+    p0 = r'/home/furtadobb/MyModels/PolicySpace2'
     p = run.OUTPUT_PATH
-    p2 = r'\run__2020-05-22T14_43_56.546691'
-    p3 = r'\0\temp_'
+    p2 = r'run__2020-05-22T18_53_17.538787'
+    p3 = r'0/temp_'
     p4 = '.csv'
-    # for i in range(len(all)):
-        # out = read_allocate_cols(p + p2 + p3 + all[i] + p4, cols[i])
-    out = read_allocate_cols(p + p2 + p3 + all[0] + p4)
+
+    for i in range(len(all)):
+        pf = os.path.join(p0, p, p2, p3 + all[i] + p4)
+        out = read_allocate_cols(pf, cols[i])
+    # pf = os.path.join(p0, p, p2, p3 + all[0] + p4)
+    # out = read_allocate_cols(pf, firms)
