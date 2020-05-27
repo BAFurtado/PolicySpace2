@@ -82,7 +82,7 @@ def die(sim, agent):
         id = agent.family.id
         del sim.families[id]
 
-        savings = agent.family.grab_savings(sim.central, sim.clock.year, (sim.clock.months % 12)+1)
+        savings = agent.family.grab_savings(sim.central, sim.clock.year, (sim.clock.months % 12) + 1)
         relatives = [sim.families[i] for i in agent.family.relatives if i in sim.families]
 
         # Redistribute houses, debt, and savings of empty family
