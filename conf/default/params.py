@@ -53,13 +53,14 @@ FPM_DISTRIBUTION = True
 LICENSES_PER_REGION = 50
 NEW_LICENSE_RATE = 10
 PERCENT_CONSTRUCTION_FIRMS = 0.05
-INPUTS_PER_SIZE = 0.835
+INPUTS_PER_SIZE = 1
 
 # Families run parameters
 MEMBERS_PER_FAMILY = 2.5                             # (on average)
 HOUSE_VACANCY = .11                                   # percentage of vacant houses
+
 RENTAL_SHARE = 0.4
-INITIAL_RENTAL_PRICE = .0029
+INITIAL_RENTAL_PRICE = .004
 # Definition to simplify population by group age groups(TRUE) or including all ages (FALSE)
 SIMPLIFY_POP_EVOLUTION = True
 # Defines the superior limit of age groups, the first value is always ZERO and is omitted from the list.
@@ -73,7 +74,7 @@ TAXES_STRUCTURE = {'consumption_equal': .1875,
 
 # GENERAL CALIBRATION PARAMETERS
 # Order of magnitude parameter of input into municipality investment
-TREASURE_INTO_SERVICES = .04
+TREASURE_INTO_SERVICES = .03
 # Order of magnitude correction of production. Production divided by parameter
 PRODUCTION_MAGNITUDE = 1
 
