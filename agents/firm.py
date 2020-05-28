@@ -2,6 +2,7 @@ from .house import House
 from .product import Product
 from collections import defaultdict
 
+
 class Firm:
     """
     Firms contain all elements connected with firms, their methods to handle production, adding, paying
@@ -225,7 +226,8 @@ class ConstructionFirm(Firm):
 
     def plan_house(self, regions, houses, inputs_per_size, seed):
         """Decide where to build"""
-        if self.building: return
+        if self.building:
+            return
 
         # Candidate regions for licenses
         regions = [r for r in regions if r.licenses > 0 and self.total_balance > r.license_price]
@@ -233,9 +235,11 @@ class ConstructionFirm(Firm):
             return
 
         # Targets
-        # TODO random
         building_size = seed.randrange(20, 120)
         building_quality = seed.choice([1, 2, 3, 4])
+        # TODO: implement a variable profitable margin 1 - random.random() if rand is high, low profit. This way, it
+        # becomes more adaptable to market conditions.
+        # TODO: also fix price of licence
         building_cost = inputs_per_size * building_size * building_quality
 
         # Get information about region house prices
@@ -246,10 +250,11 @@ class ConstructionFirm(Firm):
             # within 10 size units,
             # within 1 quality
             if h.region_id in region_ids\
-                    and abs(h.size-building_size) <= 10\
-                    and abs(h.quality-building_quality) <= 1:
+                    and abs(h.size - building_size) <= 10\
+                    and abs(h.quality - building_quality) <= 1:
                 region_prices[h.region_id].append(h.price)
-                if len(region_prices[h.region_id]) > 100: # Only take a sample
+                # Only take a sample
+                if len(region_prices[h.region_id]) > 100:
                     region_ids.remove(h.region_id)
                     if not region_ids:
                         break
@@ -259,7 +264,9 @@ class ConstructionFirm(Firm):
         region_mean_prices = {r_id: sum(vs)/len(vs) for r_id, vs in region_prices.items()}
         region_profitability = [region_mean_prices.get(r.id, 0) - (r.license_price + building_cost) for r in regions]
         regions = [(r, p) for r, p in zip(regions, region_profitability) if p > 0]
-        if not regions: # No profitable regions
+
+        # No profitable regions
+        if not regions:
             return
 
         # Choose region with highest profitability
@@ -324,5 +331,6 @@ class ConstructionFirm(Firm):
         self.revenue = self._last_revenue
         self._last_revenue = 0
 
+    # Not relevant for construction firms
     def update_prices(self, *args):
-        pass # Not relevant for construction firms
+        pass

@@ -20,6 +20,8 @@ class HousingMarket:
             # Updating all houses values every month
             house.update_price(sim.regions)
 
+            # If house is empty, add not already on sales list, add it to houses on the market and start counting
+            # However, if house is empty and had been empty count one extra month
             if not house.is_occupied:
                 if house not in self.on_sale:
                     house.on_market = 0
@@ -54,7 +56,7 @@ class HousingMarket:
         self.allocate_houses(sim, looking)
 
     def allocate_houses(self, sim, looking, for_living_only=False):
-        # Update prices of all houses in the simulation
+        # Update prices of all houses in the simulation and status 'on_market' or not
         self.update_on_sale(sim)
 
         # If empty lists, stop procedure
