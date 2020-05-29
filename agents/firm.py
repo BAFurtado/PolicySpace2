@@ -229,7 +229,7 @@ class ConstructionFirm(Firm):
         self.building_quality = None
         self.cash_flow = defaultdict(float)
 
-    def plan_house(self, regions, houses, inputs_per_size, seed):
+    def plan_house(self, regions, houses, lot_price, markup, seed):
         """Decide where to build"""
         if self.building:
             return
@@ -242,11 +242,6 @@ class ConstructionFirm(Firm):
         # Targets
         building_size = seed.randrange(20, 120)
         building_quality = seed.choice([1, 2, 3, 4])
-        # TODO: implement a variable profitable margin 1 - random.random() if rand is high, low profit. This way, it
-        # becomes more adaptable to market conditions.
-        # TODO: also fix price of licence
-        # Number of product quantities needed for the house
-        building_cost = inputs_per_size * building_size * building_quality
 
         # Get information about region house prices
         region_ids = [r.id for r in regions]
@@ -265,10 +260,18 @@ class ConstructionFirm(Firm):
                     if not region_ids:
                         break
 
+        # Number of product quantities needed for the house
+        gross_cost = building_size * building_quality
+        # Productivity of the company may vary double than exogenous set markup.
+        # Productivity reduces the cost of construction and sets the size of profiting when selling
+        productivity = seed.randint(100 - 2 * markup, 100) / 100
+        building_cost = gross_cost * productivity
+
         # Choose region where construction is most profitable
         # There might not be samples for all regions, so fallback to price of 0
         region_mean_prices = {r_id: sum(vs)/len(vs) for r_id, vs in region_prices.items()}
-        region_profitability = [region_mean_prices.get(r.id, 0) - (r.license_price + building_cost) for r in regions]
+        region_profitability = [region_mean_prices.get(r.id, 0) - (r.license_price * building_cost * (1 + lot_price))
+                                for r in regions]
         regions = [(r, p) for r, p in zip(regions, region_profitability) if p > 0]
 
         # No profitable regions
@@ -282,12 +285,14 @@ class ConstructionFirm(Firm):
         self.building_quality = building_quality
         #
         # Product.quantity increases as construction moves forward and is deducted at once
-        self.building_cost = building_cost
+        self.building_cost = building_cost * region.license_price
         self.building = True
 
         # Buy license
         region.licenses -= 1
-        self.total_balance -= region.index
+        lot_cost = region.license_price * building_cost * lot_price
+        self.total_balance -= lot_cost
+        region.collect_taxes(lot_cost, 'transaction')
 
     def build_house(self, regions, generator):
         """Firm decides if house is finished"""

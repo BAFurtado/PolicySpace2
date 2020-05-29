@@ -254,7 +254,8 @@ class Simulation:
         # Construction firms
         for firm in self.construction_firms.values():
             # See if firm can build a house
-            firm.plan_house(self.regions.values(), self.houses.values(), self.PARAMS['INPUTS_PER_SIZE'], self.seed)
+            firm.plan_house(self.regions.values(), self.houses.values(), self.PARAMS['LOT_COST'],
+                            self.PARAMS['MARKUP'], self.seed)
             # See whether a house has been completed. If so, register. Else, continue
             house = firm.build_house(self.regions, self.generator)
             if house is not None:

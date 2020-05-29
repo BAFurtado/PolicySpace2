@@ -53,7 +53,8 @@ FPM_DISTRIBUTION = True
 LICENSES_PER_REGION = 50
 NEW_LICENSE_RATE = 10
 PERCENT_CONSTRUCTION_FIRMS = 0.05
-INPUTS_PER_SIZE = 1
+# Cost of lot in percentage of construction
+LOT_COST = .1
 
 # Families run parameters
 MEMBERS_PER_FAMILY = 2.5                             # (on average)
