@@ -132,7 +132,8 @@ class Firm:
     # Accountancy department ########################################################################################
     # Save values in time
     def calculate_profit(self):
-        # Calculate profits considering last month wages paid,
+        # Calculate profits considering last month wages paid and taxes on firm
+        # (labor and consumption taxes are already deducted)
         self.profit = self.revenue - self.wages_paid - self.taxes_paid
 
     def pay_taxes(self, regions, tax_firm):
@@ -151,8 +152,9 @@ class Firm:
     def wage_base(self, unemployment, ignore_unemployment):
         if not ignore_unemployment:
             # Observing global economic performance has the added advantage of not spending all revenue on salaries
-            self.revenue *= (1 - unemployment)
-        return self.revenue
+            return self.revenue * (1 - unemployment)
+        else:
+            return self.revenue
 
     def make_payment(self, regions, unemployment, alpha, tax_labor, ignore_unemployment):
         """Pay employees based on revenue, relative employee qualification, labor taxes, and alpha param"""
@@ -201,9 +203,6 @@ class Firm:
     def num_employees(self):
         return len(self.employees)
 
-    def update_balance(self, amount):
-        self.total_balance += amount
-
     def get_total_balance(self):
         return self.total_balance
 
@@ -228,13 +227,14 @@ class ConstructionFirm(Firm):
         self.building_size = None
         self.building_cost = None
         self.building_quality = None
+        self.cash_flow = defaultdict(float)
 
     def plan_house(self, regions, houses, inputs_per_size, seed):
         """Decide where to build"""
         if self.building:
             return
 
-        # Candidate regions for licenses
+        # Candidate regions for licenses and check of funds to buy license
         regions = [r for r in regions if r.licenses > 0 and self.total_balance > r.license_price]
         if not regions:
             return
@@ -245,6 +245,7 @@ class ConstructionFirm(Firm):
         # TODO: implement a variable profitable margin 1 - random.random() if rand is high, low profit. This way, it
         # becomes more adaptable to market conditions.
         # TODO: also fix price of licence
+        # Number of product quantities needed for the house
         building_cost = inputs_per_size * building_size * building_quality
 
         # Get information about region house prices
@@ -279,6 +280,8 @@ class ConstructionFirm(Firm):
         self.building_region = region.id
         self.building_size = building_size
         self.building_quality = building_quality
+        #
+        # Product.quantity increases as construction moves forward and is deducted at once
         self.building_cost = building_cost
         self.building = True
 
@@ -318,12 +321,27 @@ class ConstructionFirm(Firm):
         self.building = False
         return h
 
+    # Selling house
+    def update_balance(self, amount):
+        self.total_balance += amount
+        self.update_cash_flow(amount)
+
+    def update_cash_flow(self, amount):
+        for i in range(12):
+            self.cash_flow[i] += amount/12
+
+    def wage_base(self, unemployment, ignore_unemployment):
+        self.revenue = self.cash_flow[self.actual_month]
+        self.cash_flow[self.actual_month] = 0
+        if not ignore_unemployment:
+            # Observing global economic performance has the added advantage of not spending all revenue on salaries
+            return self.revenue * (1 - unemployment)
+        else:
+            return self.revenue
+
     @property
     def n_houses_sold(self):
         return len(self.houses) - len(self.houses_inventory)
-
-    def update_balance(self, amount):
-        self.total_balance += amount
 
     def mean_house_price(self):
         if not self.houses:

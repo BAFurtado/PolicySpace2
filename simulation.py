@@ -209,7 +209,8 @@ class Simulation:
         for firm in self.firms.values():
             firm.actual_month = present_month
             firm.amount_sold = 0
-            firm.revenue = 0
+            if firm.type is not 'CONSTRUCTION':
+                firm.revenue = 0
 
         # Create new firms according to average historical growth
         firm_growth(self)
@@ -254,6 +255,7 @@ class Simulation:
         for firm in self.construction_firms.values():
             # See if firm can build a house
             firm.plan_house(self.regions.values(), self.houses.values(), self.PARAMS['INPUTS_PER_SIZE'], self.seed)
+            # See whether a house has been completed. If so, register. Else, continue
             house = firm.build_house(self.regions, self.generator)
             if house is not None:
                 self.houses[house.id] = house
@@ -280,8 +282,8 @@ class Simulation:
         self.timer.start()
         sample_size = math.floor(len(self.agents) * 0.5)
         last_wages = [self.agents[a].last_wage
-                for a in self.seed.sample(self.agents.keys(), sample_size)
-                if self.agents[a].last_wage is not None]
+                      for a in self.seed.sample(self.agents.keys(), sample_size)
+                      if self.agents[a].last_wage is not None]
         wage_deciles = np.percentile(last_wages, np.arange(0, 100, 10))
         self.labor_market.assign_post(current_unemployment, wage_deciles, self.PARAMS)
         self.logger.log_time('JOB MATCH', self.timer, self.clock.months)
