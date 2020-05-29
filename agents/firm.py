@@ -23,7 +23,8 @@ class Firm:
                  wages_paid=0,
                  actual_month=0,
                  revenue=0,
-                 taxes_paid=0):
+                 taxes_paid=0,
+                 prices=None):
 
         self.id = id
         self.address = address
@@ -42,6 +43,7 @@ class Firm:
         self.actual_month = actual_month
         self.revenue = revenue
         self.taxes_paid = taxes_paid
+        self.prices = prices
 
     # Product procedures ##############################################################################################
     def create_product(self):
@@ -55,22 +57,26 @@ class Firm:
                 self.product_index += 1
             self.prices = sum(p.price for p in self.inventory.values()) / len(self.inventory)
 
+    # Production department
     def update_product_quantity(self, alpha, production_magnitude):
-        """Production equation = Labour * qualification ** alpha"""
+        """Production equation = Labor * qualification ** alpha"""
         if self.employees and self.inventory:
             # Call get_sum_qualification below: sum([employee.qualification ** parameters.ALPHA
             #                                   for employee in self.employees.values()])
 
             # Divide production by an order of magnitude adjustment parameter
             quantity = self.total_qualification(alpha) / production_magnitude
-            for p in self.inventory.values():
-                p.quantity += quantity
-                self.amount_produced += quantity
+            # Currently, each firm has only a single product. If more products should be introduced, allocation of
+            # quantity per product should be adjusted accordingly
+            # Currently, the index for the single product is 0
+            self.inventory[0].quantity += quantity
+            self.amount_produced += quantity
 
     @property
     def total_quantity(self):
         return sum(p.quantity for p in self.inventory.values())
 
+    # Commercial department
     def update_prices(self, sticky_prices, markup, seed):
         """Update prices based on sales"""
         # Sticky prices (KLENOW, MALIN, 2010)
@@ -103,11 +109,12 @@ class Firm:
                     self.inventory[key].quantity -= bought_quantity
 
                     # Tax deducted from firms' balance and value of sale added to the firm
-                    self.total_balance += (amount_per_product - (amount_per_product * tax_consumption))
+                    revenue = (amount_per_product - (amount_per_product * tax_consumption))
+                    self.total_balance += revenue
+                    self.revenue += revenue
 
                     # Tax added to region-specific government
-                    regions[self.region_id].collect_taxes(amount_per_product * tax_consumption,
-                                                          'consumption')
+                    regions[self.region_id].collect_taxes(amount_per_product * tax_consumption, 'consumption')
 
                     # Quantifying quantity sold
                     dummy_bought_quantity += bought_quantity
@@ -115,14 +122,61 @@ class Firm:
                     # Deducing money from clients upfront
                     amount -= amount_per_product
             self.amount_sold += dummy_bought_quantity
-        # Return any change
+        # Return change to consumer, if any
         return amount
 
     @property
     def num_products(self):
         return len(self.inventory)
 
-    # Employees' procedures ##########################################################################################
+    # Accountancy department ########################################################################################
+    # Save values in time
+    def calculate_profit(self):
+        # Calculate profits considering last month wages paid,
+        self.profit = self.revenue - self.wages_paid - self.taxes_paid
+
+    def pay_taxes(self, regions, tax_firm):
+        taxes = (self.revenue - self.wages_paid) * tax_firm
+        if taxes >= 0:
+            # Revenue minus salaries paid in previous month may be negative.
+            # In this case, no taxes are paid
+            self.taxes_paid = taxes
+            self.total_balance -= taxes
+            regions[self.region_id].collect_taxes(self.taxes_paid, 'firm')
+
+    # Employees' procedures #########
+    def total_qualification(self, alpha):
+        return sum([employee.qualification ** alpha for employee in self.employees.values()])
+
+    def wage_base(self, unemployment, ignore_unemployment):
+        if not ignore_unemployment:
+            # Observing global economic performance has the added advantage of not spending all revenue on salaries
+            self.revenue *= (1 - unemployment)
+        return self.revenue
+
+    def make_payment(self, regions, unemployment, alpha, tax_labor, ignore_unemployment):
+        """Pay employees based on revenue, relative employee qualification, labor taxes, and alpha param"""
+        if self.employees:
+            total_salary_paid = self.wage_base(unemployment, ignore_unemployment=ignore_unemployment)
+            if total_salary_paid > 0:
+                total_qualification = self.total_qualification(alpha)
+                for employee in self.employees.values():
+                    # Making payment according to employees' qualification.
+                    # Deducing it from firms' balance
+                    # Deduce LABOR TAXES
+                    wage = (total_salary_paid * (employee.qualification ** alpha)
+                            / total_qualification) * (1 - tax_labor)
+                    employee.money += wage
+                    employee.last_wage = wage
+
+                # Transfer collected LABOR TAXES to region
+                labor_tax = total_salary_paid * tax_labor
+                regions[self.region_id].collect_taxes(labor_tax, 'labor')
+                self.total_balance -= total_salary_paid
+                self.total_balance -= labor_tax
+                self.wages_paid = total_salary_paid
+
+    # Human resources department #################
     def add_employee(self, employee):
         # Adds a new employee to firms' set
         # Employees are instances of Agents
@@ -147,59 +201,11 @@ class Firm:
     def num_employees(self):
         return len(self.employees)
 
-    def total_qualification(self, alpha):
-        return sum([employee.qualification ** alpha for employee in self.employees.values()])
-
-    def wage_base(self, unemployment, tax_consumption, ignore_unemployment):
-        base = self.revenue * (1 - tax_consumption)
-        if not ignore_unemployment:
-            base *= (1 - unemployment)
-        return base
-
     def update_balance(self, amount):
         self.total_balance += amount
 
     def get_total_balance(self):
         return self.total_balance
-
-    def make_payment(self, regions, unemployment, alpha, tax_labor, tax_consumption, ignore_unemployment):
-        """Pay employees based on a base wage, relative employee qualification,
-        consumption & labor taxes, and alpha param"""
-        if self.employees:
-            total_salary_paid = self.wage_base(unemployment, tax_consumption, ignore_unemployment=ignore_unemployment)
-            if total_salary_paid > 0:
-                total_qualification = self.total_qualification(alpha)
-                for employee in self.employees.values():
-                    # Making payment according to employees' qualification.
-                    # Deducing it from firms' balance
-                    # Deduce LABOR TAXES
-                    wage = (total_salary_paid * (employee.qualification ** alpha)
-                            / total_qualification) * (1 - tax_labor)
-                    employee.money += wage
-                    employee.last_wage = wage
-
-                # Transfer collected LABOR TAXES to region
-                regions[self.region_id].collect_taxes(total_salary_paid * tax_labor, 'labor')
-                self.total_balance -= total_salary_paid
-                self.wages_paid = total_salary_paid
-
-    # Profits  #######################################################################################################
-    # Save values in time, every quarter
-    def calculate_profit(self):
-        # Calculate profits considering last month wages paid,
-        self.profit = self.revenue - self.wages_paid - self.taxes_paid
-
-    def calculate_revenue(self):
-        # Calculate revenue using monthly amount sold times prices applied in that month
-        self.revenue = self.amount_sold * self.prices
-
-    def pay_taxes(self, regions, unemployment, tax_consumption, tax_firm):
-        taxes = (self.revenue - self.wages_paid) * tax_firm
-        if taxes >= 0:
-            # Revenue minus salaries paid in previous month may be negative.
-            # In this case, no taxes are paid
-            self.taxes_paid = taxes
-            regions[self.region_id].collect_taxes(self.taxes_paid, 'firm')
 
     def __repr__(self):
         return 'FirmID: %s, $ %d, Emp. %d, Quant. %d, Address: %s at %s' % (self.id,
@@ -222,7 +228,6 @@ class ConstructionFirm(Firm):
         self.building_size = None
         self.building_cost = None
         self.building_quality = None
-        self._last_revenue = 0
 
     def plan_house(self, regions, houses, inputs_per_size, seed):
         """Decide where to build"""
@@ -319,18 +324,9 @@ class ConstructionFirm(Firm):
 
     def update_balance(self, amount):
         self.total_balance += amount
-        self._last_revenue += amount
 
     def mean_house_price(self):
         if not self.houses:
             return 0
         t = sum(h.price for h in self.houses)
         return t/len(self.houses)
-
-    def calculate_revenue(self):
-        self.revenue = self._last_revenue
-        self._last_revenue = 0
-
-    # Not relevant for construction firms
-    def update_prices(self, *args):
-        pass

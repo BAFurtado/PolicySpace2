@@ -109,7 +109,7 @@ PRODUCTION_MAGNITUDE = 1
 
 # Percentage of actual population to run the simulation
 # Minimum value to run depends on the size of municipality 0,001 is recommended minimum
-PERCENTAGE_ACTUAL_POP = 0.02
+PERCENTAGE_ACTUAL_POP = 0.01
 
 # Write exactly like the list
 PROCESSING_ACPS = ['IPATINGA']

@@ -58,7 +58,7 @@ class LaborMarket:
         else:
             return
 
-        available_postings = [(f, f.wage_base(unemployment, tax_consumption, ignore_unemployment)) for f in self.available_postings]
+        available_postings = [(f, f.wage_base(unemployment, ignore_unemployment)) for f in self.available_postings]
         available_postings.sort(key=lambda p: p[1], reverse=True)
         by_qual.sort(key=lambda c: c.qualification, reverse=False)
 

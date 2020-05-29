@@ -209,6 +209,7 @@ class Simulation:
         for firm in self.firms.values():
             firm.actual_month = present_month
             firm.amount_sold = 0
+            firm.revenue = 0
 
         # Create new firms according to average historical growth
         firm_growth(self)
@@ -216,9 +217,9 @@ class Simulation:
         self.logger.log_time('FIRMS INITIALIZATION', self.timer, self.clock.months)
         self.output.times.append(self.timer.elapsed())
 
-        # FAMILIES CONSUMPTION
+        # FAMILIES CONSUMPTION -- using payment received from previous month
         # Equalize money within family members
-        # Tax firms when doing sales
+        # Tax consumption when doing sales are realized
         self.timer.start()
         markets.goods.consume(self)
 
@@ -235,20 +236,18 @@ class Simulation:
         self.output.times.append(self.timer.elapsed())
 
         # FIRMS
-        # Update profits
-        # Check if necessary to update prices
         self.timer.start()
         for firm in self.firms.values():
-            firm.calculate_revenue()
-            # Tax firms before profits: (revenue - salaries paid)
-            firm.pay_taxes(self.regions, current_unemployment, self.PARAMS['TAX_CONSUMPTION'], self.PARAMS['TAX_FIRM'])
-            firm.calculate_profit()
             # Tax workers when paying salaries
             firm.make_payment(self.regions, current_unemployment,
                               self.PARAMS['ALPHA'],
                               self.PARAMS['TAX_LABOR'],
-                              self.PARAMS['TAX_CONSUMPTION'],
                               self.PARAMS['WAGE_IGNORE_UNEMPLOYMENT'])
+            # Tax firms before profits: (revenue - salaries paid)
+            firm.pay_taxes(self.regions, self.PARAMS['TAX_FIRM'])
+            # Profits are after taxes
+            firm.calculate_profit()
+            # Check if necessary to update prices
             firm.update_prices(self.PARAMS['STICKY_PRICES'], self.PARAMS['MARKUP'], self.seed)
 
         # Construction firms

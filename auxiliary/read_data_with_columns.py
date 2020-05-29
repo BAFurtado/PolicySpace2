@@ -52,7 +52,7 @@ if __name__ == '__main__':
     # cols = [stats]
     p0 = r'/home/furtadobb/MyModels/PolicySpace2'
     p = run.OUTPUT_PATH
-    p2 = r'run__2020-05-22T18_53_17.538787'
+    p2 = r'run__2020-05-29T15_06_05.615645'
     p3 = r'0/temp_'
     p4 = '.csv'
 

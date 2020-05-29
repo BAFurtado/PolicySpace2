@@ -16,22 +16,25 @@ def read(path):
     return pd.read_csv(path, sep=';')
 
 
-def all_data(l):
+def all_data(l, p):
     result = dict()
     for each in l:
-        result[each] = read(get_path(each))
+        result[each] = read(get_path(each, p))
     return result
 
 
-def get_path(cols='houses'):
+def get_path(cols='houses', path=None):
     p0 = r'/home/furtadobb/MyModels/PolicySpace2'
     p = run.OUTPUT_PATH
-    p2 = r'run__2020-05-22T18_53_17.538787'
+    path = path
     p3 = r'0/temp_'
     p4 = '.csv'
-    return os.path.join(p0, p, p2, p3 + cols + p4)
+    return os.path.join(p0, p, path, p3 + cols + p4)
 
 
 if __name__ == '__main__':
-    all = ['banks', 'construction', 'families', 'firms', 'houses', 'regional', 'stats']
-    d = all_data(all)
+    p1 = r'run__2020-05-22T18_53_17.538787'
+    p2 = r'run__2020-05-29T15_06_05.615645'
+    all_ = ['banks', 'construction', 'families', 'firms', 'houses', 'regional', 'stats']
+    dt = all_data(all_, p2)
+    dp = all_data(all_, p1)
