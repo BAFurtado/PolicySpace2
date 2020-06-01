@@ -264,7 +264,7 @@ class ConstructionFirm(Firm):
         gross_cost = building_size * building_quality
         # Productivity of the company may vary double than exogenous set markup.
         # Productivity reduces the cost of construction and sets the size of profiting when selling
-        productivity = seed.randint(100 - 2 * markup, 100) / 100
+        productivity = seed.randint(100 - int(2 * markup * 100), 100) / 100
         building_cost = gross_cost * productivity
 
         # Choose region where construction is most profitable
@@ -290,9 +290,10 @@ class ConstructionFirm(Firm):
 
         # Buy license
         region.licenses -= 1
-        lot_cost = region.license_price * building_cost * lot_price
-        self.total_balance -= lot_cost
-        region.collect_taxes(lot_cost, 'transaction')
+        # Region license price is current QLI. Lot price is the model parameter
+        cost_of_land = region.license_price * building_cost * lot_price
+        self.total_balance -= cost_of_land
+        region.collect_taxes(cost_of_land, 'transaction')
 
     def build_house(self, regions, generator):
         """Firm decides if house is finished"""
