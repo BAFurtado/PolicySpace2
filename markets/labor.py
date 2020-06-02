@@ -115,9 +115,8 @@ class LaborMarket:
     def hire_fire(self, firms, firm_enter_freq):
         """Firms adjust their labor force based on profit"""
         for firm in firms.values():
-            strategy = self.seed.random()
             # `firm_enter_freq` is the frequency firms enter the market
-            if strategy > firm_enter_freq:
+            if self.seed.random() > firm_enter_freq:
                 if firm.profit >= 0:
                     self.add_post(firm)
                 else:

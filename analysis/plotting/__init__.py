@@ -143,11 +143,10 @@ class Plotter:
     def plot_banks(self):
         labels, dats = self._load_multiple_runs('banks', 'temp_banks.csv')
 
-        cols = ['taxes', 'balance', 'deposits',
-                'active_loans', 'p_delinquent_loans',
+        cols = ['taxes', 'balance', 'deposits', 'active_loans', 'p_delinquent_loans',
                 'mean_loan_age', 'mean_loan']
         titles = ['Bank taxes paid', 'Bank balance', 'Bank deposits', 'Bank active loans',
-                  'Bank p delinquent loans', 'Bank mean loan age', 'Bank mean loan amount']
+                  'Bank perc. delinquent loans', 'Bank mean loan age', 'Bank mean loan amount']
         dats = [d.set_index('month') for d in dats]
         for col, title in zip(cols, titles):
             fig = self.make_plot([d[col] for d in dats], title, labels)
@@ -183,7 +182,7 @@ class Plotter:
 
         to_plot = {
             'house_rent': {
-                'title': 'Mean rent by month',
+                'title': 'Mean rent value by month',
                 'name': 'rents'
             },
             'total_wage': {
@@ -195,7 +194,7 @@ class Plotter:
                 'name': 'savings'
             },
             'affordable_rent': {
-                'title': 'Mean affordability by month',
+                'title': 'Mean number of families for whom rent is affordable (30%) by month',
                 'name': 'affordable'
             },
             'income_towards_rent': {
@@ -203,7 +202,7 @@ class Plotter:
                 'name': 'rent_shares'
             },
             'renting': {
-                'title': 'Mean is renting by month',
+                'title': 'Mean number of families that are renting by month',
                 'name': 'renting'
             }
         }
@@ -270,9 +269,9 @@ class Plotter:
 
     def plot_construction(self):
         dat = self._load_single_run('construction', 'temp_construction.csv')
-
         cols = ['amount_produced', 'price']
-        titles = ['Cumulative sum of amount produced by firm, by month', 'Price values by firm, by month']
+        titles = ['Cumulative sum of amount produced by construction firms, by month',
+                  'Price values of houses by firm, by month']
         for col, title in zip(cols, titles):
             dat_to_plot = dat.pivot(index='month', columns='firm_id', values=col).astype(float)
             dats_to_plot = [dat_to_plot[c] for c in dat_to_plot.columns.values]
@@ -280,7 +279,7 @@ class Plotter:
             fig = self.make_plot(dats_to_plot, title, labels=labels, y_label='Values in units')
             self.save_fig(fig, 'temp_construction_{}'.format(col))
 
-        title = 'Median of number of employees by firm, by month'
+        title = 'Median of number of employees by construction firms, by month'
         firms_stats = dat.groupby(['month', 'firm_id'], as_index=False).median()
         dat_to_plot = firms_stats.pivot(index='month', columns='firm_id', values='number_employees').astype(float)
         dats_to_plot = [dat_to_plot[c] for c in dat_to_plot.columns.values]
