@@ -71,7 +71,7 @@ class HousingMarket:
         # Sorting. Those with larger savings first
         looking.sort(key=lambda f: f.savings_with_loan, reverse=True)
 
-        # Family with larger savings
+        # Family with the largest savings
         maximum_purchasing_power = looking[0].savings_with_loan
 
         # Only rent from families, not firms
@@ -115,6 +115,7 @@ class HousingMarket:
                 # Skip houses that are being rented
                 if for_living_only and house.rent_data is not None:
                     continue
+
                 s = family.savings
                 S = family.savings_with_loan
                 p = house.price
