@@ -42,3 +42,7 @@ threadpoolctl==2.0.0
 tornado==6.0.4
 Werkzeug==1.0.1
 WTForms==2.3.1
+
+numpy~=1.18.4
+scikit-learn~=0.23.1
+joblib~=0.15.1

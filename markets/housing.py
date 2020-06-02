@@ -160,7 +160,7 @@ class HousingMarket:
                 # Firm owner
                 else:
                     # Deposit money on selling firm
-                    sim.firms[house.owner_id].update_balance(price - taxes)
+                    sim.firms[house.owner_id].update_balance(price - taxes, sim.PARAMS['CONSTRUCTION_ACC_CASH_FLOW'])
 
                     # Transfer ownership
                     sim.firms[house.owner_id].houses_inventory.remove(house)

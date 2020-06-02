@@ -121,8 +121,7 @@ class LaborMarket:
                 if firm.profit >= 0:
                     self.add_post(firm)
                 else:
-                    pass
-                    # firm.fire(self.seed)
+                    firm.fire(self.seed)
 
     def __repr__(self):
         return self.available_postings, self.candidates

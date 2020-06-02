@@ -82,10 +82,9 @@ class Firm:
         # Sticky prices (KLENOW, MALIN, 2010)
         if seed.random() > sticky_prices:
             for p in self.inventory.values():
-                # if firm has sold more than produced, prices rise
+                # if the firm has sold more than available in stocks, prices rise
                 if self.amount_sold > self.total_quantity:
                     p.price *= (1 + markup)
-            # Easy to implement large discounts (that have to be permanent though)
         self.prices = sum(p.price for p in self.inventory.values()) / len(self.inventory)
 
     def sale(self, amount, regions, tax_consumption):
@@ -159,13 +158,14 @@ class Firm:
     def make_payment(self, regions, unemployment, alpha, tax_labor, ignore_unemployment):
         """Pay employees based on revenue, relative employee qualification, labor taxes, and alpha param"""
         if self.employees:
+            # Total salary, including labor taxes
             total_salary_paid = self.wage_base(unemployment, ignore_unemployment=ignore_unemployment)
             if total_salary_paid > 0:
                 total_qualification = self.total_qualification(alpha)
                 for employee in self.employees.values():
                     # Making payment according to employees' qualification.
                     # Deducing it from firms' balance
-                    # Deduce LABOR TAXES
+                    # Deduce LABOR TAXES from employees' salaries as a percentual of each salary
                     wage = (total_salary_paid * (employee.qualification ** alpha)
                             / total_qualification) * (1 - tax_labor)
                     employee.money += wage
@@ -175,7 +175,6 @@ class Firm:
                 labor_tax = total_salary_paid * tax_labor
                 regions[self.region_id].collect_taxes(labor_tax, 'labor')
                 self.total_balance -= total_salary_paid
-                self.total_balance -= labor_tax
                 self.wages_paid = total_salary_paid
 
     # Human resources department #################
@@ -328,13 +327,13 @@ class ConstructionFirm(Firm):
         return h
 
     # Selling house
-    def update_balance(self, amount):
+    def update_balance(self, amount, acc_months):
         self.total_balance += amount
-        self.update_cash_flow(amount)
+        self.update_cash_flow(amount, acc_months)
 
-    def update_cash_flow(self, amount):
-        for i in range(12):
-            self.cash_flow[i] += amount/12
+    def update_cash_flow(self, amount, acc_months):
+        for i in range(acc_months):
+            self.cash_flow[i] += amount/acc_months
 
     def wage_base(self, unemployment, ignore_unemployment):
         self.revenue = self.cash_flow[self.actual_month]

@@ -19,6 +19,7 @@ from world.funds import Funds
 from world.geography import Geography, STATES_CODES, state_string
 from world.regions import REGION_CACHE
 
+
 class Simulation:
     def __init__(self, params, output_path):
         self.PARAMS = params
@@ -30,7 +31,6 @@ class Simulation:
         self.logger = analysis.Logger(hex(id(self))[-5:])
         self._seed = random.randrange(sys.maxsize) if conf.RUN['KEEP_RANDOM_SEED'] else conf.RUN.get('SEED', 0)
         self.seed = random.Random(self._seed)
-
         self.generator = Generator(self)
 
         # Read necessary files
@@ -167,6 +167,9 @@ class Simulation:
         for region in self.regions.values():
             region.licenses += self.PARAMS['NEW_LICENSE_RATE']
 
+        # Create new firms according to average historical growth
+        firm_growth(self)
+
         # Update firm products
         for firm in self.firms.values():
             firm.update_product_quantity(self.PARAMS['ALPHA'], self.PARAMS['PRODUCTION_MAGNITUDE'])
@@ -202,9 +205,6 @@ class Simulation:
             if firm.type is not 'CONSTRUCTION':
                 firm.revenue = 0
 
-        # Create new firms according to average historical growth
-        firm_growth(self)
-
         # FAMILIES CONSUMPTION -- using payment received from previous month
         # Equalize money within family members
         # Tax consumption when doing sales are realized
@@ -212,7 +212,7 @@ class Simulation:
 
         # Collect loan repayments
         self.central.collect_loan_payments(self)
-
+        # Family investments
         for fam in self.families.values():
             fam.invest(self.PARAMS['INTEREST_RATE'], self.central, present_year, (present_month % 12) + 1)
 
@@ -227,7 +227,7 @@ class Simulation:
             firm.pay_taxes(self.regions, self.PARAMS['TAX_FIRM'])
             # Profits are after taxes
             firm.calculate_profit()
-            # Check if necessary to update prices
+            # Check whether it is necessary to update prices
             firm.update_prices(self.PARAMS['STICKY_PRICES'], self.PARAMS['MARKUP'], self.seed)
 
         # Construction firms

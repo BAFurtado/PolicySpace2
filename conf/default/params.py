@@ -5,7 +5,7 @@ ALPHA = .24
 # By how much percentage to increase prices
 MARKUP = 0.15
 # Frequency firms change prices. Probability > than parameter
-STICKY_PRICES = .5
+STICKY_PRICES = .8
 # Number of firms consulted before consumption
 SIZE_MARKET = 10
 
@@ -23,11 +23,11 @@ HIRING_SAMPLE_SIZE = 100
 PERCENTAGE_CHECK_NEW_LOCATION = 0.005
 
 # TAXES
-TAX_CONSUMPTION = 3.9E-05
-TAX_LABOR = 1.3E-05
-TAX_ESTATE_TRANSACTION = 1.5E-07
-TAX_FIRM = 4.4E-05
-TAX_PROPERTY = 1.4E-07
+TAX_CONSUMPTION = .3
+TAX_LABOR = .15
+TAX_ESTATE_TRANSACTION = .005
+TAX_FIRM = .15
+TAX_PROPERTY = .005
 
 # LOANS
 MAX_LOAN_AGE = 80
@@ -53,6 +53,9 @@ FPM_DISTRIBUTION = True
 LICENSES_PER_REGION = 50
 NEW_LICENSE_RATE = 10
 PERCENT_CONSTRUCTION_FIRMS = 0.05
+# Months that construction firm will divide its income into monthly revenue installments.
+# Although prices are accounted for at once.
+CONSTRUCTION_ACC_CASH_FLOW = 36
 # Cost of lot in PERCENTAGE of construction
 LOT_COST = .1
 
@@ -61,7 +64,7 @@ MEMBERS_PER_FAMILY = 2.5                             # (on average)
 HOUSE_VACANCY = .11                                   # percentage of vacant houses
 
 RENTAL_SHARE = 0.4
-INITIAL_RENTAL_PRICE = .004
+INITIAL_RENTAL_PRICE = .0029
 # Definition to simplify population by group age groups(TRUE) or including all ages (FALSE)
 SIMPLIFY_POP_EVOLUTION = True
 # Defines the superior limit of age groups, the first value is always ZERO and is omitted from the list.
@@ -75,7 +78,7 @@ TAXES_STRUCTURE = {'consumption_equal': .1875,
 
 # GENERAL CALIBRATION PARAMETERS
 # Order of magnitude parameter of input into municipality investment
-TREASURE_INTO_SERVICES = .03
+TREASURE_INTO_SERVICES = .000001
 # Order of magnitude correction of production. Production divided by parameter
 PRODUCTION_MAGNITUDE = 1
 
