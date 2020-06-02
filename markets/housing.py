@@ -32,7 +32,8 @@ class HousingMarket:
         # Order houses by price most expensive first
         self.on_sale.sort(key=lambda h: h.price, reverse=True)
 
-    def make_move(self, family, house, sim):
+    @staticmethod
+    def make_move(family, house, sim):
         # Make the move
         old_r_id = family.region_id
         if family.house is not None:

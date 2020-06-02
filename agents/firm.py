@@ -327,9 +327,10 @@ class ConstructionFirm(Firm):
         return h
 
     # Selling house
-    def update_balance(self, amount, acc_months):
+    def update_balance(self, amount, acc_months=None):
         self.total_balance += amount
-        self.update_cash_flow(amount, acc_months)
+        if acc_months is not None:
+            self.update_cash_flow(amount, acc_months)
 
     def update_cash_flow(self, amount, acc_months):
         for i in range(acc_months):
