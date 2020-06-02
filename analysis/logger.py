@@ -7,12 +7,6 @@ class Logger:
     def __init__(self, id):
         self.logger = logging.getLogger('SIM:{}'.format(id))
 
-    def log_time(self, text, timer, month):
-        if conf.RUN['PRINT_TIME_CONTROL_IN_TIME_ITERATION']:
-            h, m, s = timer.elapsed(fmt=True)
-            print("Elapsed time %s month: %d  - %d hs %d min %.4f sec" % (text, month, h, m, s))
-            print('')
-
     def log_outcomes(self, sim):
         print('\nAgents out of the game:')
         for agent in sim.grave[:10]:

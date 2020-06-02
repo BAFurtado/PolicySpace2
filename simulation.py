@@ -28,7 +28,6 @@ class Simulation:
         self.output = analysis.Output(self, output_path)
         self.stats = analysis.Statistics()
         self.logger = analysis.Logger(hex(id(self))[-5:])
-        self.timer = analysis.Timer()
         self._seed = random.randrange(sys.maxsize) if conf.RUN['KEEP_RANDOM_SEED'] else conf.RUN.get('SEED', 0)
         self.seed = random.Random(self._seed)
 
@@ -89,9 +88,6 @@ class Simulation:
         self.logger.logger.info('Params: {}'.format(json.dumps(self.PARAMS)))
         self.logger.logger.info('Seed: {}'.format(self._seed))
 
-        timer = analysis.Timer()
-        timer.start()
-
         self.logger.logger.info('Running...')
         while self.clock.days < conf.RUN['STARTING_DAY'] + datetime.timedelta(days=conf.RUN['TOTAL_DAYS']):
             self.daily()
@@ -111,7 +107,6 @@ class Simulation:
         if conf.RUN['SAVE_TRANSIT_DATA']:
             self.output.save_transit_data(self, 'end')
         self.logger.logger.info('Simulation completed.')
-        self.logger.logger.info('Run took {:.2f}s'.format(timer.elapsed()))
 
     def initialize(self):
         """Initiating simulation"""
@@ -178,7 +173,6 @@ class Simulation:
 
         # Call demographics
         # Update agent life cycles
-        self.timer.start()
         for state in self.geo.states_on_process:
             mortality_men = self.m_men[state]
             mortality_women = self.m_women[state]
@@ -201,11 +195,7 @@ class Simulation:
         # Adjust families for marriages
         population.marriage(self)
 
-        self.logger.log_time('DEMOGRAPHICS', self.timer, self.clock.months)
-        self.output.times.append(self.timer.elapsed())
-
         # Firms initialization
-        self.timer.start()
         for firm in self.firms.values():
             firm.actual_month = present_month
             firm.amount_sold = 0
@@ -215,29 +205,18 @@ class Simulation:
         # Create new firms according to average historical growth
         firm_growth(self)
 
-        self.logger.log_time('FIRMS INITIALIZATION', self.timer, self.clock.months)
-        self.output.times.append(self.timer.elapsed())
-
         # FAMILIES CONSUMPTION -- using payment received from previous month
         # Equalize money within family members
         # Tax consumption when doing sales are realized
-        self.timer.start()
         markets.goods.consume(self)
 
         # Collect loan repayments
-        self.timer.start()
         self.central.collect_loan_payments(self)
-        self.logger.log_time('LOAN REPAYMENTS', self.timer, self.clock.months)
-        self.output.times.append(self.timer.elapsed())
 
         for fam in self.families.values():
             fam.invest(self.PARAMS['INTEREST_RATE'], self.central, present_year, (present_month % 12) + 1)
 
-        self.logger.log_time('CONSUME FAMILY', self.timer, self.clock.months)
-        self.output.times.append(self.timer.elapsed())
-
         # FIRMS
-        self.timer.start()
         for firm in self.firms.values():
             # Tax workers when paying salaries
             firm.make_payment(self.regions, current_unemployment,
@@ -261,55 +240,35 @@ class Simulation:
             if house is not None:
                 self.houses[house.id] = house
 
-        self.logger.log_time('FIRMS PROCESS', self.timer, self.clock.months)
-        self.output.times.append(self.timer.elapsed())
-
         # Initiating Labor Market
         # AGENTS
-        self.timer.start()
         self.labor_market.look_for_jobs(self.agents)
-        self.logger.log_time('PEOPLE LOOKING JOBS', self.timer, self.clock.months)
-        self.output.times.append(self.timer.elapsed())
 
         # FIRMS
         # Check if new employee needed (functions below)
         # Check if firing is necessary
-        self.timer.start()
         self.labor_market.hire_fire(self.firms, self.PARAMS['LABOR_MARKET'])
-        self.logger.log_time('HIRE FIRE', self.timer, self.clock.months)
-        self.output.times.append(self.timer.elapsed())
 
         # Job Matching
-        self.timer.start()
         sample_size = math.floor(len(self.agents) * 0.5)
         last_wages = [self.agents[a].last_wage
                       for a in self.seed.sample(self.agents.keys(), sample_size)
                       if self.agents[a].last_wage is not None]
         wage_deciles = np.percentile(last_wages, np.arange(0, 100, 10))
         self.labor_market.assign_post(current_unemployment, wage_deciles, self.PARAMS)
-        self.logger.log_time('JOB MATCH', self.timer, self.clock.months)
-        self.output.times.append(self.timer.elapsed())
 
         # Initiating Real Estate Market
         # Tax transaction taxes (ITBI) when selling house
         # Property tax (IPTU) collected. One twelfth per month
-        self.timer.start()
         self.housing.housing_market(self)
         self.housing.process_monthly_rent(self)
         for house in self.houses.values():
             house.pay_property_tax(self)
 
-        self.logger.log_time('HOUSE MARKET', self.timer, self.clock.months)
-        self.output.times.append(self.timer.elapsed())
-
         # Using all collected taxes to improve public services
-        self.timer.start()
         self.funds.invest_taxes(present_year)
-        self.logger.log_time('TREASURE', self.timer, self.clock.months)
-        self.output.times.append(self.timer.elapsed())
 
         # Pass monthly information to be stored in Statistics
-        self.timer.start()
         self.output.save_stats_report(self)
 
         # Getting regional GDP
@@ -317,12 +276,6 @@ class Simulation:
 
         if conf.RUN['SAVE_AGENTS_DATA'] == 'MONTHLY':
             self.output.save_data(self)
-
-        self.logger.log_time('SAVING DATA', self.timer, self.clock.months)
-        self.output.times.append(self.timer.elapsed())
-
-        if conf.RUN['PRINT_STATISTICS_AND_RESULTS_DURING_PROCESS']:
-            self.logger.info(self.clock.days)
 
     def quarterly(self):
         if conf.RUN['SAVE_AGENTS_DATA'] == 'QUARTERLY':
