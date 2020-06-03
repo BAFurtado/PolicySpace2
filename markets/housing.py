@@ -62,7 +62,8 @@ class HousingMarket:
 
         # Only rent from families, not firms
         family_houses_for_rent = [h for h in self.on_sale if h.family_owner]
-        for_rent = sim.seed.sample(family_houses_for_rent, int(len(family_houses_for_rent) * sim.PARAMS['RENTAL_SHARE']))
+        for_rent = sim.seed.sample(family_houses_for_rent,
+                                   int(len(family_houses_for_rent) * sim.PARAMS['RENTAL_SHARE']))
 
         # Deduce houses that are to be rented from sales pool
         self.on_sale = [h for h in self.on_sale if h not in for_rent]
@@ -76,13 +77,14 @@ class HousingMarket:
             purchasing = []
             renting = looking
         else:
+            # Renting families is a share of those moving. Both rich and poor may rent.
+            # Rationale for decision on renting in the literature is dependent on loads of future uncertainties.
+            renting = sim.seed.sample(looking, int(len(looking) * sim.PARAMS['RENTAL_SHARE']))
+            purchasing = [f for f in looking if f not in renting]
             # Minimum price on market
             minimum_price = month_listing[-1].price
-            # Families that can afford to buy, remain on the list
-            # Those without funds, try the rental market.
-            # TODO: increase the rationale for renting
-            purchasing, renting = list(), list()
-            [purchasing.append(f) if f.savings_with_loan > minimum_price else renting.append(f) for f in looking]
+            # Families that cannot afford to buy, will have to try the rental market.
+            [(purchasing.append(f), renting.remove(f)) for f in renting if f.savings_with_loan > minimum_price]
 
         # Call Rental market ###############################################################
         if renting and for_rent:
