@@ -173,12 +173,11 @@ def immigration(sim):
             families.append(f)
 
         # Pass through housing market
-        sim.housing.allocate_houses(sim, families, for_living_only=True)
+        sim.housing.allocate_houses(sim, families)
 
-        # Some might have tried to buy houses but failed,
-        # pass to rental market
-        houseless = [f for f in families if f.house is None]
-        sim.housing.rental.rental_market(houseless, sim)
+        # Some might have tried to buy houses but failed, pass them directly to the rental market
+        homeless = [f for f in families if f.house is None]
+        sim.housing.rental.rental_market(homeless, sim)
 
         # Only keep families that have houses
         families = [f for f in families if f.house is not None]

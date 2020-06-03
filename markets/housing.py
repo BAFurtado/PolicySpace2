@@ -8,14 +8,14 @@ from .rentmarket import RentalMarket
 class HousingMarket:
     def __init__(self):
         self.rental = RentalMarket()
-        self.on_sale = list()
+        self.for_sale = list()
 
     def process_monthly_rent(self, sim):
         """ Collection of rental payment due made by households that are renting """
         to_pay_rent = [h for h in sim.houses.values() if h.rent_data is not None]
         self.rental.collect_rent(to_pay_rent, sim)
 
-    def update_on_sale(self, sim):
+    def update_for_sale(self, sim):
         for house in sim.houses.values():
             # Updating all houses values every month
             house.update_price(sim.regions)
@@ -23,14 +23,14 @@ class HousingMarket:
             # If house is empty, add not already on sales list, add it to houses on the market and start counting
             # However, if house is empty and had been empty count one extra month
             if not house.is_occupied:
-                if house not in self.on_sale:
+                if house not in self.for_sale:
                     house.on_market = 0
-                    self.on_sale.append(house)
+                    self.for_sale.append(house)
                 else:
                     house.on_market += 1
 
         # Order houses by price most expensive first
-        self.on_sale.sort(key=lambda h: h.price, reverse=True)
+        self.for_sale.sort(key=lambda h: h.price, reverse=True)
 
     def housing_market(self, sim):
         """Allocation of houses on the market"""
@@ -40,17 +40,22 @@ class HousingMarket:
                                   int(len(sim.families) * sim.PARAMS['PERCENTAGE_CHECK_NEW_LOCATION']))
 
         # Update prices of all houses in the simulation and status 'on_market' or not
-        self.update_on_sale(sim)
+        self.update_for_sale(sim)
 
         # Run the market
         self.allocate_houses(sim, looking)
 
-    def allocate_houses(self, sim, looking, for_living_only=False):
+    def allocate_houses(self, sim, looking):
+        """ This function manipulates both lists for families that are purchasing or renting
+            and houses that are available for rent or purchase.
+            Families "looking" for houses become either "purchasing" or "renting"
+            Houses are either on "for_sale" or "for_rent"
+        """
         # If empty lists, stop procedure
-        if not looking or not self.on_sale:
+        if not looking or not self.for_sale:
             return
 
-        # Check the bank for potential credit
+        # Families check the bank for potential credit
         for f in looking:
             f.savings_with_loan = f.savings + sim.central.max_loan(f)
 
@@ -61,59 +66,58 @@ class HousingMarket:
         family_maximum_purchasing_power = looking[0].savings_with_loan
 
         # Only rent from families, not firms
-        family_houses_for_rent = [h for h in self.on_sale if h.family_owner]
+        family_houses_for_rent = [h for h in self.for_sale if h.family_owner]
         for_rent = sim.seed.sample(family_houses_for_rent,
                                    int(len(family_houses_for_rent) * sim.PARAMS['RENTAL_SHARE']))
 
-        # Deduce houses that are to be rented from sales pool
-        self.on_sale = [h for h in self.on_sale if h not in for_rent]
-
-        # Continue procedures for purchasing market. Restrict list of available houses to families' price range
-        month_listing = [h for h in self.on_sale if h.price < family_maximum_purchasing_power]
+        # Deduce houses that are to be rented from sales pool and
+        # Restrict list of available houses to families' maximum paying ability
+        for_sale = [h for h in self.for_sale if (h not in for_rent) and (h.price < family_maximum_purchasing_power)]
 
         # Create two (local) lists for those families that are Purchasing and those that are Renting
-        if not month_listing:
+        if not for_sale:
             # Obviously, if there are no houses for sale, all unoccupied are for rentals.
             purchasing = []
             renting = looking
         else:
+            # Manipulating lists. Getting list by sampling and by condition
             # Renting families is a share of those moving. Both rich and poor may rent.
             # Rationale for decision on renting in the literature is dependent on loads of future uncertainties.
             renting = sim.seed.sample(looking, int(len(looking) * sim.PARAMS['RENTAL_SHARE']))
-            purchasing = [f for f in looking if f not in renting]
+            # The families that are not renting, want join the purchasing list
+            willing = [f for f in looking if f not in renting]
             # Minimum price on market
-            minimum_price = month_listing[-1].price
-            # Families that cannot afford to buy, will have to try the rental market.
-            [(purchasing.append(f), renting.remove(f)) for f in renting if f.savings_with_loan > minimum_price]
+            minimum_price = for_sale[-1].price
+            # However, families that cannot afford to buy, will have also have to join the renting list...
+            [renting.append(f) for f in willing if f.savings_with_loan < minimum_price]
+            # ... and only those who remain will join the purchasing list
+            purchasing = [f for f in willing if f not in renting]
 
         # Call Rental market ###############################################################
         if renting and for_rent:
             self.rental.rental_market(renting, sim, for_rent)
 
         # Second check. If empty lists, stop procedure
-        if not purchasing or not month_listing:
+        if not purchasing or not for_sale:
             return
 
-        # Families in search of houses to buy
+        # Proceed to Sales market ###########################################################
         # For each family
-        # Necessary to save in another list because you cannot delete an element while iterating over the list
         for family in purchasing:
-            for house in month_listing:
-                # Skip houses that are being rented
-                if for_living_only and house.rent_data is not None:
-                    continue
-
+            for house in for_sale:
                 s = family.savings
                 S = family.savings_with_loan
                 p = house.price
 
+                # If savings is enough, then price is established as the average of the two
                 if s > p:
-                    # Then PRICE is established as the average of the two
                     price = (s + p) / 2
 
+                # If not, check whether loan can help
                 elif S > p:
                     price = (S + p) / 2
 
+                # Too expensive, try cheaper house
                 else:
                     continue
 
@@ -164,13 +168,13 @@ class HousingMarket:
                 self.decision(family, sim)
 
                 # Cleaning up list
-                month_listing[:] = [h for h in month_listing if h is not house]
+                for_sale[:] = [h for h in for_sale if h is not house]
 
                 # This family has solved its problem. Go to next family
                 break
 
         # Taking houses not sold this month into the next one
-        self.on_sale = month_listing.copy()
+        self.for_sale = for_sale.copy()
 
     def decision(self, family, sim):
         """A family decides which house to move into"""
