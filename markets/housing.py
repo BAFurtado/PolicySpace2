@@ -104,6 +104,7 @@ class HousingMarket:
         # Proceed to Sales market ###########################################################
         # For each family
         for family in purchasing:
+            # TODO: Restrict houses to a sample, and from those, the ones affordable, shuffle
             for house in for_sale:
                 s = family.savings
                 S = family.savings_with_loan

@@ -38,6 +38,8 @@ Journal on Policy and Complex Systems, 5(1). https://doi.org/10.18278/jpcs.5.1.6
 
 ### Major changes
 
+**new BOOK describing changes and processes currently on the make**
+
 1. PolicySpace2 generates data that can be applied at https://github.com/frnsys/transit_demand_model. 
 The transit model in turn generates private and public transport routes, visualization and congestion times.
 2. Now data is read at the **intraurban** level of 'áreas de ponderação' (census track/block) from IBGE.
@@ -58,6 +60,8 @@ up to permanent income
 14. Introduced a rental market 
 15. Included construction companies. 
 16. Financial (mortgage, credit) market structures
+17. Included transportation costs on workers' decision on choosing jobs
+18. Introduce inheritance (savings).
 
 #### How do I get set up?
 
