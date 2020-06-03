@@ -1,4 +1,3 @@
-import inspect
 
 
 class RentalMarket:
@@ -16,9 +15,6 @@ class RentalMarket:
 
     def rental_market(self, families, sim, to_rent=None):
         self.update_list(sim, to_rent)
-        # teste = inspect.stack()
-        # print(teste[1][3], teste[2][3], teste[3][3])
-        # Sorting. Those with less savings first
         if families:
             families.sort(key=lambda f: f.savings, reverse=True)
             self.unoccupied.sort(key=lambda h: h.price, reverse=True)
