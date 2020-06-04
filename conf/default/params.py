@@ -77,7 +77,7 @@ TAXES_STRUCTURE = {'consumption_equal': .1875, 'fpm': .235}
 
 # GENERAL CALIBRATION PARAMETERS
 # Order of magnitude parameter of input into municipality investment
-TREASURE_INTO_SERVICES = 1e-07
+TREASURE_INTO_SERVICES = 5e-07
 # Order of magnitude correction of production. Production divided by parameter
 PRODUCTION_MAGNITUDE = 1
 

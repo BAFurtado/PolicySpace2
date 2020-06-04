@@ -149,6 +149,7 @@ class HousingMarket:
 
             # This family has solved its problem. Go to next family
             return for_sale
+        return for_sale
 
     def notarial_procedures(self, family, house, price, change, sim):
         # Withdraw money from buying family and distribute back the difference
