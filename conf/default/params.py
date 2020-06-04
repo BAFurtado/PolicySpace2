@@ -73,8 +73,7 @@ MARRIAGE_CHECK_PROBABILITY = .034
 
 # Consumption_equal: ratio of consumption tax distributed at state level (equal)
 # Fpm: ratio of 'labor' and 'firm' taxes distributed per the fpm ruling
-TAXES_STRUCTURE = {'consumption_equal': .1875,
-                   'fpm': .235}
+TAXES_STRUCTURE = {'consumption_equal': .1875, 'fpm': .235}
 
 # GENERAL CALIBRATION PARAMETERS
 # Order of magnitude parameter of input into municipality investment

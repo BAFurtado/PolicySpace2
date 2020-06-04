@@ -101,81 +101,85 @@ class HousingMarket:
         if not purchasing or not for_sale:
             return
 
+        self.sales_market(sim, purchasing, for_sale)
+
+    def sales_market(self, sim, purchasing, for_sale):
         # Proceed to Sales market ###########################################################
         # For each family
         for family in purchasing:
-            # TODO: Restrict houses to a sample, and from those, the ones affordable, shuffle
-            for house in for_sale:
-                s = family.savings
-                S = family.savings_with_loan
-                p = house.price
-
-                # If savings is enough, then price is established as the average of the two
-                if s > p:
-                    price = (s + p) / 2
-
-                # If not, check whether loan can help
-                elif S > p:
-                    price = (S + p) / 2
-
-                # Too expensive, try cheaper house
-                else:
-                    continue
-
-                # Withdraw the money of buying family from the bank
-                savings = family.grab_savings(sim.central,
-                                              sim.clock.year,
-                                              ((sim.clock.months % 12) + 1))
-
-                # Get loan to make up the difference
-                if savings < price:
-                    loan_amount = price - savings
-                    success = sim.central.request_loan(family, loan_amount, sim.seed)
-                    change = 0
-                    if not success:
-                        continue
-                else:
-                    change = savings - price
-
-                # Buying procedures
-                # Withdraw money from buying family and distribute back the difference
-                family.update_balance(change)
-                # Collect taxes on transaction
-                taxes = price * sim.PARAMS['TAX_ESTATE_TRANSACTION']
-                sim.regions[house.region_id].collect_taxes(taxes, 'transaction')
-
-                if house.family_owner:
-                    # Deposit money on selling family account
-                    sim.families[house.owner_id].update_balance(price - taxes)
-
-                    # Transfer ownership
-                    sim.families[house.owner_id].owned_houses.remove(house)
-
-                # Firm owner
-                else:
-                    # Deposit money on selling firm
-                    sim.firms[house.owner_id].update_balance(price - taxes, sim.PARAMS['CONSTRUCTION_ACC_CASH_FLOW'])
-
-                    # Transfer ownership
-                    sim.firms[house.owner_id].houses_inventory.remove(house)
-
-                # Finish notarial procedures
-                house.owner_id = family.id
-                house.family_owner = True
-                family.owned_houses.append(house)
-                house.on_market = 0
-
-                # Decision on moving
-                self.decision(family, sim)
-
-                # Cleaning up list
-                for_sale[:] = [h for h in for_sale if h is not house]
-
-                # This family has solved its problem. Go to next family
-                break
+            for_sale = self.negotiating(family, for_sale, sim)
 
         # Taking houses not sold this month into the next one
         self.for_sale = for_sale.copy()
+
+    def negotiating(self, family, for_sale, sim):
+        savings = family.savings
+        savings_with_mortgage = family.savings_with_loan
+        my_market = sim.seed.sample(for_sale, min(len(for_sale), sim.PARAMS['SIZE_MARKET'] * 3))
+        my_market = [h for h in my_market if h.price < savings_with_mortgage]
+        sim.seed.shuffle(my_market)
+        # If family has enough funds, or successfully gets a loan, it buys the first house of the stack.
+        # Otherwise, it tries another one.
+        for house in my_market:
+            p = house.price
+            # If savings is enough, then price is established as the average of the two
+            if savings > p:
+                price = (savings + p) / 2
+            # If not, check whether loan can help
+            elif savings_with_mortgage > p:
+                price = (savings_with_mortgage + p) / 2
+
+            # Withdraw the money of buying family from the bank
+            savings = family.grab_savings(sim.central,
+                                          sim.clock.year,
+                                          ((sim.clock.months % 12) + 1))
+            # Get loan to make up the difference
+            if savings < price:
+                loan_amount = price - savings
+                success = sim.central.request_loan(family, loan_amount, sim.seed)
+                change = 0
+                if not success:
+                    continue
+            else:
+                change = savings - price
+
+            self.notarial_procedures(family, house, price, change, sim)
+            # Cleaning up list
+            for_sale[:] = [h for h in for_sale if h is not house]
+
+            # This family has solved its problem. Go to next family
+            return for_sale
+
+    def notarial_procedures(self, family, house, price, change, sim):
+        # Withdraw money from buying family and distribute back the difference
+        family.update_balance(change)
+        # Collect taxes on transaction
+        taxes = price * sim.PARAMS['TAX_ESTATE_TRANSACTION']
+        sim.regions[house.region_id].collect_taxes(taxes, 'transaction')
+
+        if house.family_owner:
+            # Deposit money on selling family account
+            sim.families[house.owner_id].update_balance(price - taxes)
+
+            # Transfer ownership
+            sim.families[house.owner_id].owned_houses.remove(house)
+
+        # Firm owner
+        else:
+            # Deposit money on selling firm
+            sim.firms[house.owner_id].update_balance(price - taxes, sim.PARAMS['CONSTRUCTION_ACC_CASH_FLOW'])
+
+            # Transfer ownership
+            sim.firms[house.owner_id].houses_inventory.remove(house)
+
+        # Finish notarial procedures
+        house.owner_id = family.id
+        house.family_owner = True
+        family.owned_houses.append(house)
+        house.on_market = 0
+
+        # Decision on moving
+        self.decision(family, sim)
 
     def decision(self, family, sim):
         """A family decides which house to move into"""
