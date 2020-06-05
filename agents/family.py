@@ -27,8 +27,8 @@ class Family:
         self.relatives = set()
         self.house = house
         self.average_utility = 0
-        self.study = None
         self.monthly_loan_payments = 0
+        self.last_permanent_income = 0
 
         # Previous region id
         if house is not None:
@@ -101,14 +101,8 @@ class Family:
         r_1_r = r/(1 + r)
         # Calculated as "discounted some of current income and expected future income" plus "financial wealth"
         # Perpetuity of income is a fraction (r_1_r) of income t0 divided by interest r
-        return r_1_r * t0 + r_1_r * (t0 / r) + self.get_wealth(bank) * r
-
-    def average_study(self):
-        """Averages the years of study of the family"""
-        self.study = sum(m.qualification for m in self.members.values())
-        if self.members:
-            self.study /= float(self.num_members)
-        return self.study
+        self.last_permanent_income = r_1_r * t0 + r_1_r * (t0 / r) + self.get_wealth(bank) * r
+        return self.last_permanent_income
 
     def prop_employed(self):
         """Proportion of members that are employed"""

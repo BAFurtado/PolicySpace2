@@ -142,13 +142,14 @@ class HousingMarket:
                     continue
             else:
                 change = savings - price
-
             self.notarial_procedures(family, house, price, change, sim)
-            # Cleaning up list
-            for_sale[:] = [h for h in for_sale if h is not house]
 
-            # This family has solved its problem. Go to next family
-            return for_sale
+        # Cleaning up list
+        for_sale[:] = [h for h in for_sale if h is not house]
+
+        # For those who have tried to buy houses but failed, pass them over to the rental market
+        if family.house is None:
+            sim.housing.rental.rental_market(family, sim)
         return for_sale
 
     def notarial_procedures(self, family, house, price, change, sim):
