@@ -270,7 +270,7 @@ class Simulation:
         self.funds.invest_taxes(present_year, bank_taxes)
 
         # Pass monthly information to be stored in Statistics
-        self.output.save_stats_report(self)
+        self.output.save_stats_report(self, bank_taxes)
 
         # Getting regional GDP
         self.output.save_regional_report(self)
