@@ -1,12 +1,10 @@
 """ This code gives access to output databases.
-    NOTE: for convenience and columns lables, run `read_data_with_columns.py` first """
-
-
-import os
+    NOTE: for convenience and columns labels, we rewrite the data with appropriate column names
+    """
 
 import pandas as pd
+import auxiliary.read_data_with_columns
 
-from conf.default import run
 pd.set_option('display.max_columns', 13)
 pd.set_option('display.max_rows', 240)
 pd.set_option('display.float_format', lambda x: '%.4f' % x)
@@ -16,25 +14,15 @@ def read(path):
     return pd.read_csv(path, sep=';')
 
 
-def all_data(l, p):
+def all_data(lst, p):
     result = dict()
-    for each in l:
-        result[each] = read(get_path(each, p))
+    for each in lst:
+        result[each] = read(auxiliary.read_data_with_columns.get_path(each, p))
     return result
 
 
-def get_path(cols='houses', path=None):
-    p0 = r'/home/furtadobb/MyModels/PolicySpace2'
-    p = run.OUTPUT_PATH
-    path = path
-    p3 = r'0/temp_'
-    p4 = '.csv'
-    return os.path.join(p0, p, path, p3 + cols + p4)
-
-
 if __name__ == '__main__':
-    p1 = r'run__2020-05-22T18_53_17.538787'
-    p2 = r'run__2020-05-29T15_06_05.615645'
+    p1 = r'run__2020-06-04T14_13_27.012916'
+    auxiliary.read_data_with_columns.main(p1)
     all_ = ['banks', 'construction', 'families', 'firms', 'houses', 'regional', 'stats']
-    dt = all_data(all_, p2)
     dp = all_data(all_, p1)

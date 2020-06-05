@@ -45,19 +45,18 @@ def read_allocate_cols(path, cols=None):
     return output
 
 
-if __name__ == '__main__':
-    all = ['banks', 'construction', 'families', 'firms', 'houses', 'regional', 'stats']
+def main(path):
+    full_list = ['banks', 'construction', 'families', 'firms', 'houses', 'regional', 'stats']
     cols = [banks, construction, families, firms, houses, regional, stats]
-    # all = ['firms']
-    # cols = [stats]
+    for i in range(len(full_list)):
+        pf = get_path(cols=full_list[i], path=path)
+        out = read_allocate_cols(pf, cols[i])
+    return out
+
+
+def get_path(cols='houses', path=None):
     p0 = r'/home/furtadobb/MyModels/PolicySpace2'
     p = run.OUTPUT_PATH
-    p2 = r'run__2020-05-29T15_06_05.615645'
     p3 = r'0/temp_'
     p4 = '.csv'
-
-    for i in range(len(all)):
-        pf = os.path.join(p0, p, p2, p3 + all[i] + p4)
-        out = read_allocate_cols(pf, cols[i])
-    # pf = os.path.join(p0, p, p2, p3 + all[0] + p4)
-    # out = read_allocate_cols(pf, firms)
+    return os.path.join(p0, p, path, p3 + cols + p4)

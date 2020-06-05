@@ -107,10 +107,7 @@ class HousingMarket:
         # Proceed to Sales market ###########################################################
         # For each family
         for family in purchasing:
-            for_sale = self.negotiating(family, for_sale, sim)
-
-        # Taking houses not sold this month into the next one
-        self.for_sale = for_sale.copy()
+            self.negotiating(family, for_sale, sim)
 
     def negotiating(self, family, for_sale, sim):
         savings = family.savings
@@ -145,12 +142,11 @@ class HousingMarket:
             self.notarial_procedures(family, house, price, change, sim)
 
         # Cleaning up list
-        for_sale[:] = [h for h in for_sale if h is not house]
+        self.for_sale[:] = [h for h in for_sale if h is not house]
 
         # For those who have tried to buy houses but failed, pass them over to the rental market
         if family.house is None:
             sim.housing.rental.rental_market(family, sim)
-        return for_sale
 
     def notarial_procedures(self, family, house, price, change, sim):
         # Withdraw money from buying family and distribute back the difference
