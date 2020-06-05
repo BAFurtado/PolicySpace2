@@ -110,6 +110,7 @@ class HousingMarket:
             self.negotiating(family, for_sale, sim)
 
     def negotiating(self, family, for_sale, sim):
+        house = None
         savings = family.savings
         savings_with_mortgage = family.savings_with_loan
         my_market = sim.seed.sample(for_sale, min(len(for_sale), sim.PARAMS['SIZE_MARKET'] * 3))
@@ -142,7 +143,8 @@ class HousingMarket:
             self.notarial_procedures(family, house, price, change, sim)
 
         # Cleaning up list
-        self.for_sale[:] = [h for h in for_sale if h is not house]
+        if house:
+            self.for_sale[:] = [h for h in for_sale if h is not house]
 
         # For those who have tried to buy houses but failed, pass them over to the rental market
         if family.house is None:

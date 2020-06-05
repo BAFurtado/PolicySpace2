@@ -16,7 +16,8 @@ class RentalMarket:
     def rental_market(self, families, sim, to_rent=None):
         self.update_list(sim, to_rent)
         if families:
-            # TODO: Change for permanent_income
+            # TODO: Change for permanent_income. Come back after checking loans and salaries
+            #  and initial money (generator)
             families.sort(key=lambda f: f.savings, reverse=True)
             self.unoccupied.sort(key=lambda h: h.price, reverse=True)
 

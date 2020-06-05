@@ -167,8 +167,7 @@ class Generator:
                     # Qualification
                     # To see a histogram check test:
                     qualification = self.qual(code)
-                    r_age = self.seed.randint(list_of_possible_ages[(list_of_possible_ages.index(age, ) - 1)] + 1,
-                                                age)
+                    r_age = self.seed.randint(list_of_possible_ages[(list_of_possible_ages.index(age, ) - 1)] + 1, age)
                     money = self.seed.randrange(1, 34)
                     month = self.seed.randrange(1, 13, 1)
                     agent_id = self.gen_id()
@@ -220,11 +219,9 @@ class Generator:
     # Additional details so that address fall in urban areas, given percentage
     def get_random_point_in_polygon(self, region, urban=True):
         while True:
-            lat = self.seed.uniform(region.address_envelope[0],
-                            region.address_envelope[1])
-            lng = self.seed.uniform(region.address_envelope[2],
-                            region.address_envelope[3])
-            address = shapely.geometry.Point(lat,lng)
+            lat = self.seed.uniform(region.address_envelope[0], region.address_envelope[1])
+            lng = self.seed.uniform(region.address_envelope[2], region.address_envelope[3])
+            address = shapely.geometry.Point(lat, lng)
             if urban:
                 mun_code = region.id[:7]
                 item = self.urban[mun_code]
