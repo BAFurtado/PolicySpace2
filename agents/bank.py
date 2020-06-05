@@ -66,10 +66,17 @@ class Central:
             interest -= amount
 
         # Compute taxes
-        tax = interest * .15
+        tax = interest * conf.PARAMS['TAX_FIRM']
         self.taxes += tax
         self.balance -= interest - tax
         return interest - tax
+
+    def collect_taxes(self):
+        """ This function withdraws monthly collected taxes from investments, at tax firm rates and
+            resets the counter back to 0.
+            """
+        amount, self.taxes = self.taxes, 0
+        return amount
 
     def deposit(self, client, amount, date):
         """ Receives the money of the client
@@ -200,8 +207,3 @@ class Bank(Central):
         May benefit from methods available at the Central Bank
         """
     pass
-
-
-if __name__ == '__main__':
-    BC = Central(0)
-    b1 = Bank(0)

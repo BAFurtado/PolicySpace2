@@ -48,7 +48,7 @@ class Funds:
             region.update_index(amount * self.sim.PARAMS['TREASURE_INTO_SERVICES'])
             region.update_applied_taxes(amount, 'equally')
 
-    def invest_taxes(self, year):
+    def invest_taxes(self, year, bank_taxes):
         # Collect and UPDATE pop_t-1 and pop_t
         regions = self.sim.regions
         pop_t_minus_1, pop_t = {}, {}
@@ -95,4 +95,6 @@ class Funds:
         else:
             v_equal += (sum([treasure[key]['labor'] for key in treasure.keys()]) +
                         sum([treasure[key]['firm'] for key in treasure.keys()]))
+        # Taxes charged from interests paid by the bank are equally distributed
+        v_equal += bank_taxes
         self.equally(v_equal, regions, pop_t, sum(pop_mun_t.values()))

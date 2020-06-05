@@ -14,7 +14,7 @@ files = ['stats', 'regional', 'time', 'firms', 'banks',
 
 stats = ['sim.clock.days', 'price_index', 'gdp_index', 'gdp_growth', 'unemployment', 'average_workers',
          'families_wealth', 'families_savings', 'firms_wealth', 'firms_profit', 'gini_index', 'average_utility',
-         'inflation', 'average_qli',  'equally', 'locally', 'fpm']
+         'inflation', 'average_qli',  'equally', 'locally', 'fpm', 'bank']
 
 banks = ['sim.clock.days', 'bank.taxes', 'bank.balance', 'bank.total_deposits', 'n_active', 'p_delinquent',
          ' mean_age', 'mn', 'mx', 'avg']

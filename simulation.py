@@ -266,7 +266,8 @@ class Simulation:
             house.pay_property_tax(self)
 
         # Using all collected taxes to improve public services
-        self.funds.invest_taxes(present_year)
+        bank_taxes = self.central.collect_taxes()
+        self.funds.invest_taxes(present_year, bank_taxes)
 
         # Pass monthly information to be stored in Statistics
         self.output.save_stats_report(self)

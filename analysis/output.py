@@ -29,7 +29,7 @@ OUTPUT_DATA_SPEC = {
         },
         'columns': ['month', 'price_index', 'gdp_index', 'gdp_growth', 'unemployment', 'average_workers',
                     'families_wealth', 'families_savings', 'firms_wealth', 'firms_profit', 'gini_index',
-                    'average_utility', 'inflation', 'average_qli', 'equally', 'locally', 'fpm']
+                    'average_utility', 'inflation', 'average_qli', 'equally', 'locally', 'fpm', 'bank']
     },
     'families': {
         'avg': {
@@ -125,7 +125,7 @@ class Output:
             '_'.join(sim.geo.processing_acps_codes)
         )
 
-    def save_stats_report(self, sim):
+    def save_stats_report(self, sim, bank_taxes):
         price_index, inflation = sim.stats.update_price(sim.firms)
         gdp_index, gdp_growth = sim.stats.sum_region_gdp(sim.firms, sim.regions)
         unemployment = sim.stats.update_unemployment(sim.agents.values(), True)
@@ -138,11 +138,12 @@ class Output:
         average_qli = sim.stats.average_qli(sim.regions)
 
         mun_applied_treasure = defaultdict(int)
+        mun_applied_treasure['bank'] = bank_taxes
         for k in ['equally', 'locally', 'fpm']:
             mun_applied_treasure[k] = sum(r.applied_treasure[k] for r in sim.regions.values())
 
         report = '{};{:.3f};{:.3f};{:.3f};{:.3f};{:.3f};{:.3f};{:.3f};{:.3f};{:.3f};{:.3f};{:.3f};{:.4f};{:.4f};' \
-                 '{:.4f};{:.4f};{:.4f}\n'.format(
+                 '{:.4f};{:.4f};{:.4f};{:.4f}\n'.format(
                     sim.clock.days, price_index, gdp_index,
                     gdp_growth, unemployment, average_workers,
                     families_wealth, families_savings,
@@ -150,7 +151,8 @@ class Output:
                     average_utility, inflation, average_qli,
             mun_applied_treasure['equally'],
             mun_applied_treasure['locally'],
-            mun_applied_treasure['fpm']
+            mun_applied_treasure['fpm'],
+            mun_applied_treasure['bank']
         )
 
         with open(self.stats_path, 'a') as f:
