@@ -278,6 +278,9 @@ class Simulation:
         if conf.RUN['SAVE_AGENTS_DATA'] == 'MONTHLY':
             self.output.save_data(self)
 
+        if conf.RUN['PRINT_STATISTICS_AND_RESULTS_DURING_PROCESS']:
+            self.logger.info(self.clock.days)
+
     def quarterly(self):
         if conf.RUN['SAVE_AGENTS_DATA'] == 'QUARTERLY':
             self.output.save_data(self)
