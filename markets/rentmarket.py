@@ -47,7 +47,7 @@ class RentalMarket:
         # TODO: improve general rationality for wishing to enter the market
         # TODO: sales -- excess wealth
         # TODO: rent -- burdensome rent
-        base_price = sim.PARAMS['INITIAL_PRICE_RENT']
+        base_price = sim.PARAMS['INITIAL_RENTAL_PRICE']
         self.update_list(sim, to_rent)
         if families:
             families.sort(key=lambda f: f.last_permanent_income, reverse=True)
