@@ -168,7 +168,6 @@ class Generator:
                     # To see a histogram check test:
                     qualification = self.qual(code)
                     r_age = self.seed.randint(list_of_possible_ages[(list_of_possible_ages.index(age, ) - 1)] + 1, age)
-                    # TODO: Verify if we can't get actual data to come here
                     money = self.seed.randrange(1, 34)
                     month = self.seed.randrange(1, 13, 1)
                     agent_id = self.gen_id()

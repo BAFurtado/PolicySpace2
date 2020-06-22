@@ -13,7 +13,7 @@ class HousingMarket:
     def process_monthly_rent(self, sim):
         """ Collection of rental payment due made by households that are renting """
         to_pay_rent = [h for h in sim.houses.values() if h.rent_data is not None]
-        collect_rent(to_pay_rent, sim)
+        self.rental.collect_rent(to_pay_rent, sim)
 
     def update_for_sale(self, sim):
         for house in sim.houses.values():
@@ -109,10 +109,6 @@ class HousingMarket:
         for family in purchasing:
             self.negotiating(family, for_sale, sim)
 
-        # For those who have tried to buy houses but failed, pass them over to the rental market
-        homeless = [f for f in purchasing if f.house is None]
-        sim.housing.rental.rental_market(homeless, sim)
-
     def negotiating(self, family, for_sale, sim):
         house = None
         savings = family.savings
@@ -149,6 +145,10 @@ class HousingMarket:
         # Cleaning up list
         if house:
             self.for_sale[:] = [h for h in for_sale if h is not house]
+
+        # For those who have tried to buy houses but failed, pass them over to the rental market
+        if family.house is None:
+            sim.housing.rental.rental_market(family, sim)
 
     def notarial_procedures(self, family, house, price, change, sim):
         # Withdraw money from buying family and distribute back the difference
