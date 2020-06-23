@@ -10,7 +10,8 @@ class HousingMarket:
         self.rental = RentalMarket()
         self.for_sale = list()
 
-    def process_monthly_rent(self, sim):
+    @staticmethod
+    def process_monthly_rent(sim):
         """ Collection of rental payment due made by households that are renting """
         to_pay_rent = [h for h in sim.houses.values() if h.rent_data is not None]
         collect_rent(to_pay_rent, sim)
@@ -20,7 +21,7 @@ class HousingMarket:
             # Updating all houses values every month
             house.update_price(sim.regions)
 
-            # If house is empty, add not already on sales list, add it to houses on the market and start counting
+            # If house is empty, and not already on sales list, add it to houses on the market and start counting
             # However, if house is empty and had been empty count one extra month
             if not house.is_occupied:
                 if house not in self.for_sale:
@@ -33,9 +34,9 @@ class HousingMarket:
         self.for_sale.sort(key=lambda h: h.price, reverse=True)
 
     def housing_market(self, sim):
-        """Allocation of houses on the market"""
-        # Clear list of past houses for sale
-        # BUYING FAMILIES: select sample of families looking for houses at this time, given parameter
+        """Start of the housing market"""
+        # Select sample of families looking for houses at this time, given parameter, at the same time,
+        # clear list of past houses for sale
         looking = sim.seed.sample(list(sim.families.values()),
                                   int(len(sim.families) * sim.PARAMS['PERCENTAGE_CHECK_NEW_LOCATION']))
 
@@ -117,6 +118,7 @@ class HousingMarket:
         my_market = [h for h in my_market if h.price < savings_with_mortgage]
         sim.seed.shuffle(my_market)
         # If family has enough funds, or successfully gets a loan, it buys the first house of the stack.
+        # Only houses that are within savings or savings plus loan compose each family individual market
         # Otherwise, it tries another one.
         for house in my_market:
             p = house.price
@@ -140,15 +142,17 @@ class HousingMarket:
                     continue
             else:
                 change = savings - price
+
+            # Register the transaction, collect taxes and consider moving
             self.notarial_procedures(family, house, price, change, sim)
-
-        # Cleaning up list
-        if house:
+            # if the procedures have come this far, it means loan or price have being agreed upon.
+            # Clean for_sale list.
             self.for_sale[:] = [h for h in for_sale if h is not house]
-
+            # Then it can move on to the next family
+            return
         # For those who have tried to buy houses but failed, pass them over to the rental market
-        if family.house is None:
-            sim.housing.rental.rental_market(family, sim)
+        # if family.house is None:
+        #     sim.housing.rental.rental_market(family, sim)
 
     def notarial_procedures(self, family, house, price, change, sim):
         # Withdraw money from buying family and distribute back the difference

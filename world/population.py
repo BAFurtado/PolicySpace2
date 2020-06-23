@@ -225,7 +225,7 @@ def marriage(sim):
                 new_family.relatives.add(b.id)
                 sim.housing.rental.rental_market([new_family], sim)
 
-                # Reverse marriage if they can't find house
+                # Reverse marriage if they can't find a house
                 if new_family.house is None:
                     old_a.add_agent(a)
                     old_b.add_agent(b)
