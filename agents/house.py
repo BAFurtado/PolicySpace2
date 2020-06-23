@@ -1,8 +1,10 @@
 from enum import Enum
 
+
 class Owner(Enum):
     FAMILY = 0
     FIRM = 1
+
 
 class House:
     """Holds the fixed households.

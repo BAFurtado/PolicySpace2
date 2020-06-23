@@ -2,7 +2,7 @@ def maybe_move(family, house, price, sim):
     # Make the move
     old_r_id = family.region_id
     if family.house:
-        # Families who are already settled, will move into rental, if better quality (that is, price)
+        # Families who are already settled, will move into rental only if better quality (that is, price)
         if family.house.price > house.price:
             return
         family.move_out()
@@ -68,7 +68,7 @@ class RentalMarket:
                     my_market.sort(key=lambda h: h.price)
                     house = my_market[0]
                     # Ask for reduced price, because out of budget. Varying according to number of available houses
-                    price = house.price * (base_price - len(my_market) / 100000)
+                    price = house.price * (base_price - (len(my_market) / 100000))
 
                 # Decision on moving. If no house, move, else, consider
                 maybe_move(family, house, price, sim)
