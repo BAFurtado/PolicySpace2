@@ -31,7 +31,7 @@ class HousingMarket:
                     house.on_market += 1
 
         # Order houses by price most expensive first
-        self.for_sale.sort(key=lambda h: h.price, reverse=True)
+        # self.for_sale.sort(key=lambda h: h.price, reverse=True)
 
     def housing_market(self, sim):
         """Start of the housing market"""
@@ -111,16 +111,16 @@ class HousingMarket:
             self.negotiating(family, for_sale, sim)
 
     def negotiating(self, family, for_sale, sim):
-        house = None
         savings = family.savings
         savings_with_mortgage = family.savings_with_loan
         my_market = sim.seed.sample(for_sale, min(len(for_sale), sim.PARAMS['SIZE_MARKET'] * 3))
         my_market = [h for h in my_market if h.price < savings_with_mortgage]
-        sim.seed.shuffle(my_market)
+        my_market.sort(key=lambda h: h.price, reverse=True)
         # If family has enough funds, or successfully gets a loan, it buys the first house of the stack.
         # Only houses that are within savings or savings plus loan compose each family individual market
         # Otherwise, it tries another one.
         for house in my_market:
+            cash = 0
             p = house.price
             # If savings is enough, then price is established as the average of the two
             if savings > p:
@@ -128,20 +128,15 @@ class HousingMarket:
             # If not, check whether loan can help
             elif savings_with_mortgage > p:
                 price = (savings_with_mortgage + p) / 2
-
-            # Withdraw the money of buying family from the bank
-            savings = family.grab_savings(sim.central,
-                                          sim.clock.year,
-                                          ((sim.clock.months % 12) + 1))
-            # Get loan to make up the difference
-            if savings < price:
+                # Get loan to make up the difference
                 loan_amount = price - savings
                 success = sim.central.request_loan(family, loan_amount, sim.seed)
-                change = 0
                 if not success:
                     continue
-            else:
-                change = savings - price
+                cash += loan_amount
+            # Withdraw the money of buying family from the bank
+            cash += family.grab_savings(sim.central, sim.clock.year, ((sim.clock.months % 12) + 1))
+            change = cash - price
 
             # Register the transaction, collect taxes and consider moving
             self.notarial_procedures(family, house, price, change, sim)
@@ -150,9 +145,6 @@ class HousingMarket:
             self.for_sale[:] = [h for h in for_sale if h is not house]
             # Then it can move on to the next family
             return
-        # For those who have tried to buy houses but failed, pass them over to the rental market
-        # if family.house is None:
-        #     sim.housing.rental.rental_market(family, sim)
 
     def notarial_procedures(self, family, house, price, change, sim):
         # Withdraw money from buying family and distribute back the difference
