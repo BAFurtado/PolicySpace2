@@ -25,6 +25,7 @@ class Family:
         self.owned_houses = list()
         self.members = {}
         self.relatives = set()
+        # Refers to the house the family is living on currently
         self.house = house
         self.average_utility = 0
         self.monthly_loan_payments = 0

@@ -258,6 +258,7 @@ class Simulation:
         self.labor_market.assign_post(current_unemployment, wage_deciles, self.PARAMS)
 
         # Initiating Real Estate Market
+        # TODO: improve general rationality for wishing to enter the market
         # Tax transaction taxes (ITBI) when selling house
         # Property tax (IPTU) collected. One twelfth per month
         self.housing.housing_market(self)

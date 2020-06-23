@@ -16,7 +16,8 @@ class House:
         self.price = price
         self.region_id = region_id
         self.quality = quality
-        self.family_id = family_id # owner may be the occupant or the house may be vacant
+        # owner may be the occupant or the house may be vacant
+        self.family_id = family_id
         self.owner_id = owner_id
         self.owner_type = owner_type
         self.rent_data = None

@@ -1,9 +1,15 @@
-def make_move(family, house, sim):
+def maybe_move(family, house, price, sim):
     # Make the move
     old_r_id = family.region_id
     if family.house:
+        # Families who are already settled, will move into rental, if better quality (that is, price)
+        if family.house.price > house.price:
+            return
         family.move_out()
     family.move_in(house)
+    # Save information of rental on house
+    house.rent_data = price, sim.clock.days
+
     # Only after simulation has begun, it is necessary to update population, not at generation time
     try:
         if sim.mun_pops:
@@ -44,9 +50,8 @@ class RentalMarket:
             self.unoccupied = [h for h in sim.houses.values() if h.family_id is None and h.family_owner]
 
     def rental_market(self, families, sim, to_rent=None):
-        # TODO: improve general rationality for wishing to enter the market
-        # TODO: sales -- excess wealth
-        # TODO: rent -- burdensome rent
+        # Families that come here without a house (from marriage or immigration) need to move in or give up their plans
+        # In that case, the list of houses is any unoccupied houses. Not a sample list separated for the rental market
         base_price = sim.PARAMS['INITIAL_RENTAL_PRICE']
         self.update_list(sim, to_rent)
         if families:
@@ -64,9 +69,6 @@ class RentalMarket:
                     house = my_market[0]
                     # Ask for reduced price, because out of budget. Varying according to number of available houses
                     price = house.price * (base_price - len(my_market) / 100000)
-                # Just checking
-                if house.family_id is None:
-                    # Define price
-                    make_move(family, house, sim)
-                    # Save information of rental on house
-                    house.rent_data = price, sim.clock.days
+
+                # Decision on moving. If no house, move, else, consider
+                maybe_move(family, house, price, sim)
