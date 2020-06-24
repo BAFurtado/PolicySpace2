@@ -112,10 +112,10 @@ PRODUCTION_MAGNITUDE = 1
 
 # Percentage of actual population to run the simulation
 # Minimum value to run depends on the size of municipality 0,001 is recommended minimum
-PERCENTAGE_ACTUAL_POP = 0.01
+PERCENTAGE_ACTUAL_POP = 0.005
 
 # Write exactly like the list
-PROCESSING_ACPS = ['IPATINGA']
+PROCESSING_ACPS = ['BRASILIA']
 
 WAGE_TO_CAR_OWNERSHIP_QUANTILES = [
     0.1174,

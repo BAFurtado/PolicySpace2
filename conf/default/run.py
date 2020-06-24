@@ -26,7 +26,7 @@ SAVE_PLOTS_FIGURES = True
 # *be aware of theirs sizes*
 PLOT_EACH_RUN = True
 # Spatial plots only works when PLOT_EACH_RUN is True
-SAVE_SPATIAL_PLOTS = False
+SAVE_SPATIAL_PLOTS = True
 # 'png' or 'eps'
 PLOT_FORMAT = 'png'
 PLOT_REGIONAL = True

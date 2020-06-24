@@ -87,7 +87,22 @@ def die(sim, agent):
 
         # Redistribute houses, debt, and savings of empty family
         if relatives:
-            sim.generator.randomly_assign_houses(inheritance, relatives)
+            # Choose a member to get house/houses and debt, if any
+            if inheritance:
+                lucky_ones = sim.seed.choices(relatives, k=len(inheritance))
+                # Most expensive house last. Will pop for the luckiest, so,
+                # who gets the most expensive house, also gets the debt, if any
+                inheritance.sort(key=lambda h: h.price, reverse=False)
+                debtor = lucky_ones.pop()
+                sim.generator.randomly_assign_houses(inheritance.pop(), debtor)
+                # If we still have other houses and other relatives, assign randomly
+                if inheritance and lucky_ones:
+                    sim.generator.randomly_assign_houses(inheritance, lucky_ones)
+                # If we have just more houses, give them all to the survivor
+                elif inheritance:
+                    sim.generator.randomly_assign_houses(inheritance, debtor)
+            else:
+                debtor = sim.seed.choice(relatives)
 
             # Distribute savings equally
             savings_per_relative = savings/len(relatives)
@@ -96,16 +111,14 @@ def die(sim, agent):
 
             # Distribute debt
             if id in sim.central.loans:
-                f = relatives[0]
                 loans = sim.central.loans.pop(id)
-                sim.central.loans[f.id] = loans
+                sim.central.loans[debtor.id] = loans
 
         else:
             # Assign randomly
             sim.generator.randomly_assign_houses(inheritance, sim.families.values())
 
             # Delete debt
-            # TODO should we do something different with it?
             if id in sim.central.loans:
                 del sim.central.loans[id]
     else:
