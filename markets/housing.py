@@ -175,26 +175,33 @@ class HousingMarket:
         house.on_market = 0
 
         # Decision on moving
-        self.decision(family, sim)
+        if family.house is None:
+            # If previously without a house, move into the new acquired one
+            self.make_move(family, house, sim)
+        else:
+            # Check if there is more than one option and choose
+            self.decision(family, sim)
 
     def decision(self, family, sim):
         """A family decides which house to move into"""
-        # Leave only empty houses or currently occupied by the same family. Exclude rentals
+        # Options include only empty houses (those ot rented) or currently occupied by the same family.
         options = [h for h in family.owned_houses if (h.family_id is None) or (h.family_id == family.id)]
 
-        # Include first-time mover
-        if len(options) > 1 or family.house is None:
-            # Sort by price, which captures quality, size, and location
-            # This puts the cheapest house first
-            options.sort(key=lambda h: h.price, reverse=False)
-            # If family does not live in the worst house, but nobody is employed, move to the worst house
-            prop_employed = family.prop_employed()
-            if options[0].family_id != family.id and prop_employed == 0:
-                self.make_move(family, options[0], sim)
+        # Maybe the family 
+        if options:
+            # If options is size 1, it means the only owned house is the one the family currently lives in.
+            if len(options) > 1:
+                # Sort by price, which captures quality, size, and location
+                # This puts the cheapest house first
+                options.sort(key=lambda h: h.price, reverse=False)
+                # If family does not live in the worst house, but nobody is employed, move to the worst house
+                prop_employed = family.prop_employed()
+                if options[0].family_id != family.id and prop_employed == 0:
+                    self.make_move(family, options[0], sim)
 
-            # Else if they live in the worst house, but at least one member is working, move to a better house
-            elif options[0].family_id == family.id and prop_employed > 0:
-                self.make_move(family, options[-1], sim)
+                # Else if they live in the worst house, but at least one member is working, move to a better house
+                elif options[0].family_id == family.id and prop_employed > 0:
+                    self.make_move(family, options[-1], sim)
 
     @staticmethod
     def make_move(family, house, sim):
