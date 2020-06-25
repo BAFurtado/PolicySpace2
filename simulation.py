@@ -250,6 +250,7 @@ class Simulation:
         self.labor_market.hire_fire(self.firms, self.PARAMS['LABOR_MARKET'])
 
         # Job Matching
+        # Sample used only to calculate wage deciles
         sample_size = math.floor(len(self.agents) * 0.5)
         last_wages = [self.agents[a].last_wage
                       for a in self.seed.sample(self.agents.keys(), sample_size)

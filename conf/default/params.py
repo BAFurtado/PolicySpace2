@@ -10,14 +10,15 @@ STICKY_PRICES = .8
 SIZE_MARKET = 10
 
 # Frequency firms enters in the market
-LABOR_MARKET = 0.05
+# TODO: Check if this frequency (95% of the time is adequate)
+LABOR_MARKET = 0.95
 
 # Percentage of employees firms hire by distance
 PCT_DISTANCE_HIRING = .17
 # Ignore unemployment in wage base calculation
 WAGE_IGNORE_UNEMPLOYMENT = False
 # Candidate sample size for the labor market
-HIRING_SAMPLE_SIZE = 100
+HIRING_SAMPLE_SIZE = 20
 
 # Percentage of households pursuing new location
 PERCENTAGE_CHECK_NEW_LOCATION = 0.005

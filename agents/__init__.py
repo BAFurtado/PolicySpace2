@@ -96,6 +96,7 @@ class Agent:
 
     def distance_to_firm(self, firm):
         # If no house, use region center
+        # TODO: Check whether no house might be a case at all
         if self.family.house is not None:
             return self.family.house.distance_to_firm(firm)
         else:

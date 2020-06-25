@@ -29,12 +29,9 @@ class LaborMarket:
         self.candidates = []
 
     def assign_post(self, unemployment, wage_deciles, params):
-        """Rank positions by wage and rank employees by qualifications
-        Make a match """
+        """Rank positions by revenue. Make a match as workers considers mobility choices """
         pct_distance_hiring = params['PCT_DISTANCE_HIRING']
-        tax_consumption = params['TAX_CONSUMPTION']
         ignore_unemployment = params['WAGE_IGNORE_UNEMPLOYMENT']
-        hiring_sample_size = int(round(params['HIRING_SAMPLE_SIZE']))
 
         self.seed.shuffle(self.candidates)
         if wage_deciles is not None:
@@ -51,57 +48,66 @@ class LaborMarket:
             for c in self.candidates:
                 c.has_car = False
 
-        if len(self.candidates) >= 2:
-            split = int(len(self.candidates) * (1 - pct_distance_hiring))
-            by_qual = self.candidates[0:split]
-            by_dist = self.candidates[split:]
+        # If parameter of distance or qualification is ON, firms are the ones that are divided by the criteria
+        # Candidates consider distance when they deduce cost of mobility from potential wage bundle
+        # Division between qualification and proximity is done randomly
+        self.seed.shuffle(self.available_postings)
+        if len(self.available_postings) >= 2:
+            split = int(len(self.available_postings) * (1 - pct_distance_hiring))
+            by_qual = self.available_postings[0:split]
+            by_dist = self.available_postings[split:]
         else:
             return
 
-        available_postings = [(f, f.wage_base(unemployment, ignore_unemployment)) for f in self.available_postings]
-        available_postings.sort(key=lambda p: p[1], reverse=True)
-        by_qual.sort(key=lambda c: c.qualification, reverse=False)
-
         # Choosing by qualification
-        offers = []
-        done_firms = set()
-        done_cands = set()
-        for firm, wage in available_postings[0::2]:
-            candidates = self.seed.sample(by_qual, min(len(by_qual), hiring_sample_size))
-            for c in candidates:
-                transit_cost = params['PRIVATE_TRANSIT_COST'] if c.has_car else params['PUBLIC_TRANSIT_COST']
-                score = wage - (c.distance_to_firm(firm) * transit_cost)
-                offers.append((firm, c, c.qualification + score))
-        sorted(offers, key=lambda o: o[2], reverse=True)
-        for firm, candidate, _ in offers:
-            if firm not in done_firms and candidate not in done_cands:
-                self.apply_assign(candidate, firm)
-                done_firms.add(firm)
-                done_cands.add(candidate)
+        # Firms paying higher wages first
+        by_qual = [(f, f.wage_base(unemployment, ignore_unemployment)) for f in by_qual]
+        by_qual.sort(key=lambda p: p[1], reverse=True)
+        by_dist = [(f, f.wage_base(unemployment, ignore_unemployment)) for f in by_dist]
+        by_dist.sort(key=lambda p: p[1], reverse=True)
 
-        offers = []
-        done_firms = set()
-        done_cands = set()
-        for firm, wage in available_postings[1::2]:
-            if not by_dist:
-                break
-
-            # sample candidates
-            candidates = self.seed.sample(by_dist, min(len(by_dist), hiring_sample_size))
-            for c in candidates:
-                dist = c.distance_to_firm(firm)
-                transit_cost = params['PRIVATE_TRANSIT_COST'] if c.has_car else params['PUBLIC_TRANSIT_COST']
-                score = wage - (dist * transit_cost)
-                offers.append((firm, c, score - dist))
-        sorted(offers, key=lambda o: o[2], reverse=True)
-        for firm, candidate, _ in offers:
-            if firm not in done_firms and candidate not in done_cands:
-                self.apply_assign(candidate, firm)
-                done_firms.add(firm)
-                done_cands.add(candidate)
+        # Two matching processes. 1. By qualification 2. By distance only, if candidates left
+        cand_still_looking = self.matching_firm_offers(by_qual, params, cand_looking=None, flag='qualification')
+        self.matching_firm_offers(by_dist, params, cand_still_looking)
 
         self.available_postings = []
         self.candidates = []
+
+    def matching_firm_offers(self, lst_firms, params, cand_looking=None, flag=None):
+        if cand_looking:
+            candidates = cand_looking
+        else:
+            candidates = self.candidates
+        offers = []
+        done_firms = set()
+        done_cands = set()
+        # This organizes a number of offers of candidates per firm, according to their own location
+        # and "size" of a firm, giving by its more recent revenue level
+        for firm, wage in lst_firms:
+            candidates = self.seed.sample(candidates, min(len(candidates), params['HIRING_SAMPLE_SIZE']))
+            for c in candidates:
+                transit_cost = params['PRIVATE_TRANSIT_COST'] if c.has_car else params['PUBLIC_TRANSIT_COST']
+                # TODO: check units of distance_to_firm and relevance comparatively to potential wage.
+                #  Anyway, it differentiates among candidates for the same firm
+                score = wage - (c.distance_to_firm(firm) * transit_cost)
+                if flag:
+                    offers.append((firm, c, c.qualification + score))
+                else:
+                    offers.append((firm, c, score))
+
+        # Then, the criteria is used to order all candidates
+        offers = sorted(offers, key=lambda o: o[2], reverse=True)
+        for firm, candidate, score in offers:
+            if firm not in done_firms and candidate not in done_cands:
+                self.apply_assign(candidate, firm)
+                done_firms.add(firm)
+                done_cands.add(candidate)
+
+        # If this run was for qualification, another run for distance has to go
+        if flag:
+            # Now it is time for the matching for firms favoring proximity
+            cand_still_looking = [c for c in self.candidates if c not in done_cands]
+            return cand_still_looking
 
     def apply_assign(self, chosen, firm):
         chosen.commute = firm
@@ -116,7 +122,8 @@ class LaborMarket:
         """Firms adjust their labor force based on profit"""
         for firm in firms.values():
             # `firm_enter_freq` is the frequency firms enter the market
-            if self.seed.random() > firm_enter_freq:
+            if self.seed.random() < firm_enter_freq:
+                # TODO: verify if only on positive profit, it makes sense
                 if firm.profit >= 0:
                     self.add_post(firm)
                 else:
