@@ -103,7 +103,7 @@ class LaborMarket:
                 done_firms.add(firm)
                 done_cands.add(candidate)
 
-        # If this run was for qualification, another run for distance has to go
+        # If this run was for qualification, another run for distance has to go through
         if flag:
             # Now it is time for the matching for firms favoring proximity
             cand_still_looking = [c for c in self.candidates if c not in done_cands]

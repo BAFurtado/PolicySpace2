@@ -7,12 +7,12 @@ Disclaimer:
 This code was generated for research purposes only.
 It is licensed under GNU v3 license
 """
-import sys
 import copy
 import json
-import random
 import logging
 import os
+import random
+import sys
 
 import click
 import matplotlib
