@@ -20,9 +20,9 @@ from .shapes import prepare_shapes
 logger = logging.getLogger('generator')
 
 # Necessary input Data
-prop_urban = pd.read_csv('input/prop_urban_rural_2000.csv', sep=';', header=0,
-                         decimal=',').apply(pd.to_numeric, errors='coerce')
-
+# TODO: Delete prop_urban_rural_2000.csv before merging
+# prop_urban = pd.read_csv('input/prop_urban_rural_2000.csv', sep=';', header=0, decimal=',')
+prop_urban = pd.read_csv('input/prop_urban_2000_2010.csv', sep=';')
 idhm = pd.read_csv('input/idhm_1991_2010.txt', sep=',', header=0,
                    decimal='.').apply(pd.to_numeric, errors='coerce')
 idhm = idhm.loc[idhm['year'] == 2000]
@@ -250,7 +250,7 @@ class Generator:
         # for municipalities with one AP
         mun_code = int(region.id[:7])
         if mun_code in single_ap_muns:
-            probability_urban = prop_urban[prop_urban['cod_mun'] == int(mun_code)]['prop_urb'].iloc[0]
+            probability_urban = prop_urban[prop_urban['cod_mun'] == int(mun_code)][str(self.sim.clock.year)].iloc[0]
         else:
             probability_urban = 0
         return probability_urban
