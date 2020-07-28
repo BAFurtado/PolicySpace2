@@ -6,17 +6,18 @@ from collections import defaultdict
 from shapely.geometry import shape
 
 
-def prepare_shapes_2010(ufs):
+def prepare_shapes_2010(geo):
     full_region = pd.DataFrame()
     aps = pd.DataFrame()
     urban = pd.DataFrame()
-    for uf in ufs:
+    for uf in geo.states_on_process:
         temp = gpd.read_file(f'input/shapes/2010/mun_ufs/{uf}.shp')
         full_region = pd.concat([temp, full_region])
         temp2 = gpd.read_file(f'input/shapes/2010/areas/{uf}.shp')
         aps = pd.concat([temp2, aps])
+    for mun in geo.mun_codes:
         temp3 = gpd.read_file('input/shapes/2010/urban_mun_2010.shp')
-        temp3 = temp3[temp3.SIGLA_UF == uf]
+        temp3 = temp3[temp3.CD_MUN == str(mun)]
         urban = pd.concat([temp3, urban])
 
     urban = {
@@ -39,7 +40,7 @@ def prepare_shapes(geo):
 
     # load the shapefiles
     if geo.year == 2010:
-        return prepare_shapes_2010(geo.states_on_process)
+        return prepare_shapes_2010(geo)
     full_region = ogr.Open('input/shapes/mun_ACPS_ibge_2014_latlong_wgs1984_fixed.shp')
     urban_region = ogr.Open('input/shapes/URBAN_IBGE_ACPs.shp')
     aps_region = ogr.Open('input/shapes/APs.shp')
