@@ -22,27 +22,8 @@ logger = logging.getLogger('generator')
 # Necessary input Data
 prop_urban = pd.read_csv('input/prop_urban_2000_2010.csv', sep=';')
 
-# load qualifications data, combining municipal-level with AP-level
-quali = pd.read_csv('input/qualification_2000.csv', sep=';', header=0,
-                    decimal=',').apply(pd.to_numeric, errors='coerce')
-quali = quali.drop('Unnamed: 0', 1)
-
-# rename from cod_mun b/c we may also have
-# AP codes, not just municipal codes
-quali.rename(columns={'cod_mun': 'code'}, inplace=True)
-quali_aps = pd.read_csv('input/qualification_APs.csv', sep=';', header=0,
-                      decimal=',').apply(pd.to_numeric, errors='coerce')
-for code, group in quali_aps.groupby('AREAP'):
-    group = group[['qual', 'perc_qual_AP']]
-    row = {'code': code}
-    for idx, qual, percent in group.to_records():
-        row[str(qual)] = percent
-    row = [row.get(col, 0) for col in quali.columns]
-    quali.loc[quali.shape[0]] = row
-quali.set_index('code', inplace=True)
-quali_sum = quali.cumsum(axis=1)
-
-
+quali_sum = pd.read_csv('input/qualification_APs_2000.csv')
+quali_sum.set_index('code', inplace=True)
 single_ap_muns = pd.read_csv('input/single_aps.csv', sep=';')
 single_ap_muns = single_ap_muns['mun_code'].tolist()
 

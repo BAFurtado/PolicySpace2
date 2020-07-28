@@ -29,7 +29,7 @@ def prepare_shapes(geo):
             # for all states different from Federal district (53 code)
             for mun_reg in range(urban_region.GetLayer(0).GetFeatureCount()):
                 if urban_region.GetLayer(0).GetFeature(mun_reg).GetField(5) == str(acp) and \
-                                urban_region.GetLayer(0).GetFeature(mun_reg).GetField(3) == str(state) :
+                                urban_region.GetLayer(0).GetFeature(mun_reg).GetField(3) == str(state):
                     urban.append(urban_region.GetLayer(0).GetFeature(mun_reg))
                     urban_mun_codes.append(urban_region.GetLayer(0).GetFeature(mun_reg).GetField(1))
 
