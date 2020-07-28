@@ -9,17 +9,21 @@ from shapely.geometry import shape
 def prepare_shapes_2010(ufs):
     full_region = pd.DataFrame()
     aps = pd.DataFrame()
+    urban = pd.DataFrame()
     for uf in ufs:
         temp = gpd.read_file(f'input/shapes/2010/mun_ufs/{uf}.shp')
         full_region = pd.concat([temp, full_region])
         temp2 = gpd.read_file(f'input/shapes/2010/areas/{uf}.shp')
         aps = pd.concat([temp2, aps])
-    urban = gpd.read_file('input/shapes/2010/urban_mun_2010.shp')
-    urban = {
-        item.GetField(1): shape(json.loads(item.geometry().ExportToJson()))
-        for item in urban
-    }
+        temp3 = gpd.read_file('input/shapes/2010/urban_mun_2010.shp')
+        temp3 = temp3[temp3.SIGLA_UF == uf]
+        urban = pd.concat([temp3, urban])
 
+    urban = {
+        item: urban[urban.CD_MUN == item]['geometry'].item()
+        for item in urban.CD_MUN
+    }
+    return urban
 
 
 def prepare_shapes(geo):
@@ -35,7 +39,7 @@ def prepare_shapes(geo):
 
     # load the shapefiles
     if geo.year == 2010:
-        return prepare_shapes_2010(processing_states_code_list)
+        return prepare_shapes_2010(geo.states_on_process)
     full_region = ogr.Open('input/shapes/mun_ACPS_ibge_2014_latlong_wgs1984_fixed.shp')
     urban_region = ogr.Open('input/shapes/URBAN_IBGE_ACPs.shp')
     aps_region = ogr.Open('input/shapes/APs.shp')
