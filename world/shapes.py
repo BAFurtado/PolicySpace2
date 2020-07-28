@@ -5,6 +5,10 @@ from collections import defaultdict
 from shapely.geometry import shape
 
 
+def prepare_shapes_2010():
+    pass
+
+
 def prepare_shapes(geo):
     """Loads shape data for municipalities"""
 
@@ -17,6 +21,8 @@ def prepare_shapes(geo):
         processing_states_code_list.append((states_codes['nummun'].loc[states_codes['codmun'] == item]).values[0])
 
     # load the shapefiles
+    if geo.year == 2010:
+        return prepare_shapes_2010()
     full_region = ogr.Open('input/shapes/mun_ACPS_ibge_2014_latlong_wgs1984_fixed.shp')
     urban_region = ogr.Open('input/shapes/URBAN_IBGE_ACPs.shp')
     aps_region = ogr.Open('input/shapes/APs.shp')
@@ -54,7 +60,6 @@ def prepare_shapes(geo):
     # running over the states in the list
     for mun_id in urban_mun_codes:
         # for all states different from Federal district (53 code)
-
         # if we have AP shapes for this municipality, use those
         if mun_id in mun_codes_to_ap_shapes:
             my_shapes.extend(mun_codes_to_ap_shapes[mun_id])

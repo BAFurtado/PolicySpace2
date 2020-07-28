@@ -23,7 +23,7 @@ from world.regions import REGION_CACHE
 class Simulation:
     def __init__(self, params, output_path):
         self.PARAMS = params
-        self.geo = Geography(params)
+        self.geo = Geography(params, conf.RUN['STARTING_DAY'].year)
         self.funds = Funds(self)
         self.clock = clock.Clock(conf.RUN['STARTING_DAY'])
         self.output = analysis.Output(self, output_path)

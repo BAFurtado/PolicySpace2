@@ -21,9 +21,9 @@ logger = logging.getLogger('generator')
 
 # Necessary input Data
 prop_urban = pd.read_csv('input/prop_urban_2000_2010.csv', sep=';')
-
 quali_sum = pd.read_csv('input/qualification_APs_2000.csv')
 quali_sum.set_index('code', inplace=True)
+
 single_ap_muns = pd.read_csv('input/single_aps.csv', sep=';')
 single_ap_muns = single_ap_muns['mun_code'].tolist()
 
@@ -44,7 +44,7 @@ class Generator:
     def create_regions(self):
         """Create regions"""
         idhm = pd.read_csv('input/idhm_2000_2010.csv', sep=';')
-        idhm = idhm.loc[idhm['year'] == self.sim.clock.year]
+        idhm = idhm.loc[idhm['year'] == self.sim.geo.year]
         regions = {}
         for item in self.shapes:
             r = Region(item, licenses=self.sim.PARAMS['LICENSES_PER_REGION'])
@@ -223,11 +223,10 @@ class Generator:
         return neighborhood
 
     def prob_urban(self, region):
-        # only use urban/rural distinction
-        # for municipalities with one AP
+        # Only using urban/rural distinction for municipalities with one AP
         mun_code = int(region.id[:7])
         if mun_code in single_ap_muns:
-            probability_urban = prop_urban[prop_urban['cod_mun'] == int(mun_code)][str(self.sim.clock.year)].iloc[0]
+            probability_urban = prop_urban[prop_urban['cod_mun'] == int(mun_code)][str(self.sim.geo.year)].iloc[0]
         else:
             probability_urban = 0
         return probability_urban

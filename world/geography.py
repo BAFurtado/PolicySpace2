@@ -24,7 +24,8 @@ def process_acps(acps):
 
 class Geography:
     """Manages which ACPs/states/municipalities are used for the simulation"""
-    def __init__(self, params):
+    def __init__(self, params, year):
+        self.year = year
         # Processing the chosen ACPs
         self.processing_acps_codes, self.processing_acps, self.states_on_process = \
             process_acps(params['PROCESSING_ACPS'])
