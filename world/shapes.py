@@ -7,24 +7,30 @@ from shapely.geometry import shape
 
 
 def prepare_shapes_2010(geo):
-    full_region = pd.DataFrame()
-    aps = pd.DataFrame()
+    ap_temp = pd.DataFrame()
     urban = pd.DataFrame()
+    aps = pd.DataFrame()
     for uf in geo.states_on_process:
-        temp = gpd.read_file(f'input/shapes/2010/mun_ufs/{uf}.shp')
-        full_region = pd.concat([temp, full_region])
         temp2 = gpd.read_file(f'input/shapes/2010/areas/{uf}.shp')
-        aps = pd.concat([temp2, aps])
+        ap_temp = pd.concat([temp2, ap_temp])
     for mun in geo.mun_codes:
         temp3 = gpd.read_file('input/shapes/2010/urban_mun_2010.shp')
         temp3 = temp3[temp3.CD_MUN == str(mun)]
         urban = pd.concat([temp3, urban])
+        temp4 = ap_temp[ap_temp.cod_mun == str(mun)]
+        aps = pd.concat([temp4, aps])
 
     urban = {
         item: urban[urban.CD_MUN == item]['geometry'].item()
         for item in urban.CD_MUN
     }
-    return urban
+    # TODO: When adapting for all municipalities, include further shapes from censo_2010 repo *.all_muns.shp
+    codes = [str(code) for code in geo.mun_codes]
+    shapes = aps[aps.cod_mun.isin(codes)]
+    my_shapes = list()
+    for i in shapes.index:
+        my_shapes.append(ogr.Open(shapes.loc[i].to_json()))
+    return urban, my_shapes
 
 
 def prepare_shapes(geo):
@@ -70,7 +76,6 @@ def prepare_shapes(geo):
         mun_code = code[:7]
         shap.id = code
         shap.mun_code = mun_code
-        shap.name = code
         mun_codes_to_ap_shapes[mun_code].append(shap)
 
     my_shapes = []
@@ -85,8 +90,6 @@ def prepare_shapes(geo):
             for mun_reg in range(full_region.GetLayer(0).GetFeatureCount()):
                 if full_region.GetLayer(0).GetFeature(mun_reg).GetField(1) == mun_id:
                     shap = full_region.GetLayer(0).GetFeature(mun_reg)
-                    # Make sure FIELD 2 is Name
-                    shap.name = shap.GetFieldAsString(2)
                     # Make sure FIELD 1 is IBGE CODE
                     shap.id = shap.GetField(1)
                     my_shapes.append(shap)
