@@ -7,29 +7,32 @@ from shapely.geometry import shape
 
 
 def prepare_shapes_2010(geo):
-    ap_temp = pd.DataFrame()
     urban = pd.DataFrame()
-    aps = pd.DataFrame()
-    for uf in geo.states_on_process:
-        temp2 = gpd.read_file(f'input/shapes/2010/areas/{uf}.shp')
-        ap_temp = pd.concat([temp2, ap_temp])
     for mun in geo.mun_codes:
-        temp3 = gpd.read_file('input/shapes/2010/urban_mun_2010.shp')
-        temp3 = temp3[temp3.CD_MUN == str(mun)]
-        urban = pd.concat([temp3, urban])
-        temp4 = ap_temp[ap_temp.cod_mun == str(mun)]
-        aps = pd.concat([temp4, aps])
+        temp = gpd.read_file('input/shapes/2010/urban_mun_2010.shp')
+        temp = temp[temp.CD_MUN == str(mun)]
+        urban = pd.concat([temp, urban])
 
     urban = {
-        item: urban[urban.CD_MUN == item]['geometry'].item()
-        for item in urban.CD_MUN
+        mun: urban[urban.CD_MUN == mun]['geometry'].item()
+        for mun in urban.CD_MUN
     }
+
     # TODO: When adapting for all municipalities, include further shapes from censo_2010 repo *.all_muns.shp
     codes = [str(code) for code in geo.mun_codes]
-    shapes = aps[aps.cod_mun.isin(codes)]
+
     my_shapes = list()
-    for i in shapes.index:
-        my_shapes.append(ogr.Open(shapes.loc[i].to_json()))
+    states = list()
+    for uf in geo.states_on_process:
+        states.append(ogr.Open(f'input/shapes/2010/areas/{uf}.shp'))
+    for mun_id in codes:
+        for state in states:
+            for mun_reg in range(state.GetLayer(0).GetFeatureCount()):
+                if state.GetLayer(0).GetFeature(mun_reg).GetField(1) == mun_id:
+                    shap = state.GetLayer(0).GetFeature(mun_reg)
+                    shap.id = str(shap.GetField(0))
+                    my_shapes.append(shap)
+
     return urban, my_shapes
 
 

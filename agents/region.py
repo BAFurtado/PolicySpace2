@@ -14,7 +14,7 @@ class Region:
         self.addresses = region.geometry()
         lat, lng, _ = self.addresses.Centroid().GetPoint()
         self.center = Point(lat, lng)
-        self.id = region.id
+        self.id = str(region.id)
         self.addresses = shape(json.loads(self.addresses.ExportToJson()))
         self.index = index
         self.gdp = gdp
