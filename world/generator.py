@@ -30,7 +30,7 @@ class Generator:
         self.sim = sim
         self.seed = sim.seed
         self.urban, self.shapes = prepare_shapes(sim.geo)
-        self.firm_data = FirmData()
+        self.firm_data = FirmData(self.sim.geo.year)
         self.central = Central('central')
         if self.sim.geo.year == 2000:
             single_ap_muns = pd.read_csv('input/single_aps.csv', sep=';')

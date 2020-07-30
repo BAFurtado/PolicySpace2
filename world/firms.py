@@ -5,7 +5,7 @@ from collections import defaultdict
 
 class FirmData:
     """ Firm growth is estimated from a monthly value of growth observed between the years of 2000 and 2012 """
-    def __init__(self):
+    def __init__(self, year):
         self.num_emp_2000 = self._load('input/firms_by_APs_full.csv')
         # Using APs code of year 2000 (they are not compatible with year 2010 APs)
         self.num_emp_2012 = self._load('input/firms_by_APs12_full.csv')
