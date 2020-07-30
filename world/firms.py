@@ -4,8 +4,10 @@ from collections import defaultdict
 
 
 class FirmData:
+    """ Firm growth is estimated from a monthly value of growth observed between the years of 2000 and 2012 """
     def __init__(self):
         self.num_emp_2000 = self._load('input/firms_by_APs_full.csv')
+        # Using APs code of year 2000 (they are not compatible with year 2010 APs)
         self.num_emp_2012 = self._load('input/firms_by_APs12_full.csv')
 
         self.deltas = {}
@@ -14,11 +16,11 @@ class FirmData:
             num_emp_2012 = self.num_emp_2012[mun_code]
             delta = num_emp_2012 - num_emp_2000
             self.deltas[mun_code] = delta
-            self.avg_monthly_deltas[mun_code] = delta/(12*12)
+            self.avg_monthly_deltas[mun_code] = delta/(12 * 12)
 
     def _load(self, fname):
-        num_emp_aps = pd.read_csv(fname, sep=';', header=0,
-                            decimal=',').apply(pd.to_numeric, errors='coerce')
+        """ Returns the sum of firms of each AP by municipality (all APs summed) """
+        num_emp_aps = pd.read_csv(fname, sep=';', header=0, decimal=',').apply(pd.to_numeric, errors='coerce')
         num_emp = defaultdict(int)
         for idx, row in num_emp_aps.iterrows():
             mun_code = int(str(row['AP'])[:7])
@@ -28,7 +30,9 @@ class FirmData:
 
 
 def firm_growth(sim):
-    """Create new firms according to average historical growth"""
+    """ Create new firms according to average historical growth
+        Location within the municipality is more likely on regions with growth of profit and employees
+        """
 
     # Group firms by region
     firms_by_region = defaultdict(list)
@@ -45,8 +49,7 @@ def firm_growth(sim):
         if growth <= 0:
             continue
 
-        # Calculate average profit and number of employees
-        # for firms in each region
+        # Calculate average profit and number of employees for firms in each region
         avg_profit, avg_n_emp = {}, {}
         for region_id in regions:
             firms = firms_by_region[region_id]
@@ -58,8 +61,7 @@ def firm_growth(sim):
                 avg_profit[region_id] = 0
                 avg_n_emp[region_id] = 0
 
-        # Compute probabilities that a firm starts
-        # in a region, based on that regions's average
+        # Compute probabilities that a firm starts in a region, based on that regions' average
         # profit and number of employees
         region_ps = []
         sum_profit = sum(avg_profit.values())
