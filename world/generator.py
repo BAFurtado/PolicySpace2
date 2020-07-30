@@ -24,9 +24,6 @@ prop_urban = pd.read_csv('input/prop_urban_2000_2010.csv', sep=';')
 quali_sum = pd.read_csv('input/qualification_APs_2000.csv')
 quali_sum.set_index('code', inplace=True)
 
-single_ap_muns = pd.read_csv('input/single_aps.csv', sep=';')
-single_ap_muns = single_ap_muns['mun_code'].tolist()
-
 
 class Generator:
     def __init__(self, sim):
@@ -35,6 +32,12 @@ class Generator:
         self.urban, self.shapes = prepare_shapes(sim.geo)
         self.firm_data = FirmData()
         self.central = Central('central')
+        if self.sim.geo.year == 2000:
+            single_ap_muns = pd.read_csv('input/single_aps.csv', sep=';')
+            self.single_ap_muns = single_ap_muns['mun_code'].tolist()
+        else:
+            single_ap_muns_2010 = pd.read_csv('input/single_aps_2010.csv')
+            self.single_ap_muns = single_ap_muns_2010['mun_code'].tolist()
 
     def gen_id(self):
         """Generate a random id that should
@@ -225,7 +228,7 @@ class Generator:
     def prob_urban(self, region):
         # Only using urban/rural distinction for municipalities with one AP
         mun_code = int(region.id[:7])
-        if mun_code in single_ap_muns:
+        if mun_code in self.single_ap_muns:
             probability_urban = prop_urban[prop_urban['cod_mun'] == int(mun_code)][str(self.sim.geo.year)].iloc[0]
         else:
             probability_urban = 0
