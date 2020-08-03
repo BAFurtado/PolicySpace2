@@ -6,9 +6,9 @@ from collections import defaultdict
 class FirmData:
     """ Firm growth is estimated from a monthly value of growth observed between the years of 2000 and 2012 """
     def __init__(self, year):
-        self.num_emp_2000 = self._load('input/firms_by_APs_full.csv')
+        self.num_emp_2000 = self._load('input/firms_by_APs2000_dados2002_full.csv')
         # Using APs code of year 2000 (they are not compatible with year 2010 APs)
-        self.num_emp_2012 = self._load('input/firms_by_APs12_full.csv')
+        self.num_emp_2012 = self._load('input/firms_by_APs2000_dados2012_full.csv')
 
         self.deltas = {}
         self.avg_monthly_deltas = {}
@@ -20,7 +20,7 @@ class FirmData:
 
     def _load(self, fname):
         """ Returns the sum of firms of each AP by municipality (all APs summed) """
-        num_emp_aps = pd.read_csv(fname, sep=';', header=0, decimal=',').apply(pd.to_numeric, errors='coerce')
+        num_emp_aps = pd.read_csv(fname, sep=';')
         num_emp = defaultdict(int)
         for idx, row in num_emp_aps.iterrows():
             mun_code = int(str(row['AP'])[:7])
