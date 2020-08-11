@@ -57,15 +57,14 @@ def pop_age_data(pop, code, age, percent_pop):
     # when it's better to have at least 1 agent
     if rounded == 0 and math.ceil(n_pop) == 1:
         return 1
-
     return rounded
 
 
-def load_pops(mun_codes, params):
+def load_pops(mun_codes, params, year):
     """Load populations for specified municipal codes."""
     pops = {}
     for name, gender in [('men', 'male'), ('women', 'female')]:
-        pop = pd.read_csv('input/pop_{}.csv'.format(name), sep=';', header=0, decimal=',')
+        pop = pd.read_csv(f'input/pop_{name}_{year}.csv', sep=';', header=0, decimal=',')
         pop = pop[pop['cod_mun'].isin(mun_codes)]
 
         # rename from cod_mun b/c we may also have
@@ -73,7 +72,7 @@ def load_pops(mun_codes, params):
         pop.rename(columns={'cod_mun': 'code'}, inplace=True)
         pops[gender] = pop
 
-    ap_pops = pd.read_csv('input/num_people_age_gender_AP.csv', sep=';', header=0)
+    ap_pops = pd.read_csv(f'input/num_people_age_gender_AP_{year}.csv', sep=';', header=0)
     for code, group in ap_pops.groupby('AREAP'):
         if not int(str(code)[:7]) in mun_codes:
             continue
@@ -110,7 +109,6 @@ class PopulationEstimates:
             x = pops.index.values.astype('int')
             y = pops.values
             self.linear_models[mun_code] = sm.OLS(y, x).fit()
-
         self.data = df.to_dict()
 
     def estimate_for_year(self, mun_code, year):

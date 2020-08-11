@@ -115,7 +115,7 @@ class Simulation:
 
         self.labor_market = markets.LaborMarket(self.seed)
         self.housing = markets.HousingMarket()
-        self.pops, self.total_pop = population.load_pops(self.geo.mun_codes, self.PARAMS)
+        self.pops, self.total_pop = population.load_pops(self.geo.mun_codes, self.PARAMS, self.geo.year)
         self.regions, self.agents, self.houses, self.families, self.firms, self.central = self.generate()
         self.construction_firms = {f.id: f for f in self.firms.values() if f.type == 'CONSTRUCTION'}
         self.consumer_firms = {f.id: f for f in self.firms.values() if f.type == 'CONSUMER'}

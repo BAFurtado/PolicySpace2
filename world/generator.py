@@ -78,7 +78,7 @@ class Generator:
             num_families = int(num_houses / self.sim.PARAMS['MEMBERS_PER_FAMILY'])
             num_houses = int(num_houses / self.sim.PARAMS['MEMBERS_PER_FAMILY'] *
                              (1 + self.sim.PARAMS['HOUSE_VACANCY']))
-            num_firms = int(self.firm_data.num_emp_2000[int(region.id)] * self.sim.PARAMS['PERCENTAGE_ACTUAL_POP'])
+            num_firms = int(self.firm_data.num_emp_t0[int(region.id)] * self.sim.PARAMS['PERCENTAGE_ACTUAL_POP'])
 
             regional_families = self.create_families(num_families)
             regional_houses = self.create_houses(num_houses, region)
