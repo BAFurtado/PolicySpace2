@@ -18,7 +18,6 @@ def prepare_shapes_2010(geo):
         for mun in urban.CD_MUN
     }
 
-    # TODO: When adapting for all municipalities, include further shapes from censo_2010 repo *.all_muns.shp
     codes = [str(code) for code in geo.mun_codes]
 
     my_shapes = list()

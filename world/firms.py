@@ -6,17 +6,23 @@ from collections import defaultdict
 class FirmData:
     """ Firm growth is estimated from a monthly value of growth observed between the years of 2000 and 2012 """
     def __init__(self, year):
-        self.num_emp_2000 = self._load('input/firms_by_APs2000_dados2002_full.csv')
         # Using APs code of year 2000 (they are not compatible with year 2010 APs)
-        self.num_emp_2012 = self._load('input/firms_by_APs2000_dados2012_full.csv')
+        # If year == 2000, data refers to years 2002 and 2012
+        # If year == 2010, data refers to years 2010 and 2017
+        self.num_emp_t0 = self._load(f'input/firms_by_APs{year}_t0_full.csv')
+        self.num_emp_t1 = self._load(f'input/firms_by_APs{year}_t1_full.csv')
 
         self.deltas = {}
         self.avg_monthly_deltas = {}
-        for mun_code, num_emp_2000 in self.num_emp_2000.items():
-            num_emp_2012 = self.num_emp_2012[mun_code]
-            delta = num_emp_2012 - num_emp_2000
+        for mun_code, num_emp_t0 in self.num_emp_t0.items():
+            num_emp_t1 = self.num_emp_t1[mun_code]
+            delta = num_emp_t1 - num_emp_t0
             self.deltas[mun_code] = delta
-            self.avg_monthly_deltas[mun_code] = delta/(12 * 12)
+            if year == 2000:
+                num_months = 12 * 12
+            else:
+                num_months = 12 * 7
+            self.avg_monthly_deltas[mun_code] = delta/num_months
 
     def _load(self, fname):
         """ Returns the sum of firms of each AP by municipality (all APs summed) """
