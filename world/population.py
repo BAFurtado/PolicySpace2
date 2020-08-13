@@ -64,7 +64,7 @@ def load_pops(mun_codes, params, year):
     """Load populations for specified municipal codes."""
     pops = {}
     for name, gender in [('men', 'male'), ('women', 'female')]:
-        pop = pd.read_csv(f'input/pop_{name}_{year}.csv', sep=';', header=0, decimal=',')
+        pop = pd.read_csv(f'input/pop_{name}_{year}.csv', sep=';')
         pop = pop[pop['cod_mun'].isin(mun_codes)]
 
         # rename from cod_mun b/c we may also have
