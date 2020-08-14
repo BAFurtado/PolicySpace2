@@ -289,5 +289,5 @@ class Generator:
         idx = sel.idxmax(1)
         loc = idx.loc[int(cod)]
         if self.sim.geo.year == 2010:
-            return self.years_study[loc]
+            return int(self.years_study[loc])
         return int(loc)

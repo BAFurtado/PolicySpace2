@@ -8,10 +8,8 @@ AGENTS_PATH = 'StoragedAgents'
 if not os.path.exists(AGENTS_PATH):
     os.mkdir(AGENTS_PATH)
 
-# These are the params which specifically
-# affect agent generation.
-# We check when these change so
-# we know to re-generate the agent population.
+# These are the params which specifically affect agent generation.
+# We check when these change so we know to re-generate the agent population.
 GENERATOR_PARAMS = [
     'MEMBERS_PER_FAMILY',
     'HOUSE_VACANCY',
