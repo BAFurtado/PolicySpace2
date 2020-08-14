@@ -21,8 +21,6 @@ logger = logging.getLogger('generator')
 
 # Necessary input Data
 prop_urban = pd.read_csv('input/prop_urban_2000_2010.csv', sep=';')
-quali_sum = pd.read_csv('input/qualification_APs_2000.csv')
-quali_sum.set_index('code', inplace=True)
 
 
 class Generator:
@@ -38,6 +36,13 @@ class Generator:
         else:
             single_ap_muns_2010 = pd.read_csv('input/single_aps_2010.csv')
             self.single_ap_muns = single_ap_muns_2010['mun_code'].tolist()
+        self.quali = self.load_quali()
+        # Qualification 2010 degrees of instruction transformation into years of study
+        self.years_study = {'1': self.seed.choice(['1', '2']),
+                            '2': self.seed.choice(['1', '2']),
+                            '3': self.seed.choice(['4', '6', '8', '9', '10', '11']),
+                            '4': self.seed.choice(['12', '13', '14']),
+                            '5': self.seed.choice(['1', '2', '4', '6', '8', '9'])}
 
     def gen_id(self):
         """Generate a random id that should
@@ -274,8 +279,15 @@ class Generator:
 
         return sector
 
+    def load_quali(self):
+        quali_sum = pd.read_csv(f'input/qualification_APs_{self.sim.geo.year}.csv')
+        quali_sum.set_index('code', inplace=True)
+        return quali_sum
+
     def qual(self, cod):
-        sel = quali_sum > self.seed.random()
+        sel = self.quali > self.seed.random()
         idx = sel.idxmax(1)
         loc = idx.loc[int(cod)]
+        if self.sim.geo.year == 2010:
+            return self.years_study[loc]
         return int(loc)
