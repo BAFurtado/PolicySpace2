@@ -1,6 +1,5 @@
 # THE ROOT OUTPUT DATA LOCATION #######################################################################################
 # Change your output directory as necessary
-import datetime
 
 
 OUTPUT_PATH = 'output'
@@ -60,12 +59,6 @@ SAVE_TRANSIT_DATA = False
 # of the listed codes (as strings).
 # If None, include all
 LIMIT_SAVED_TRANSIT_REGIONS = None
-
-# Selecting the starting year to build the Agents, can be: 1991, 2000 or 2010
-STARTING_DAY = datetime.date(2010, 1, 1)
-
-# Maximum running time (restrained by official data) is 30 years,
-TOTAL_DAYS = (datetime.date(2020, 1, 1) - STARTING_DAY).days
 
 # Force generation of new population
 FORCE_NEW_POPULATION = True

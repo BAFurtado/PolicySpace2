@@ -13,27 +13,26 @@ import logging
 import os
 import random
 import sys
+from collections import defaultdict
+from datetime import datetime
+from glob import glob
+from itertools import product
 
 import click
 import matplotlib
 # import validation_tentative
 import numpy as np
 import pandas as pd
+from joblib import Parallel, delayed
 
 import conf
-
-matplotlib.use('agg') # necessary for multiprocess plotting
-
-from glob import glob
 from analysis import report
-from datetime import datetime
-from simulation import Simulation
-from collections import defaultdict
-from itertools import product
-from joblib import Parallel, delayed
-from analysis.plotting import Plotter, MissingDataError
 from analysis.output import OUTPUT_DATA_SPEC
+from analysis.plotting import Plotter, MissingDataError
+from simulation import Simulation
 from web import app
+
+matplotlib.use('agg')
 
 logger = logging.getLogger('main')
 logging.basicConfig(level=logging.INFO)
@@ -121,7 +120,7 @@ def multiple_runs(overrides, runs, cpus, output_dir, fix_seeds=False):
             'avg_type': conf.RUN['AVERAGE_TYPE']
         })
     with open(os.path.join(output_dir, 'meta.json'), 'w') as f:
-        json.dump(results, f)
+        json.dump(results, f, default=str)
 
     plot_results(output_dir)
 

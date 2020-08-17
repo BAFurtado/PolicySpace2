@@ -23,9 +23,9 @@ from world.regions import REGION_CACHE
 class Simulation:
     def __init__(self, params, output_path):
         self.PARAMS = params
-        self.geo = Geography(params, conf.RUN['STARTING_DAY'].year)
+        self.geo = Geography(params, self.PARAMS['STARTING_DAY'].year)
         self.funds = Funds(self)
-        self.clock = clock.Clock(conf.RUN['STARTING_DAY'])
+        self.clock = clock.Clock(self.PARAMS['STARTING_DAY'])
         self.output = analysis.Output(self, output_path)
         self.stats = analysis.Statistics()
         self.logger = analysis.Logger(hex(id(self))[-5:])
@@ -85,11 +85,11 @@ class Simulation:
         """Runs the simulation"""
         self.logger.logger.info('Starting run.')
         self.logger.logger.info('Output: {}'.format(self.output.path))
-        self.logger.logger.info('Params: {}'.format(json.dumps(self.PARAMS)))
+        self.logger.logger.info('Params: {}'.format(json.dumps(self.PARAMS, default=str)))
         self.logger.logger.info('Seed: {}'.format(self._seed))
 
         self.logger.logger.info('Running...')
-        while self.clock.days < conf.RUN['STARTING_DAY'] + datetime.timedelta(days=conf.RUN['TOTAL_DAYS']):
+        while self.clock.days < self.PARAMS['STARTING_DAY'] + datetime.timedelta(days=self.PARAMS['TOTAL_DAYS']):
             self.daily()
             if self.clock.months == 1 and conf.RUN['SAVE_TRANSIT_DATA']:
                 self.output.save_transit_data(self, 'start')
