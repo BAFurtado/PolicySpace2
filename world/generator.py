@@ -117,7 +117,7 @@ class Generator:
             to_rent = [h for h in regional_houses.values() if h.family_id is None]
             self.sim.housing.rental.rental_market(renting, self.sim, to_rent)
 
-            # Saving on all might dictionary of families
+            # Saving on almighty dictionary of families
             for family in regional_families.keys():
                 my_families[family] = regional_families[family]
 
@@ -130,17 +130,9 @@ class Generator:
             try:
                 assert len([h for h in regional_houses.values() if h.owner_id is None]) == 0
             except AssertionError:
-                print('stop nao tem dono')
+                print('Houses without ownership')
 
         return my_agents, my_houses, my_families, my_firms
-
-    def randomly_assign_houses(self, houses, families):
-        families = list(families)
-        houses = [h for h in houses if h.owner_id is None]
-        for house in houses:
-            family = self.seed.choice(families)
-            house.owner_id = family.id
-            family.owned_houses.append(house)
 
     def create_agents(self, region):
         agents = {}
@@ -273,6 +265,14 @@ class Generator:
                     house_id = None
         assert len(unclaimed) == 0
         return families
+
+    def randomly_assign_houses(self, houses, families):
+        families = list(families)
+        houses = [h for h in houses if h.owner_id is None]
+        for house in houses:
+            family = self.seed.choice(families)
+            house.owner_id = family.id
+            family.owned_houses.append(house)
 
     def create_firms(self, num_firms, region):
         sector = {}
