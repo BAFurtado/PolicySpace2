@@ -33,12 +33,15 @@ class Generator:
         single_ap_muns = pd.read_csv(f'input/single_aps_{self.sim.geo.year}.csv')
         self.single_ap_muns = single_ap_muns['mun_code'].tolist()
         self.quali = self.load_quali()
+
+    def years_study(self, loc):
         # Qualification 2010 degrees of instruction transformation into years of study
-        self.years_study = {'1': self.seed.choice(['1', '2']),
-                            '2': self.seed.choice(['4', '6', '8']),
-                            '3': self.seed.choice(['9', '10', '11']),
-                            '4': self.seed.choice(['12', '13', '14']),
-                            '5': self.seed.choice(['1', '2', '4', '6', '8', '9'])}
+        parameters = {'1': self.seed.choice(['1', '2']),
+                      '2': self.seed.choice(['4', '6', '8']),
+                      '3': self.seed.choice(['9', '10', '11']),
+                      '4': self.seed.choice(['12', '13', '14']),
+                      '5': self.seed.choice(['1', '2', '4', '6', '8', '9'])}
+        return parameters[loc]
 
     def gen_id(self):
         """Generate a random id that should
@@ -295,5 +298,5 @@ class Generator:
         idx = sel.idxmax(1)
         loc = idx.loc[int(cod)]
         if self.sim.geo.year == 2010:
-            return int(self.years_study[loc])
+            return int(self.years_study(loc))
         return int(loc)
