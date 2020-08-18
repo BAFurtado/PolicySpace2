@@ -71,6 +71,9 @@ class Generator:
         my_houses = {}
         my_firms = {}
 
+        if self.sim.geo.year == 2010:
+            avg_num_fam = pd.read_csv('input/average_num_members_families_2010.csv')
+
         for region_id, region in regions.items():
             logger.info('Generating region {}'.format(region_id))
             num_houses = 0
@@ -80,7 +83,14 @@ class Generator:
             for agent in regional_agents.keys():
                 my_agents[agent] = regional_agents[agent]
 
-            num_families = int(num_houses / self.sim.PARAMS['MEMBERS_PER_FAMILY'])
+            if self.sim.geo.year == 2010:
+                try:
+                    num_families = int(num_houses /
+                                       avg_num_fam[avg_num_fam['AREAP'] == int(region_id)].iloc[0]['avg_num_people'])
+                except KeyError:
+                    num_families = int(num_houses / self.sim.PARAMS['MEMBERS_PER_FAMILY'])
+            else:
+                num_families = int(num_houses / self.sim.PARAMS['MEMBERS_PER_FAMILY'])
             num_houses = int(num_houses / self.sim.PARAMS['MEMBERS_PER_FAMILY'] *
                              (1 + self.sim.PARAMS['HOUSE_VACANCY']))
             num_firms = int(self.firm_data.num_emp_t0[int(region.id)] * self.sim.PARAMS['PERCENTAGE_ACTUAL_POP'])
