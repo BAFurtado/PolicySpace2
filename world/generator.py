@@ -30,12 +30,8 @@ class Generator:
         self.urban, self.shapes = prepare_shapes(sim.geo)
         self.firm_data = FirmData(self.sim.geo.year)
         self.central = Central('central')
-        if self.sim.geo.year == 2000:
-            single_ap_muns = pd.read_csv('input/single_aps.csv', sep=';')
-            self.single_ap_muns = single_ap_muns['mun_code'].tolist()
-        else:
-            single_ap_muns_2010 = pd.read_csv('input/single_aps_2010.csv')
-            self.single_ap_muns = single_ap_muns_2010['mun_code'].tolist()
+        single_ap_muns = pd.read_csv(f'input/single_aps_{self.sim.geo.year}.csv')
+        self.single_ap_muns = single_ap_muns['mun_code'].tolist()
         self.quali = self.load_quali()
         # Qualification 2010 degrees of instruction transformation into years of study
         self.years_study = {'1': self.seed.choice(['1', '2']),
