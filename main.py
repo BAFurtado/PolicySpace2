@@ -225,7 +225,7 @@ def plot_runs_with_avg(run_data):
 
 def plot_results(output_dir):
     """Plot results of multiple simulations"""
-    logger.info('Plotting results...') # TODO
+    logger.info('Plotting results...')
     results = json.load(open(os.path.join(output_dir, 'meta.json'), 'r'))
     avgs = []
     for r in results:

@@ -10,14 +10,14 @@ if not os.path.exists(AGENTS_PATH):
 
 # These are the params which specifically affect agent generation.
 # We check when these change so we know to re-generate the agent population.
-# TODO: Include starting year as a parameter. Change its location from run to params
 GENERATOR_PARAMS = [
     'MEMBERS_PER_FAMILY',
     'HOUSE_VACANCY',
     'SIMPLIFY_POP_EVOLUTION',
     'PERCENTAGE_ACTUAL_POP',
     'LICENSES_PER_REGION',
-    'PERCENT_CONSTRUCTION_FIRMS'
+    'PERCENT_CONSTRUCTION_FIRMS',
+    'STARTING_DAY'
 ]
 
 OUTPUT_DATA_SPEC = {

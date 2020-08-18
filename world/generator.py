@@ -39,8 +39,8 @@ class Generator:
         self.quali = self.load_quali()
         # Qualification 2010 degrees of instruction transformation into years of study
         self.years_study = {'1': self.seed.choice(['1', '2']),
-                            '2': self.seed.choice(['1', '2']),
-                            '3': self.seed.choice(['4', '6', '8', '9', '10', '11']),
+                            '2': self.seed.choice(['4', '6', '8']),
+                            '3': self.seed.choice(['9', '10', '11']),
                             '4': self.seed.choice(['12', '13', '14']),
                             '5': self.seed.choice(['1', '2', '4', '6', '8', '9'])}
 
