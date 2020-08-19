@@ -1,5 +1,5 @@
 from world.population import marriage_data
-from world.regions import distance_to_firm
+#from world.regions import distance_to_firm
 from .family import Family
 from .house import House
 from .region import Region
@@ -82,8 +82,7 @@ class Agent:
         """How far the agent travels for work"""
         return self.distance
 
-    @commute.setter
-    def commute(self, firm):
+    def set_commute(self, firm):
         """Set (cache) commute according to their employer firm"""
         if firm is not None:
             self.distance = self.distance_to_firm(firm)
@@ -97,7 +96,10 @@ class Agent:
     def distance_to_firm(self, firm):
         # If no house, use region center
         # TODO: Check whether no house might be a case at all
-        if self.family.house is not None:
-            return self.family.house.distance_to_firm(firm)
-        else:
-            return distance_to_firm(self.region_id, firm)
+        if not self.family.house:
+            print('###############', self)
+        self.family.house.distance_to_firm(firm)
+        # if self.family.house is not None:
+        #     return self.family.house.distance_to_firm(firm)
+        # else:
+        #     return distance_to_firm(self.region_id, firm)

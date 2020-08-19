@@ -11,22 +11,21 @@ class House:
     They may have changing owners and changing occupancy."""
     Owner = Owner
 
-    def __init__(self, id, address, size, price, region_id, quality, family_id=None, owner_id=None, owner_type=Owner.FAMILY):
-        self.id = id
+    def __init__(self, _id, address, size, price, region_id, quality, family_id=None, owner_id=None,
+                 owner_type=Owner.FAMILY):
+        self.id = _id
         self.address = address
         self.size = size
         self.price = price
         self.region_id = region_id
         self.quality = quality
-        # owner may be the occupant or the house may be vacant
+        # Owner may be the occupant or the house may be vacant or rented
         self.family_id = family_id
         self.owner_id = owner_id
         self.owner_type = owner_type
         self.rent_data = None
         self.on_market = 0
-
-        # cache firm distances
-        # since houses never change address
+        # Cache firm distances, since houses never change address
         self._firm_distances = {}
 
     def update_price(self, regions):
@@ -63,8 +62,8 @@ class House:
 
     def __repr__(self):
         return 'House ID %s, Family ID %s, Owner ID %s, Size %s, Price$ %s, Region %s' % (self.id, self.family_id,
-                                                                                           self.owner_id, self.size,
-                                                                                           self.price, self.region_id)
+                                                                                          self.owner_id, self.size,
+                                                                                          self.price, self.region_id)
 
     def distance_to_firm(self, firm):
         if firm.id not in self._firm_distances:

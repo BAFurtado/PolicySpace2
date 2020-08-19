@@ -17,7 +17,7 @@ from world import Generator, demographics, clock, population
 from world.firms import firm_growth
 from world.funds import Funds
 from world.geography import Geography, STATES_CODES, state_string
-from world.regions import REGION_CACHE
+#from world.regions import REGION_CACHE
 
 
 class Simulation:
@@ -120,9 +120,9 @@ class Simulation:
         self.construction_firms = {f.id: f for f in self.firms.values() if f.type == 'CONSTRUCTION'}
         self.consumer_firms = {f.id: f for f in self.firms.values() if f.type == 'CONSUMER'}
 
-        for region in self.regions.values():
-            REGION_CACHE['centers'][region.id] = region.center
-            REGION_CACHE['firm_distances'][region.id] = {}
+        # for region in self.regions.values():
+        #     REGION_CACHE['centers'][region.id] = region.center
+        #     REGION_CACHE['firm_distances'][region.id] = {}
 
         # Group regions into their municipalities
         self.mun_to_regions = defaultdict(set)
@@ -143,6 +143,8 @@ class Simulation:
         total = actual = self.labor_market.num_candidates
         actual_unemployment = self.stats.global_unemployment_rate / 100
         # Simple average of 6 Metropolitan regions Brazil January 2000
+        test = [f for f in self.families.values() if f.house is None]
+        assert len(test) == 0, print(test)
         while actual / total > .086:
             self.labor_market.hire_fire(self.firms, self.PARAMS['LABOR_MARKET'])
             self.labor_market.assign_post(actual_unemployment, None, self.PARAMS)
@@ -259,7 +261,6 @@ class Simulation:
         self.labor_market.assign_post(current_unemployment, wage_deciles, self.PARAMS)
 
         # Initiating Real Estate Market
-        # TODO: improve general rationality for wishing to enter the market
         # Tax transaction taxes (ITBI) when selling house
         # Property tax (IPTU) collected. One twelfth per month
         self.housing.housing_market(self)

@@ -89,7 +89,7 @@ class LaborMarket:
                 transit_cost = params['PRIVATE_TRANSIT_COST'] if c.has_car else params['PUBLIC_TRANSIT_COST']
                 # TODO: check units of distance_to_firm and relevance comparatively to potential wage.
                 #  Anyway, it differentiates among candidates for the same firm
-                score = wage - (c.distance_to_firm(firm) * transit_cost)
+                score = wage - (c.family.house.distance_to_firm(firm) * transit_cost)
                 if flag:
                     offers.append((firm, c, c.qualification + score))
                 else:
@@ -110,7 +110,7 @@ class LaborMarket:
             return cand_still_looking
 
     def apply_assign(self, chosen, firm):
-        chosen.commute = firm
+        chosen.set_commute(firm)
         firm.add_employee(chosen)
 
     def look_for_jobs(self, agents):
@@ -133,5 +133,5 @@ class LaborMarket:
         return self.available_postings, self.candidates
 
 
-def fast_closest(by_dist, firm):
-    return min(by_dist, key=lambda x: x.distance_to_firm(firm))
+# def fast_closest(by_dist, firm):
+#     return min(by_dist, key=lambda x: x.distance_to_firm(firm))

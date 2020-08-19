@@ -190,7 +190,7 @@ class Output:
             mun_gini = sim.stats.calculate_regional_GINI(mun_families)
             mun_house_values = sim.stats.calculate_avg_regional_house_price(mun_families)
             mun_unemployment = sim.stats.update_unemployment(mun_agents)
-            # region.total_commute = commuting
+            region.total_commute = commuting
 
             mun_cumulative_treasure = 0
             licenses = 0

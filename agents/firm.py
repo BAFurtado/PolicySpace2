@@ -191,7 +191,7 @@ class Firm:
         if self.employees:
             id = seed.choice(list(self.employees.keys()))
             self.employees[id].firm_id = None
-            self.employees[id].commute = None
+            self.employees[id].set_commute(None)
             del self.employees[id]
 
     def is_worker(self, id):
