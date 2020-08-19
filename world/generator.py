@@ -285,7 +285,6 @@ class Generator:
             else:
                 f = Firm(firm_id, address, total_balance, region.id)
             sector[f.id] = f
-
         return sector
 
     def load_quali(self):

@@ -14,7 +14,7 @@ import os
 import random
 import sys
 from collections import defaultdict
-from datetime import datetime
+import datetime
 from glob import glob
 from itertools import product
 
@@ -248,7 +248,7 @@ def impute(data):
 
 
 def gen_output_dir(command):
-    timestamp = datetime.utcnow().isoformat().replace(':', '_')
+    timestamp = datetime.datetime.utcnow().isoformat().replace(':', '_')
     run_id = '{}__{}'.format(command, timestamp)
     return os.path.join(conf.RUN['OUTPUT_PATH'], run_id)
 
@@ -305,6 +305,9 @@ def sensitivity(ctx, params):
             # round to 8 decimal places
             p_vals = [round(v, 8) for v in p_vals]
 
+        elif param == 'STARTING_DAY':
+            p_name = param
+            p_vals = [datetime.date(2000, 1, 1), datetime.date(2010, 1, 1)]
         # else, assume boolean
         else:
             p_name = param
