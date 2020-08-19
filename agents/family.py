@@ -1,5 +1,4 @@
 import datetime
-#from world.regions import distance_to_firm
 
 
 class Family:
@@ -14,11 +13,11 @@ class Family:
     - Mobile, as it changes houses when in the housing market
     """
 
-    def __init__(self, id,
+    def __init__(self, _id,
                  balance=0,
                  savings=0,
                  house=None):
-        self.id = id
+        self.id = _id
         self.balance = balance
         self.savings = savings
         self.wealth = None

@@ -131,7 +131,3 @@ class LaborMarket:
 
     def __repr__(self):
         return self.available_postings, self.candidates
-
-
-# def fast_closest(by_dist, firm):
-#     return min(by_dist, key=lambda x: x.distance_to_firm(firm))

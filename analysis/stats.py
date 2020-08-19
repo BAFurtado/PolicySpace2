@@ -157,7 +157,7 @@ class Statistics(object):
         for family in families:
             for member in family.members.values():
                 if member.is_employed:
-                    dummy_total += member.commute
+                    dummy_total += member.distance
         return dummy_total
 
     def average_qli(self, regions):
