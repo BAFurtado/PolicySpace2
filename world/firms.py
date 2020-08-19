@@ -19,7 +19,7 @@ class FirmData:
             delta = num_emp_t1 - num_emp_t0
             self.deltas[mun_code] = delta
             if year == 2000:
-                num_months = 12 * 12
+                num_months = 12 * 10
             else:
                 num_months = 12 * 7
             self.avg_monthly_deltas[mun_code] = delta/num_months
