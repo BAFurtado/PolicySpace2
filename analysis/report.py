@@ -36,12 +36,12 @@ def stats(filename):
     dat_month_mun = dat.groupby(['month', 'region_id'], as_index=False)
 
     # Plotting AGE by Municipality and region
-    temp = pd.DataFrame(dat_month_mun['age'].mean())
+    temp = pd.DataFrame(dat_month_mun['age'].median())
     temp = temp.pivot(index='month', columns='region_id', values='age')
     plot_data = temp.plot(title='Evolution of AGE by Municipality, monthly\nAgents : %s' %
                                        title_pop_val + '% of Population')
     plot_data.set_xlabel('Years')
-    plot_data.set_ylabel('Average of AGE (in years)')
+    plot_data.set_ylabel('Median of age (in years)')
     plot_data.legend(loc='best', ncol=4, fancybox=True, shadow=True, labels=names_mun)
     plot_data.set_xticks(list_of_years_division)
     plot_data.set_xticklabels(list_of_years)

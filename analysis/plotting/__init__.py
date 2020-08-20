@@ -157,15 +157,15 @@ class Plotter:
 
         to_plot = {
             'price': {
-                'title': 'Mean house prices by month',
+                'title': 'Median house prices by month',
                 'name': 'prices'
             },
             'on_market': {
-                'title': 'Mean house time on market by month',
+                'title': 'Median house time on market by month',
                 'name': 'time_on_market'
             }
         }
-        df = dat.groupby(['month', 'mun_id'], as_index=False).mean()
+        df = dat.groupby(['month', 'mun_id'], as_index=False).median()
         for k, d in to_plot.items():
             title = d['title']
             name = d['name']
@@ -182,39 +182,39 @@ class Plotter:
 
         to_plot = {
             'house_rent': {
-                'title': 'Mean rent value by month',
+                'title': 'Median rent value by month',
                 'name': 'rents'
             },
             'total_wage': {
-                'title': 'Mean total wage by month',
+                'title': 'Median total wage by month',
                 'name': 'total_wages'
             },
             'savings': {
-                'title': 'Mean savings by month',
+                'title': 'Median savings by month',
                 'name': 'savings'
             },
             'affordable_rent': {
-                'title': 'Mean number of families for whom rent is affordable (30%) by month',
+                'title': 'Median number of families for whom rent is affordable (30%) by month',
                 'name': 'affordable'
             },
             'income_towards_rent': {
-                'title': 'Mean rent as share of income by month',
+                'title': 'Median rent as share of income by month',
                 'name': 'rent_shares'
             },
             'renting': {
-                'title': 'Mean number of families that are renting by month',
+                'title': 'Median number of families that are renting by month',
                 'name': 'renting'
             }
         }
 
-        df = dat.groupby(['month', 'mun_id'], as_index=False).mean()
+        df = dat.groupby(['month', 'mun_id'], as_index=False).median()
         for k, d in to_plot.items():
             title = d['title']
             name = d['name']
             dat_to_plot = df.pivot(index='month', columns='mun_id', values=k).astype(float)
             dats_to_plot = [dat_to_plot[c] for c in dat_to_plot.columns.values]
             names_mun = [mun_codes[v] for v in list(dat_to_plot.columns.values)]
-            fig = self.make_plot(dats_to_plot, title, labels=names_mun, y_label='Mean {}'.format(name))
+            fig = self.make_plot(dats_to_plot, title, labels=names_mun, y_label='Median {}'.format(name))
             self.save_fig(fig, 'temp_families_{}'.format(name))
 
     def plot_regional_stats(self):
@@ -294,5 +294,6 @@ class Plotter:
             fig.savefig(os.path.join(self.output_path,
                                      'temp_spatial_plot_{}_{}.{}'.format(name, text, conf.RUN['PLOT_FORMAT'])),
                         format=conf.RUN['PLOT_FORMAT'], close=True, verbose=True, dpi=600)
-            plt.close(fig) # reset figure
+            # Reset figure
+            plt.close(fig)
         return plt
