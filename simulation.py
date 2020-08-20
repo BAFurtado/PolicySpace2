@@ -153,9 +153,6 @@ class Simulation:
         pass
 
     def monthly(self):
-        # Save month for statistics purpose
-        present_month = self.clock.months
-        present_year = self.clock.year
         current_unemployment = self.stats.global_unemployment_rate / 100
 
         # Create new land licenses
@@ -180,11 +177,11 @@ class Simulation:
 
             birthdays = defaultdict(list)
             for agent in self.agents.values():
-                if (present_month % 12 + 1) == agent.month \
+                if (self.clock.months % 12 + 1) == agent.month \
                         and agent.region_id[:2] == state_str:
                     birthdays[agent.age].append(agent)
 
-            demographics.check_demographics(self, birthdays, present_year,
+            demographics.check_demographics(self, birthdays, self.clock.year,
                                             mortality_men, mortality_women, fertility)
 
         # Adjust population for immigration
@@ -195,7 +192,7 @@ class Simulation:
 
         # Firms initialization
         for firm in self.firms.values():
-            firm.actual_month = present_month
+            firm.present = self.clock
             firm.amount_sold = 0
             if firm.type is not 'CONSTRUCTION':
                 firm.revenue = 0
@@ -209,7 +206,7 @@ class Simulation:
         self.central.collect_loan_payments(self)
         # Family investments
         for fam in self.families.values():
-            fam.invest(self.PARAMS['INTEREST_RATE'], self.central, present_year, (present_month % 12) + 1)
+            fam.invest(self.PARAMS['INTEREST_RATE'], self.central, self.clock.year, (self.clock.months % 12) + 1)
 
         # FIRMS
         for firm in self.firms.values():
@@ -263,7 +260,7 @@ class Simulation:
 
         # Using all collected taxes to improve public services
         bank_taxes = self.central.collect_taxes()
-        self.funds.invest_taxes(present_year, bank_taxes)
+        self.funds.invest_taxes(self.clock.year, bank_taxes)
 
         # Pass monthly information to be stored in Statistics
         self.output.save_stats_report(self, bank_taxes)
