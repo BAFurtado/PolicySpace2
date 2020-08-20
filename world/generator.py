@@ -39,7 +39,7 @@ class Generator:
         parameters = {'1': self.seed.choice(['1', '2']),
                       '2': self.seed.choice(['4', '6', '8']),
                       '3': self.seed.choice(['9', '10', '11']),
-                      '4': self.seed.choice(['12', '13', '14']),
+                      '4': self.seed.choice(['12', '13', '14', '15']),
                       '5': self.seed.choice(['1', '2', '4', '6', '8', '9'])}
         return parameters[loc]
 

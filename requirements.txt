@@ -1,0 +1,33 @@
+name: ps2
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.6
+  - shapely
+  - gdal
+  - pandas
+  - descartes
+  - geopandas=0.7.0
+  - seaborn
+  - numba
+  - matplotlib
+  - scipy
+  - six
+  - statsmodels
+  - pyproj
+  - fiona
+  - cycler
+  - joblib
+  - scikit-learn
+  - flask-wtf
+  - psutil
+  - flask
+  - certifi
+  - threadpoolctl==2.0.0
+  - wtforms==2.3.1
+  - numpy~=1.18.4
+  - xlrd
+  - bokeh
+prefix: /home/furtadobb/anaconda3/envs/ps2
+
