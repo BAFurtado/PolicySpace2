@@ -155,8 +155,8 @@ class HousingMarket:
 
         if house.family_owner:
             # Deposit money on selling family account
+            assert (house.owner_id in sim.firms) is False
             sim.families[house.owner_id].update_balance(price - taxes)
-
             # Transfer ownership
             sim.families[house.owner_id].owned_houses.remove(house)
 
@@ -164,7 +164,6 @@ class HousingMarket:
         else:
             # Deposit money on selling firm
             sim.firms[house.owner_id].update_balance(price - taxes, sim.PARAMS['CONSTRUCTION_ACC_CASH_FLOW'])
-
             # Transfer ownership
             sim.firms[house.owner_id].houses_inventory.remove(house)
 

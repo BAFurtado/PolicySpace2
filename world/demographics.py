@@ -81,6 +81,8 @@ def die(sim, agent):
         # Eliminate families with no members
         id = agent.family.id
         del sim.families[id]
+        unassigned_houses = [h for h in sim.houses.values() if h.owner_id == id]
+        assert len(unassigned_houses) == 0
 
         savings = agent.family.grab_savings(sim.central, sim.clock.year, (sim.clock.months % 12) + 1)
         relatives = [sim.families[i] for i in agent.family.relatives if i in sim.families]
