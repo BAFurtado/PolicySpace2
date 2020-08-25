@@ -333,7 +333,8 @@ class ConstructionFirm(Firm):
             self.update_cash_flow(amount, acc_months)
 
     def update_cash_flow(self, amount, acc_months):
-        for i in range(acc_months):
+        acc_months = int(acc_months)
+        for i in range(int(acc_months)):
             self.cash_flow[i] += amount/acc_months
 
     def wage_base(self, unemployment, ignore_unemployment):
