@@ -13,8 +13,7 @@ STICKY_PRICES = .8
 SIZE_MARKET = 10
 
 # Frequency firms enters in the market
-# TODO: Check if this frequency (95% of the time is adequate)
-LABOR_MARKET = 0.95
+LABOR_MARKET = 0.35
 
 # Percentage of employees firms hire by distance
 PCT_DISTANCE_HIRING = .17
@@ -131,7 +130,7 @@ PUBLIC_TRANSIT_COST = 0.2
 
 # Percentage of actual population to run the simulation
 # Minimum value to run depends on the size of municipality 0,001 is recommended minimum
-PERCENTAGE_ACTUAL_POP = 0.002
+PERCENTAGE_ACTUAL_POP = 0.005
 
 # Write exactly like the list
 PROCESSING_ACPS = ['BRASILIA']

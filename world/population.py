@@ -171,7 +171,7 @@ def immigration(sim):
             families.append(f)
 
         # Pass through housing market
-        sim.housing.allocate_houses(sim, families)
+        # sim.housing.allocate_houses(sim, families)
 
         # Some might have tried to buy houses but failed, pass them directly to the rental market
         homeless = [f for f in families if f.house is None]
@@ -271,3 +271,5 @@ def marriage(sim):
                     sim.central.loans[a.family.id] = loans
 
                 del sim.families[id]
+                unassigned_houses = [h for h in sim.houses.values() if h.owner_id == id]
+                assert len(unassigned_houses) == 0

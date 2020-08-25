@@ -2,8 +2,8 @@
 # Change your output directory as necessary
 
 
-OUTPUT_PATH = 'output'
-# OUTPUT_PATH = r'\\STORAGE1\CARGA\MODELO DINAMICO DE SIMULACAO\EXITS_PYTHON\PS2020'
+# OUTPUT_PATH = 'output'
+OUTPUT_PATH = r'\\STORAGE1\CARGA\MODELO DINAMICO DE SIMULACAO\EXITS_PYTHON\PS2020'
 
 KEEP_RANDOM_SEED = False
 
@@ -25,10 +25,10 @@ SAVE_PLOTS_FIGURES = True
 # *be aware of theirs sizes*
 PLOT_EACH_RUN = False
 # Spatial plots only works when PLOT_EACH_RUN is True
-SAVE_SPATIAL_PLOTS = False
+SAVE_SPATIAL_PLOTS = True
 # 'png' or 'eps'
 PLOT_FORMAT = 'png'
-PLOT_REGIONAL = False
+PLOT_REGIONAL = True
 
 # Plot DPI. Lower ones will plot faster
 PLOT_DPI = 80

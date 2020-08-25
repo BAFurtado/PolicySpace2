@@ -46,7 +46,7 @@ class Generator:
     def gen_id(self):
         """Generate a random id that should
         avoid collisions"""
-        return str(uuid.uuid4())
+        return str(uuid.uuid4())[:12]
 
     def create_regions(self):
         """Create regions"""
