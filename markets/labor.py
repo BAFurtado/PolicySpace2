@@ -123,7 +123,6 @@ class LaborMarket:
         for firm in firms.values():
             # `firm_enter_freq` is the frequency firms enter the market
             if self.seed.random() < firm_enter_freq:
-                # TODO: verify if only on positive profit, it makes sense
                 if firm.profit >= 0:
                     self.add_post(firm)
                 else:
