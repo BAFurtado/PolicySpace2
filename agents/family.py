@@ -167,11 +167,6 @@ class Family:
             else:
                 # Choose closest firm
                 chosen_firm = min(market, key=lambda firm: self.house.distance_to_firm(firm))
-                # if self.house is not None:
-                #     chosen_firm = min(market, key=lambda firm: self.house.distance_to_firm(firm))
-                # else:
-                #     # TODO: This is not in use. Check whether it can be purged
-                #     chosen_firm = min(market, key=lambda firm: distance_to_firm(self.region_id, firm))
 
             # Buy from chosen company
             change = chosen_firm.sale(money_to_spend, regions, params['TAX_CONSUMPTION'])

@@ -170,9 +170,6 @@ def immigration(sim):
             f.savings = sum(m.grab_money() for m in f.members.values())
             families.append(f)
 
-        # Pass through housing market
-        # sim.housing.allocate_houses(sim, families)
-
         # Some might have tried to buy houses but failed, pass them directly to the rental market
         homeless = [f for f in families if f.house is None]
         sim.housing.rental.rental_market(homeless, sim)
