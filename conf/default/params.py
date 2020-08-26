@@ -4,16 +4,16 @@ import datetime
 # MODEL PARAMETERS
 # FIRMS
 # Production function, labour with decaying exponent, Alpha for K. [0, 1]
-ALPHA = .24
+ALPHA = .4
 # By how much percentage to increase prices
-MARKUP = 0.15
+MARKUP = 0.1
 # Frequency firms change prices. Probability > than parameter
-STICKY_PRICES = .8
+STICKY_PRICES = .7
 # Number of firms consulted before consumption
 SIZE_MARKET = 10
 
 # Frequency firms enters in the market
-LABOR_MARKET = 0.35
+LABOR_MARKET = 0.05
 
 # Percentage of employees firms hire by distance
 PCT_DISTANCE_HIRING = .17
@@ -53,14 +53,14 @@ FPM_DISTRIBUTION = True
 # Results     fpm + eq. + loc,  locally,  fpm + eq,   eq
 
 # CONSTRUCTION
-LICENSES_PER_REGION = 50
-NEW_LICENSE_RATE = 10
+LICENSES_PER_REGION = 200
+NEW_LICENSE_RATE = 50
 PERCENT_CONSTRUCTION_FIRMS = 0.05
 # Months that construction firm will divide its income into monthly revenue installments.
 # Although prices are accounted for at once.
-CONSTRUCTION_ACC_CASH_FLOW = 36
+CONSTRUCTION_ACC_CASH_FLOW = 24
 # Cost of lot in PERCENTAGE of construction
-LOT_COST = .1
+LOT_COST = .15
 
 # Families run parameters
 MEMBERS_PER_FAMILY = 2.5                             # (on average)
