@@ -47,7 +47,8 @@ class Plotter:
             bbox_inches='tight')
 
         if clear:
-            plt.close(fig) # reset figure
+            # reset figure
+            plt.close(fig)
 
     def make_plot(self, datas, title, labels, y_label=None):
         """Create plot based on input data"""
@@ -85,8 +86,8 @@ class Plotter:
     def _prepare_datas(self, fname, columns):
         paths = [(label, os.path.join(path, fname)) for label, path in zip(self.labels, self.run_paths)]
         paths = [(label, self._prepare_data(path, columns))
-                                 for label, path in paths
-                                 if os.path.exists(path)]
+                 for label, path in paths
+                 if os.path.exists(path)]
         labels, dats = zip(*paths)
         return labels, dats
 
