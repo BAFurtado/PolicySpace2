@@ -12,7 +12,7 @@ class Firm:
     """
     type = 'CONSUMER'
 
-    def __init__(self, id,
+    def __init__(self, _id,
                  address,
                  total_balance,
                  region_id,
@@ -21,12 +21,12 @@ class Firm:
                  product_index=0,
                  amount_produced=0,
                  wages_paid=0,
-                 actual_month=0,
+                 present=0,
                  revenue=0,
                  taxes_paid=0,
                  prices=None):
 
-        self.id = id
+        self.id = _id
         self.address = address
         self.total_balance = total_balance
         self.region_id = region_id
@@ -40,7 +40,7 @@ class Firm:
         self.product_index = product_index
         self.amount_produced = amount_produced
         self.wages_paid = wages_paid
-        self.actual_month = actual_month
+        self.present = present
         self.revenue = revenue
         self.taxes_paid = taxes_paid
         self.prices = prices
@@ -338,8 +338,8 @@ class ConstructionFirm(Firm):
             self.cash_flow[i] += amount/acc_months
 
     def wage_base(self, unemployment, ignore_unemployment):
-        self.revenue = self.cash_flow[self.actual_month]
-        self.cash_flow[self.actual_month] = 0
+        self.revenue = self.cash_flow[self.present]
+        self.cash_flow[self.present] = 0
         if not ignore_unemployment:
             # Observing global economic performance has the added advantage of not spending all revenue on salaries
             return self.revenue * (1 - unemployment)
