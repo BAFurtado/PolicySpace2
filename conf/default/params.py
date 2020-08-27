@@ -4,9 +4,9 @@ import datetime
 # MODEL PARAMETERS
 # FIRMS
 # Production function, labour with decaying exponent, Alpha for K. [0, 1]
-ALPHA = .4
+ALPHA = .3
 # By how much percentage to increase prices
-MARKUP = 0.1
+MARKUP = 0.08
 # Frequency firms change prices. Probability > than parameter
 STICKY_PRICES = .7
 # Number of firms consulted before consumption
@@ -60,7 +60,7 @@ PERCENT_CONSTRUCTION_FIRMS = 0.05
 # Although prices are accounted for at once.
 CONSTRUCTION_ACC_CASH_FLOW = 24
 # Cost of lot in PERCENTAGE of construction
-LOT_COST = .15
+LOT_COST = .14
 
 # Families run parameters
 MEMBERS_PER_FAMILY = 2.5                             # (on average)

@@ -34,7 +34,7 @@ PLOT_REGIONAL = True
 PLOT_DPI = 80
 
 # Save Agents data 'MONTHLY' or 'QUARTERLY', 'ANNUALLY', or None
-SAVE_AGENTS_DATA = 'MONTHLY'
+SAVE_AGENTS_DATA = 'QUARTERLY'
 
 # What extra CSV data (i.e. not necessary plotting) to save
 # 'firms', 'banks', 'construction', 'regional' and 'stats' data are always saved,
