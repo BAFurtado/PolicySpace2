@@ -54,7 +54,7 @@ OUTPUT_DATA_SPEC = {
             'groupings': ['month', 'mun_id'],
             'columns': ['price', 'on_market']
         },
-        'columns': ['month', 'id', 'x', 'y', 'size', 'price',
+        'columns': ['month', 'id', 'x', 'y', 'size', 'price', 'quality', 'qli',
                     'on_market', 'family_id', 'region_id', 'mun_id']
     },
     'firms': {
@@ -260,40 +260,42 @@ class Output:
     def save_grave_data(self, sim):
         with open(self.grave_path, 'a') as f:
             [f.write('%s;%s;%s;%s;%s;%d;%d;%d;%s;%s;%.3f;%.3f;%s\n' % (sim.clock.days, agent.region_id,
-                                                                           agent.gender,
-                                                                           agent.address.x if agent.address else None,
-                                                                           agent.address.y if agent.address else None,
-                                                                           agent.id, agent.age,
-                                                                           agent.qualification, agent.firm_id,
-                                                                           agent.family.id if agent.family else None,
-                                                                           agent.money, agent.utility,
-                                                                           agent.distance))
+                                                                       agent.gender,
+                                                                       agent.address.x if agent.address else None,
+                                                                       agent.address.y if agent.address else None,
+                                                                       agent.id, agent.age,
+                                                                       agent.qualification, agent.firm_id,
+                                                                       agent.family.id if agent.family else None,
+                                                                       agent.money, agent.utility,
+                                                                       agent.distance))
             for agent in sim.grave]
 
     def save_house_data(self, sim):
         with open(self.houses_path, 'a') as f:
-            [f.write('%s;%s;%f;%f;%.2f;%.2f;%f;%s;%s;%s\n' % (sim.clock.days,
-                                                                house.id,
-                                                                house.address.x,
-                                                                house.address.y,
-                                                                house.size,
-                                                                house.price,
-                                                                house.on_market,
-                                                                house.family_id,
-                                                                house.region_id,
-                                                                house.region_id[:7]))
-            for house in sim.houses.values()]
+            [f.write('%s;%s;%f;%f;%.2f;%.2f;%.2f;%f;%.2f;%s;%s;%s\n' % (sim.clock.days,
+                                                                        house.id,
+                                                                        house.address.x,
+                                                                        house.address.y,
+                                                                        house.size,
+                                                                        house.price,
+                                                                        house.quality,
+                                                                        sim.regions[house.region_id].index,
+                                                                        house.on_market,
+                                                                        house.family_id,
+                                                                        house.region_id,
+                                                                        house.region_id[:7]))
+             for house in sim.houses.values()]
 
     def save_family_data(self, sim):
         with open(self.families_path, 'a') as f:
             [f.write('%s;%s;%s;%s;%s;%.2f;%.2f;%.2f\n' % (sim.clock.days,
-                                                            family.id,
-                                                            family.region_id[:7],
-                                                            family.house.price if family.house else '',
-                                                            family.house.rent_data[0] if family.house.rent_data else '',
-                                                            family.total_wage(),
-                                                            family.savings,
-                                                            family.num_members))
+                                                          family.id,
+                                                          family.region_id[:7],
+                                                          family.house.price if family.house else '',
+                                                          family.house.rent_data[0] if family.house.rent_data else '',
+                                                          family.total_wage(),
+                                                          family.savings,
+                                                          family.num_members))
             for family in sim.families.values()]
 
     def save_banks_data(self, sim):

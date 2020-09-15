@@ -136,7 +136,7 @@ PERCENTAGE_ACTUAL_POP = 0.005
 PROCESSING_ACPS = ['BRASILIA']
 
 # Selecting the starting year to build the Agents, can be: 1991, 2000 or 2010
-STARTING_DAY = datetime.date(2000, 1, 1)
+STARTING_DAY = datetime.date(2010, 1, 1)
 
 # Maximum running time (restrained by official data) is 30 years,
 TOTAL_DAYS = (datetime.date(2020, 1, 1) - STARTING_DAY).days
