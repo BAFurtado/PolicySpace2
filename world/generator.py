@@ -204,10 +204,9 @@ class Generator:
     # Address within the region
     # Additional details so that address fall in urban areas, given percentage
     def get_random_point_in_polygon(self, region, urban=True):
+        minx, miny, maxx, maxy = region.addresses.bounds
         while True:
-            lat = self.seed.uniform(region.address_envelope[0], region.address_envelope[1])
-            lng = self.seed.uniform(region.address_envelope[2], region.address_envelope[3])
-            address = shapely.geometry.Point(lat, lng)
+            address = shapely.geometry.Point(self.seed.uniform(minx, maxx), self.seed.uniform(miny, maxy))
             if urban:
                 mun_code = region.id[:7]
                 item = self.urban[mun_code]
