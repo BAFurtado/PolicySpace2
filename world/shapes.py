@@ -8,10 +8,10 @@ from shapely.geometry import shape
 
 def prepare_shapes_2010(geo):
     urban = pd.DataFrame()
+    temp = gpd.read_file('input/shapes/2010/urban_mun_2010.shp')
     for mun in geo.mun_codes:
-        temp = gpd.read_file('input/shapes/2010/urban_mun_2010.shp')
-        temp = temp[temp.CD_MUN == str(mun)]
-        urban = pd.concat([temp, urban])
+        temp1 = temp[temp.CD_MUN == str(mun)]
+        urban = pd.concat([temp1, urban])
 
     urban = {
         mun: urban[urban.CD_MUN == mun]['geometry'].item()
