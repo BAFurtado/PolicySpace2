@@ -146,10 +146,11 @@ if __name__ == "__main__":
         mun_names = pd.read_csv('./input/names_and_codes_municipalities.csv', sep=';', header=0)
     except FileNotFoundError:
         mun_names = pd.read_csv('../input/names_and_codes_municipalities.csv', sep=';', header=0)
-    basics(file, mun_names, 'mun_id')
-    plot(file)
+    # basics(file, mun_names, 'mun_id')
+    # plot(file)
     m = 50000
-    # file = cut(file, m)
-    # file = organize(file)
+    file = cut(file, m)
+    file = organize(file)
+    print(file.columns)
     # chord_base = prepare_chord(file, mun_names)
     # plot_chord(chord_base)
