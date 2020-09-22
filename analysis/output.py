@@ -54,7 +54,7 @@ OUTPUT_DATA_SPEC = {
             'groupings': ['month', 'mun_id'],
             'columns': ['price', 'on_market']
         },
-        'columns': ['month', 'id', 'x', 'y', 'size', 'price', 'quality', 'qli',
+        'columns': ['month', 'id', 'x', 'y', 'size', 'price', 'rent', 'quality', 'qli',
                     'on_market', 'family_id', 'region_id', 'mun_id']
     },
     'firms': {
@@ -272,12 +272,13 @@ class Output:
 
     def save_house_data(self, sim):
         with open(self.houses_path, 'a') as f:
-            [f.write('%s;%s;%f;%f;%.2f;%.2f;%.2f;%f;%.2f;%s;%s;%s\n' % (sim.clock.days,
+            [f.write('%s;%s;%f;%f;%.2f;%.2f;%s;%.1f;%.2f,%.2f;%s;%s;%s\n' % (sim.clock.days,
                                                                         house.id,
                                                                         house.address.x,
                                                                         house.address.y,
                                                                         house.size,
                                                                         house.price,
+                                                                        house.rent_data[0] if house.rent_data else '',
                                                                         house.quality,
                                                                         sim.regions[house.region_id].index,
                                                                         house.on_market,
