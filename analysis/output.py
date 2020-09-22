@@ -272,7 +272,7 @@ class Output:
 
     def save_house_data(self, sim):
         with open(self.houses_path, 'a') as f:
-            [f.write('%s;%s;%f;%f;%.2f;%.2f;%s;%.1f;%.2f,%.2f;%s;%s;%s\n' % (sim.clock.days,
+            [f.write('%s;%s;%f;%f;%.2f;%.2f;%s;%.1f;%.2f;%.2f;%s;%s;%s\n' % (sim.clock.days,
                                                                         house.id,
                                                                         house.address.x,
                                                                         house.address.y,
