@@ -4,7 +4,7 @@ import datetime
 # MODEL PARAMETERS
 # FIRMS
 # Production function, labour with decaying exponent, Alpha for K. [0, 1]
-ALPHA = .3
+ALPHA = .4
 # By how much percentage to increase prices
 MARKUP = 0.08
 # Frequency firms change prices. Probability > than parameter
@@ -12,8 +12,8 @@ STICKY_PRICES = .7
 # Number of firms consulted before consumption
 SIZE_MARKET = 10
 
-# Frequency firms enters in the market
-LABOR_MARKET = 0.05
+# Frequency firms enter the market
+LABOR_MARKET = 0.09
 
 # Percentage of employees firms hire by distance
 PCT_DISTANCE_HIRING = .17
@@ -60,14 +60,14 @@ PERCENT_CONSTRUCTION_FIRMS = 0.05
 # Although prices are accounted for at once.
 CONSTRUCTION_ACC_CASH_FLOW = 24
 # Cost of lot in PERCENTAGE of construction
-LOT_COST = .14
+LOT_COST = .1
 
 # Families run parameters
 MEMBERS_PER_FAMILY = 2.5                             # (on average)
 HOUSE_VACANCY = .11                                   # percentage of vacant houses
 
 RENTAL_SHARE = 0.4
-INITIAL_RENTAL_PRICE = .0029
+INITIAL_RENTAL_PRICE = .0028
 
 # TOO LONG ON THE MARKET:
 # value = (1 - MAX_OFFER_DISCOUNT) * e ** (ON_MARKET_DECAY_FACTOR * MONTHS ON MARKET) + MAX_OFFER_DISCOUNT
@@ -87,7 +87,7 @@ TAXES_STRUCTURE = {'consumption_equal': .1875, 'fpm': .235}
 
 # GENERAL CALIBRATION PARAMETERS
 # Order of magnitude parameter of input into municipality investment
-TREASURE_INTO_SERVICES = .00034
+TREASURE_INTO_SERVICES = .00028
 # Order of magnitude correction of production. Production divided by parameter
 PRODUCTION_MAGNITUDE = 1
 
@@ -146,6 +146,6 @@ PROCESSING_ACPS = ['BRASILIA']
 STARTING_DAY = datetime.date(2010, 1, 1)
 
 # Maximum running time (restrained by official data) is 30 years,
-TOTAL_DAYS = (datetime.date(2012, 1, 1) - STARTING_DAY).days
+TOTAL_DAYS = (datetime.date(2020, 1, 1) - STARTING_DAY).days
 
 
