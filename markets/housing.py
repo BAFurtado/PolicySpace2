@@ -21,7 +21,7 @@ class HousingMarket:
         # USE NEIGHBORHOOD FAMILY WAGE AS A PROXY FOR NEIGHBORHOOD QUALITY?
         for house in sim.houses.values():
             # Updating all houses values every month
-            house.update_price(sim.regions, sim.PARAMS.ON_MARKET_DECAY_FACTOR, sim.PARAMS.MAX_OFFER_DISCOUNT)
+            house.update_price(sim.regions, sim.PARAMS['ON_MARKET_DECAY_FACTOR'], sim.PARAMS['MAX_OFFER_DISCOUNT'])
 
             # If house is empty, and not already on sales list, add it to houses on the market and start counting
             # However, if house is empty and had been empty count one extra month
