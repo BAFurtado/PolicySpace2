@@ -68,6 +68,13 @@ HOUSE_VACANCY = .11                                   # percentage of vacant hou
 
 RENTAL_SHARE = 0.4
 INITIAL_RENTAL_PRICE = .0029
+
+# TOO LONG ON THE MARKET:
+# value = (1 - MAX_OFFER_DISCOUNT) * e ** (ON_MARKET_DECAY_FACTOR * MONTHS ON MARKET) + MAX_OFFER_DISCOUNT
+# AS SUCH (-.02) DECAY OF 1% FIRST MONTH, 10% FIRST YEAR. SET TO 0 TO ELIMINATE EFFECT
+ON_MARKET_DECAY_FACTOR = -.02
+# LOWER BOUND, THAT IS, AT LEAST 50% PERCENT OF VALUE WILL REMAIN AT END OF PERIOD
+MAX_OFFER_DISCOUNT = .5
 # Definition to simplify population by group age groups(TRUE) or including all ages (FALSE)
 SIMPLIFY_POP_EVOLUTION = True
 # Defines the superior limit of age groups, the first value is always ZERO and is omitted from the list.
@@ -80,7 +87,7 @@ TAXES_STRUCTURE = {'consumption_equal': .1875, 'fpm': .235}
 
 # GENERAL CALIBRATION PARAMETERS
 # Order of magnitude parameter of input into municipality investment
-TREASURE_INTO_SERVICES = 5e-07
+TREASURE_INTO_SERVICES = .00034
 # Order of magnitude correction of production. Production divided by parameter
 PRODUCTION_MAGNITUDE = 1
 
