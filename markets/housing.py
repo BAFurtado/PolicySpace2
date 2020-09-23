@@ -2,6 +2,7 @@
 This module is where the real estate market takes effect.
 Definitions on ownership and actual living residence is made.
 """
+from numpy import median
 from .rentmarket import RentalMarket, collect_rent
 
 
@@ -17,11 +18,22 @@ class HousingMarket:
         collect_rent(to_pay_rent, sim)
 
     def update_for_sale(self, sim):
-        # TODO IMPLEMENT NEIGHBORHOOD FACTOR
-        # USE NEIGHBORHOOD FAMILY WAGE AS A PROXY FOR NEIGHBORHOOD QUALITY?
+        # Using neighborhood_wealth effect as attractive for prices
+        neighborhood_wealth = dict()
+        if sim.PARAMS['NEIGHBORHOOD_EFFECT']:
+            for key in sim.regions.keys():
+                neighborhood_wealth[key] = median([f.last_permanent_income
+                                                   for f in sim.families.values()
+                                                   if f.house.region_id == key])
+            _max, _min = max(neighborhood_wealth.values()), min(neighborhood_wealth.values())
+            neighborhood_wealth = {k: (v - _min) / (_max - _min) for k, v in neighborhood_wealth.items()}
+
         for house in sim.houses.values():
             # Updating all houses values every month
-            house.update_price(sim.regions, sim.PARAMS['ON_MARKET_DECAY_FACTOR'], sim.PARAMS['MAX_OFFER_DISCOUNT'])
+            house.update_price(sim.regions,
+                               sim.PARAMS['ON_MARKET_DECAY_FACTOR'],
+                               sim.PARAMS['MAX_OFFER_DISCOUNT'],
+                               neighborhood_wealth)
 
             # If house is empty, and not already on sales list, add it to houses on the market and start counting
             # However, if house is empty and had been empty count one extra month

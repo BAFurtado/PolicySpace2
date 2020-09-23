@@ -29,11 +29,13 @@ class House:
         # Cache firm distances, since houses never change address
         self._firm_distances = {}
 
-    def update_price(self, regions, k, bound):
+    def update_price(self, regions, k, bound, neighborhood):
         """Compute new price for the house"""
         self.price = self.size * self.quality * regions[self.region_id].index
         # Update for too long in the market
         self.price *= (1 - bound) * e ** (k * self.on_market) + bound
+        if neighborhood:
+            self.price *= 1 + neighborhood[self.region_id]
 
     def empty(self):
         """Remove current family"""

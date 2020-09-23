@@ -22,20 +22,12 @@ WAGE_IGNORE_UNEMPLOYMENT = False
 # Candidate sample size for the labor market
 HIRING_SAMPLE_SIZE = 20
 
-# Percentage of households pursuing new location
-PERCENTAGE_CHECK_NEW_LOCATION = 0.005
-
 # TAXES
 TAX_CONSUMPTION = .3
 TAX_LABOR = .15
 TAX_ESTATE_TRANSACTION = .005
 TAX_FIRM = .15
 TAX_PROPERTY = .005
-
-# LOANS
-MAX_LOAN_AGE = 80
-MAX_LOAN_REPAYMENT_PERCENT_INCOME = 0.3
-MAX_LOAN_BANK_PERCENT = 0.7
 
 # GOVERNMENT
 # MONTHLY Real interest rate of the economy (SELIC minus INFLATION) for the Brazilian case
@@ -52,6 +44,27 @@ FPM_DISTRIBUTION = True
 # fpm           TRUE,           FALSE,      TRUE,   FALSE
 # Results     fpm + eq. + loc,  locally,  fpm + eq,   eq
 
+# HOUSING AND REAL ESTATE MARKET
+# LOANS
+MAX_LOAN_AGE = 80
+MAX_LOAN_REPAYMENT_PERCENT_INCOME = 0.3
+MAX_LOAN_BANK_PERCENT = 0.7
+
+# Percentage of households pursuing new location
+PERCENTAGE_CHECK_NEW_LOCATION = 0.005
+NEIGHBORHOOD_EFFECT = True
+
+# RENTAL
+RENTAL_SHARE = 0.4
+INITIAL_RENTAL_PRICE = .0028
+
+# TOO LONG ON THE MARKET:
+# value = (1 - MAX_OFFER_DISCOUNT) * e ** (ON_MARKET_DECAY_FACTOR * MONTHS ON MARKET) + MAX_OFFER_DISCOUNT
+# AS SUCH (-.02) DECAY OF 1% FIRST MONTH, 10% FIRST YEAR. SET TO 0 TO ELIMINATE EFFECT
+ON_MARKET_DECAY_FACTOR = -.02
+# LOWER BOUND, THAT IS, AT LEAST 50% PERCENT OF VALUE WILL REMAIN AT END OF PERIOD
+MAX_OFFER_DISCOUNT = .5
+
 # CONSTRUCTION
 LICENSES_PER_REGION = 200
 NEW_LICENSE_RATE = 50
@@ -66,15 +79,6 @@ LOT_COST = .1
 MEMBERS_PER_FAMILY = 2.5                             # (on average)
 HOUSE_VACANCY = .11                                   # percentage of vacant houses
 
-RENTAL_SHARE = 0.4
-INITIAL_RENTAL_PRICE = .0028
-
-# TOO LONG ON THE MARKET:
-# value = (1 - MAX_OFFER_DISCOUNT) * e ** (ON_MARKET_DECAY_FACTOR * MONTHS ON MARKET) + MAX_OFFER_DISCOUNT
-# AS SUCH (-.02) DECAY OF 1% FIRST MONTH, 10% FIRST YEAR. SET TO 0 TO ELIMINATE EFFECT
-ON_MARKET_DECAY_FACTOR = -.02
-# LOWER BOUND, THAT IS, AT LEAST 50% PERCENT OF VALUE WILL REMAIN AT END OF PERIOD
-MAX_OFFER_DISCOUNT = .5
 # Definition to simplify population by group age groups(TRUE) or including all ages (FALSE)
 SIMPLIFY_POP_EVOLUTION = True
 # Defines the superior limit of age groups, the first value is always ZERO and is omitted from the list.
