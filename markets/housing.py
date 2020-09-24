@@ -33,7 +33,8 @@ class HousingMarket:
             house.update_price(sim.regions,
                                sim.PARAMS['ON_MARKET_DECAY_FACTOR'],
                                sim.PARAMS['MAX_OFFER_DISCOUNT'],
-                               neighborhood_wealth)
+                               neighborhood_wealth,
+                               sim.PARAMS['NEIGHBORHOOD_EFFECT'])
 
             # If house is empty, and not already on sales list, add it to houses on the market and start counting
             # However, if house is empty and had been empty count one extra month
