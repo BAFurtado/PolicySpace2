@@ -18,7 +18,7 @@ pd.options.display.float_format = '{:,.2f}'.format
 
 
 def organize(f):
-    f.columns = ['months', 'id', 'long', 'lat', 'size', 'house_value', 'quality', 'qli', 'on_market',
+    f.columns = ['months', 'id', 'long', 'lat', 'size', 'house_value', 'rent', 'quality', 'qli', 'on_market',
                  'family_id', 'region_id', 'mun_id']
     return f
 
@@ -125,7 +125,7 @@ def plot_chord(df):
     # To save to figure
     # hv.extension("matplotlib")
     # hv.output(fig='svg', size=250)
-    hv.save(chord, '../other/chord.html')
+    hv.save(chord, 'other/chord.html')
 
 
 def cut(f, n=10000):
@@ -146,11 +146,11 @@ if __name__ == "__main__":
         mun_names = pd.read_csv('./input/names_and_codes_municipalities.csv', sep=';', header=0)
     except FileNotFoundError:
         mun_names = pd.read_csv('../input/names_and_codes_municipalities.csv', sep=';', header=0)
-    # basics(file, mun_names, 'mun_id')
-    # plot(file)
-    m = 50000
-    file = cut(file, m)
+    basics(file, mun_names, 'mun_id')
+    plot(file)
+    # m = 50000
+    # file = cut(file, m)
     file = organize(file)
     print(file.columns)
-    # chord_base = prepare_chord(file, mun_names)
-    # plot_chord(chord_base)
+    chord_base = prepare_chord(file, mun_names)
+    plot_chord(chord_base)
