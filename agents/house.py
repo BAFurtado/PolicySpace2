@@ -35,7 +35,7 @@ class House:
         # Update for too long in the market
         self.price *= (1 - bound) * e ** (k * self.on_market) + bound
         if neighborhood:
-            self.price *= 1 + neighborhood[self.region_id]
+            self.price *= value + neighborhood[self.region_id]
 
     def empty(self):
         """Remove current family"""
