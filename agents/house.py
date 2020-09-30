@@ -35,7 +35,9 @@ class House:
         # Update for too long in the market
         self.price *= (1 - bound) * e ** (k * self.on_market) + bound
         if neighborhood:
-            self.price *= (value + neighborhood[self.region_id])
+            # If neighborhood is 0 (False), price is unchanged.
+            # If 1 (True) or higher, neighborhood effect is the value multiplier which increasingly impacts prices
+            self.price *= (1 + value * neighborhood[self.region_id])
 
     def empty(self):
         """Remove current family"""
