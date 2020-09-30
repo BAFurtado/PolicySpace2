@@ -164,7 +164,7 @@ class Simulation:
 
         # Update firm products
         for firm in self.firms.values():
-            firm.update_product_quantity(self.PARAMS['ALPHA'], self.PARAMS['PRODUCTION_MAGNITUDE'])
+            firm.update_product_quantity(self.PARAMS['ALPHA'], self.PARAMS['PRODUCTIVITY'])
 
         # Call demographics
         # Update agent life cycles

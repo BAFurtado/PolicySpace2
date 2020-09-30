@@ -93,7 +93,7 @@ TAXES_STRUCTURE = {'consumption_equal': .1875, 'fpm': .235}
 # Order of magnitude parameter of input into municipality investment
 TREASURE_INTO_SERVICES = .00028
 # Order of magnitude correction of production. Production divided by parameter
-PRODUCTION_MAGNITUDE = 10
+PRODUCTIVITY = 10
 
 WAGE_TO_CAR_OWNERSHIP_QUANTILES = [
     0.1174,
