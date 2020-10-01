@@ -309,6 +309,9 @@ def sensitivity(ctx, params):
             p_name = param
             p_vals = [datetime.date(2000, 1, 1), datetime.date(2010, 1, 1)]
         # else, assume boolean
+        elif '-' in param:
+            p_name = 'PROCESSING_ACPS'
+            p_vals = [[i] for i in param.split('-')[1:]]
         else:
             p_name = param
             p_vals = [True, False]

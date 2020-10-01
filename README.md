@@ -118,6 +118,7 @@ python main.py -c 2 -n 10 run
 
 Runs simulation over a range of values for a specific parameter. For continuous parameters, the syntax is
 `NAME:MIN:MAX:NUMBER_STEPS`. For boolean parameters, just provide the parameter name.
+It now also accepts selected "PROCESSING_ACPS-BRASILIA-CAMPINAS-FORTALEZA-BELO HORIZONTE"
 
 Example:
 

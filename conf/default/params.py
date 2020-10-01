@@ -52,7 +52,7 @@ MAX_LOAN_BANK_PERCENT = 0.7
 
 # Percentage of households pursuing new location
 PERCENTAGE_CHECK_NEW_LOCATION = 0.005
-NEIGHBORHOOD_EFFECT = 2
+NEIGHBORHOOD_EFFECT = 1
 
 # RENTAL
 RENTAL_SHARE = 0.4
@@ -91,7 +91,7 @@ TAXES_STRUCTURE = {'consumption_equal': .1875, 'fpm': .235}
 
 # GENERAL CALIBRATION PARAMETERS
 # Order of magnitude parameter of input into municipality investment
-TREASURE_INTO_SERVICES = .00028
+TREASURE_INTO_SERVICES = .00034
 # Order of magnitude correction of production. Production divided by parameter
 PRODUCTIVITY = 10
 
@@ -141,7 +141,7 @@ PUBLIC_TRANSIT_COST = 0.2
 
 # Percentage of actual population to run the simulation
 # Minimum value to run depends on the size of municipality 0,001 is recommended minimum
-PERCENTAGE_ACTUAL_POP = 0.005
+PERCENTAGE_ACTUAL_POP = 0.01
 
 # Write exactly like the list
 PROCESSING_ACPS = ['BRASILIA']
