@@ -64,6 +64,7 @@ up to permanent income
 18. Introduce inheritance (savings).
 19. A neighborhood effect (wealth of resident families influence price of houses)
 20. Decay effect on prices due to excess of houses on offer 
+21. Data updated (from census 2000 to census 2010)
 
 #### How do I get set up?
 
