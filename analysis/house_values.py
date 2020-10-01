@@ -139,9 +139,9 @@ if __name__ == "__main__":
         file = pd.read_csv(sys.argv[1], sep=';', header=None)
     else:
         try:
-            file = pd.read_csv(r'../output/run__2020-09-16T13_03_40.706787/0/temp_houses.csv', sep=';', header=None)
+            file = pd.read_csv(r'../output/run__2020-09-29T18_52_36.054815/0/temp_houses.csv', sep=';', header=None)
         except FileNotFoundError:
-            file = pd.read_csv(r'output/run__2020-09-16T13_03_40.706787/0/temp_houses.csv', sep=';', header=None)
+            file = pd.read_csv(r'output/run__2020-09-29T1_03_40.706787/0/temp_houses.csv', sep=';', header=None)
     try:
         mun_names = pd.read_csv('./input/names_and_codes_municipalities.csv', sep=';', header=0)
     except FileNotFoundError:
