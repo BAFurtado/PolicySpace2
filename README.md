@@ -52,16 +52,18 @@ The transit model in turn generates private and public transport routes, visuali
 "linear function of current and expected future incomes and of financial wealth." In other words, 
 "all income in excess of permanent income will be saved and added to financial wealth."
 9. Families composition are now sure to have at least one adult. Children are initially distributed randomly.
-10. Houses of families whose last member dies are randomly allocated to remaining families.
+10. Houses of families whose last member dies are randomly allocated to remaining family members.
 11. Interest being now paid on families' savings
 12. When no cash available, families can withdraw from savings for consumption (if any at savings) 
 up to permanent income
 13. Internal clock updated to use datetime
 14. Introduced a rental market 
-15. Included construction companies. 
+15. Included construction companies endogenous to the model.
 16. Financial (mortgage, credit) market structures
 17. Included transportation costs on workers' decision on choosing jobs
 18. Introduce inheritance (savings).
+19. A neighborhood effect (wealth of resident families influence price of houses)
+20. Decay effect on prices due to excess of houses on offer 
 
 #### How do I get set up?
 
