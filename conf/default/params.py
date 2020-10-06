@@ -4,19 +4,19 @@ import datetime
 # MODEL PARAMETERS
 # FIRMS
 # Production function, labour with decaying exponent, Alpha for K. [0, 1]
-ALPHA = .1
+ALPHA = .15
 # By how much percentage to increase prices
 MARKUP = 0.08
 # Frequency firms change prices. Probability > than parameter
-STICKY_PRICES = .7
+STICKY_PRICES = .6
 # Number of firms consulted before consumption
 SIZE_MARKET = 10
 
 # Frequency firms enter the market
-LABOR_MARKET = 0.09
+LABOR_MARKET = 0.3
 
 # Percentage of employees firms hire by distance
-PCT_DISTANCE_HIRING = .17
+PCT_DISTANCE_HIRING = .4
 # Ignore unemployment in wage base calculation
 WAGE_IGNORE_UNEMPLOYMENT = False
 # Candidate sample size for the labor market

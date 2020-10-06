@@ -58,12 +58,13 @@ class RentalMarket:
             families.sort(key=lambda f: f.last_permanent_income, reverse=True)
             for family in families:
                 # Matching
-                my_market = sim.seed.sample(self.unoccupied, min(len(self.unoccupied), sim.PARAMS['SIZE_MARKET'] * 3))
+                my_market = sim.seed.sample(self.unoccupied, min(len(self.unoccupied), int(sim.PARAMS['SIZE_MARKET']) * 3))
                 in_budget = [h for h in my_market if h.price * base_price < family.last_permanent_income]
                 if in_budget:
                     sim.seed.shuffle(in_budget)
                     house = in_budget[0]
                     price = house.price * base_price
+
                 else:
                     my_market.sort(key=lambda h: h.price)
                     house = my_market[0]

@@ -84,7 +84,7 @@ class LaborMarket:
         # This organizes a number of offers of candidates per firm, according to their own location
         # and "size" of a firm, giving by its more recent revenue level
         for firm, wage in lst_firms:
-            candidates = self.seed.sample(candidates, min(len(candidates), params['HIRING_SAMPLE_SIZE']))
+            candidates = self.seed.sample(candidates, min(len(candidates), int(params['HIRING_SAMPLE_SIZE'])))
             for c in candidates:
                 transit_cost = params['PRIVATE_TRANSIT_COST'] if c.has_car else params['PUBLIC_TRANSIT_COST']
                 # TODO: check units of distance_to_firm and relevance comparatively to potential wage.
