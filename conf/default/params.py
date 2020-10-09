@@ -4,11 +4,11 @@ import datetime
 # MODEL PARAMETERS
 # FIRMS
 # Production function, labour with decaying exponent, Alpha for K. [0, 1]
-ALPHA = .15
+ALPHA = .1
 # By how much percentage to increase prices
 MARKUP = 0.08
 # Frequency firms change prices. Probability > than parameter
-STICKY_PRICES = .6
+STICKY_PRICES = .5
 # Number of firms consulted before consumption
 SIZE_MARKET = 10
 
@@ -20,7 +20,7 @@ PCT_DISTANCE_HIRING = .4
 # Ignore unemployment in wage base calculation
 WAGE_IGNORE_UNEMPLOYMENT = False
 # Candidate sample size for the labor market
-HIRING_SAMPLE_SIZE = 20
+HIRING_SAMPLE_SIZE = 23
 
 # TAXES
 TAX_CONSUMPTION = .3
@@ -93,7 +93,7 @@ TAXES_STRUCTURE = {'consumption_equal': .1875, 'fpm': .235}
 # Order of magnitude parameter of input into municipality investment
 TREASURE_INTO_SERVICES = .00034
 # Order of magnitude correction of production. Production divided by parameter
-PRODUCTIVITY = 10
+PRODUCTIVITY = 12
 
 WAGE_TO_CAR_OWNERSHIP_QUANTILES = [
     0.1174,
