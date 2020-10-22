@@ -99,11 +99,11 @@ class Generator:
             regional_agents, regional_families = self.allocate_to_family(regional_agents, regional_families)
 
             # Allocating only percentage of houses to ownership.
-            rental_size = int(self.sim.PARAMS['RENTAL_SHARE'] * len(regional_houses))
+            owners_size = int((1 - self.sim.PARAMS['RENTAL_SHARE']) * len(regional_houses))
 
             # Do not allocate all houses to families. Some families (parameter) will have to rent
-            regional_families.update(self.allocate_to_households(dict(list(regional_families.items())[:rental_size]),
-                                                                 dict(list(regional_houses.items())[:rental_size])))
+            regional_families.update(self.allocate_to_households(dict(list(regional_families.items())[:owners_size]),
+                                                                 dict(list(regional_houses.items())[:owners_size])))
 
             # Set ownership of remaining houses for random families
             self.randomly_assign_houses(regional_houses.values(), regional_families.values())

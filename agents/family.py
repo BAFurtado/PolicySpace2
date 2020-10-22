@@ -46,9 +46,12 @@ class Family:
         del self.members[agent.id]
 
     def move_in(self, house):
-        self.house = house
-        house.family_id = self.id
-        self.region_id = house.region_id
+        if house.family_id is None:
+            self.house = house
+            house.family_id = self.id
+            self.region_id = house.region_id
+        else:
+            raise Exception
 
     def move_out(self):
         self.house.empty()
