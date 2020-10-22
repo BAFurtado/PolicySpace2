@@ -23,6 +23,7 @@ sim.run()
 
 check('Construction increases housing supply', lambda sim: len(sim.houses) > N_HOUSES)
 check('Bank is loaning money', lambda sim: sim.central.n_loans() > 0)
+check('No families without a house', lambda sim: len([f for f in sim.families.values() if f.house is None]) == 0)
 
 
 conf.PARAMS['PERCENT_CONSTRUCTION_FIRMS'] = 0.0

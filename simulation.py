@@ -157,7 +157,7 @@ class Simulation:
 
         # Create new land licenses
         for region in self.regions.values():
-            region.licenses += self.PARAMS['NEW_LICENSE_RATE']
+            region.licenses += self.PARAMS['T_LICENSES_PER_REGION']
 
         # Create new firms according to average historical growth
         firm_growth(self)
@@ -251,6 +251,7 @@ class Simulation:
         self.labor_market.assign_post(current_unemployment, wage_deciles, self.PARAMS)
 
         # Initiating Real Estate Market
+        self.logger.logger.info(f'Available licenses: {sum([r.licenses for r in self.regions.values()]):,.0f}')
         # Tax transaction taxes (ITBI) when selling house
         # Property tax (IPTU) collected. One twelfth per month
         self.housing.housing_market(self)
