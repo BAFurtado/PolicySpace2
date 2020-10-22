@@ -242,7 +242,7 @@ class Output:
             [f.write('%s; %s; %s; %s; %.3f; %.3f; %.3f; %s; %.3f; %.3f; %.3f ; %.3f; %.3f; %.3f; %.3f \n' %
                             (sim.clock.days, firm.id, firm.region_id, firm.region_id[:7], firm.address.x,
                             firm.address.y, firm.total_balance, firm.num_employees,
-                            firm.total_quantity, len(firm.houses), firm.mean_house_price(),
+                            firm.total_quantity, len(firm.houses_built), firm.mean_house_price(),
                             firm.n_houses_sold, firm.revenue, firm.profit,
                             firm.wages_paid))
             for firm in sim.construction_firms.values()]

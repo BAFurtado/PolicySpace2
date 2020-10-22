@@ -66,8 +66,8 @@ ON_MARKET_DECAY_FACTOR = -.02
 MAX_OFFER_DISCOUNT = .5
 
 # CONSTRUCTION
-LICENSES_PER_REGION = 200
-NEW_LICENSE_RATE = 50
+# LICENSES ARE URBANIZED LOTS AVAILABLE FOR CONSTRUCTION
+T_LICENSES_PER_REGION = 10
 PERCENT_CONSTRUCTION_FIRMS = 0.05
 # Months that construction firm will divide its income into monthly revenue installments.
 # Although prices are accounted for at once.
@@ -75,9 +75,10 @@ CONSTRUCTION_ACC_CASH_FLOW = 24
 # Cost of lot in PERCENTAGE of construction
 LOT_COST = .1
 
-# Families run parameters
-MEMBERS_PER_FAMILY = 2.5                             # (on average)
-HOUSE_VACANCY = .11                                   # percentage of vacant houses
+# Families run parameters (on average) for year 2000, or no information. 2010 uses APs average data
+MEMBERS_PER_FAMILY = 2.5
+# Initial percentage of vacant houses
+HOUSE_VACANCY = .11
 
 # Definition to simplify population by group age groups(TRUE) or including all ages (FALSE)
 SIMPLIFY_POP_EVOLUTION = True
@@ -144,12 +145,12 @@ PUBLIC_TRANSIT_COST = 0.2
 PERCENTAGE_ACTUAL_POP = 0.005
 
 # Write exactly like the list
-PROCESSING_ACPS = ['BRASILIA']
+PROCESSING_ACPS = ['IPATINGA']
 
 # Selecting the starting year to build the Agents, can be: 1991, 2000 or 2010
 STARTING_DAY = datetime.date(2010, 1, 1)
 
 # Maximum running time (restrained by official data) is 30 years,
-TOTAL_DAYS = (datetime.date(2012, 1, 1) - STARTING_DAY).days
+TOTAL_DAYS = (datetime.date(2015, 1, 1) - STARTING_DAY).days
 
 

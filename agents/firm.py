@@ -1,3 +1,5 @@
+import datetime
+from dateutil import relativedelta
 from .house import House
 from .product import Product
 from collections import defaultdict
@@ -40,7 +42,6 @@ class Firm:
         self.product_index = product_index
         self.amount_produced = amount_produced
         self.wages_paid = wages_paid
-        self.present = present
         self.revenue = revenue
         self.taxes_paid = taxes_paid
         self.prices = prices
@@ -219,8 +220,8 @@ class ConstructionFirm(Firm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.houses = []
-        self.houses_inventory = []
+        self.houses_built = []
+        self.houses_for_sale = []
         self.building = False
         self.building_region = None
         self.building_size = None
@@ -230,6 +231,8 @@ class ConstructionFirm(Firm):
 
     def plan_house(self, regions, houses, lot_price, markup, seed):
         """Decide where to build"""
+
+        # H   E   R   E
         if self.building:
             return
 
@@ -284,6 +287,7 @@ class ConstructionFirm(Firm):
         self.building_quality = building_quality
         #
         # Product.quantity increases as construction moves forward and is deducted at once
+        # H   E   R   E
         self.building_cost = building_cost * region.license_price
         self.building = True
 
@@ -300,6 +304,7 @@ class ConstructionFirm(Firm):
             return
 
         # Not finished
+        # H   E   R   E
         if self.total_quantity < self.building_cost:
             return
 
@@ -320,26 +325,23 @@ class ConstructionFirm(Firm):
         quality = self.building_quality
         price = (size * quality) * region.index
         h = House(house_id, address, size, price, region.id, quality, owner_id=self.id, owner_type=House.Owner.FIRM)
-        self.houses.append(h)
-        self.houses_inventory.append(h)
+
+        # H E R E
+        self.houses_built.append(h)
+        self.houses_for_sale.append(h)
 
         self.building = False
         return h
 
     # Selling house
-    def update_balance(self, amount, acc_months=None):
-        self.total_balance += amount
-        if acc_months is not None:
-            self.update_cash_flow(amount, acc_months)
-
-    def update_cash_flow(self, amount, acc_months):
+    def update_balance(self, amount, acc_months=1, date=datetime.date(2000, 1, 1)):
         acc_months = int(acc_months)
-        for i in range(int(acc_months)):
-            self.cash_flow[i] += amount/acc_months
+        self.total_balance += amount
+        for i in range(acc_months):
+            self.cash_flow[date + relativedelta.relativedelta(months=+1)] += amount/acc_months
 
-    def wage_base(self, unemployment, ignore_unemployment):
-        self.revenue = self.cash_flow[self.present]
-        self.cash_flow[self.present] = 0
+    def wage_base(self, unemployment, ignore_unemployment, date=datetime.date(2000, 1, 1)):
+        self.revenue = self.cash_flow[date]
         if not ignore_unemployment:
             # Observing global economic performance has the added advantage of not spending all revenue on salaries
             return self.revenue * (1 - unemployment)
@@ -348,10 +350,10 @@ class ConstructionFirm(Firm):
 
     @property
     def n_houses_sold(self):
-        return len(self.houses) - len(self.houses_inventory)
+        return len(self.houses_built) - len(self.houses_for_sale)
 
     def mean_house_price(self):
-        if not self.houses:
+        if not self.houses_built:
             return 0
-        t = sum(h.price for h in self.houses)
-        return t/len(self.houses)
+        t = sum(h.price for h in self.houses_built)
+        return t/len(self.houses_built)
