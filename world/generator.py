@@ -75,23 +75,21 @@ class Generator:
 
         for region_id, region in regions.items():
             logger.info('Generating region {}'.format(region_id))
-            num_houses = 0
 
             regional_agents = self.create_agents(region)
-            num_houses += len(regional_agents)
             for agent in regional_agents.keys():
                 my_agents[agent] = regional_agents[agent]
 
+            num_agents = len(regional_agents)
             if self.sim.geo.year == 2010:
                 try:
-                    num_families = int(num_houses /
+                    num_families = int(num_agents /
                                        avg_num_fam[avg_num_fam['AREAP'] == int(region_id)].iloc[0]['avg_num_people'])
                 except KeyError:
-                    num_families = int(num_houses / self.sim.PARAMS['MEMBERS_PER_FAMILY'])
+                    num_families = int(num_agents / self.sim.PARAMS['MEMBERS_PER_FAMILY'])
             else:
-                num_families = int(num_houses / self.sim.PARAMS['MEMBERS_PER_FAMILY'])
-            num_houses = int(num_houses / self.sim.PARAMS['MEMBERS_PER_FAMILY'] *
-                             (1 + self.sim.PARAMS['HOUSE_VACANCY']))
+                num_families = int(num_agents / self.sim.PARAMS['MEMBERS_PER_FAMILY'])
+            num_houses = int(num_families * (1 + self.sim.PARAMS['HOUSE_VACANCY']))
             num_firms = int(self.firm_data.num_emp_t0[int(region.id)] * self.sim.PARAMS['PERCENTAGE_ACTUAL_POP'])
 
             regional_families = self.create_families(num_families)
@@ -101,7 +99,7 @@ class Generator:
             regional_agents, regional_families = self.allocate_to_family(regional_agents, regional_families)
 
             # Allocating only percentage of houses to ownership.
-            rental_size = int((1 - self.sim.PARAMS['RENTAL_SHARE']) * len(regional_houses))
+            rental_size = int(self.sim.PARAMS['RENTAL_SHARE'] * len(regional_houses))
 
             # Do not allocate all houses to families. Some families (parameter) will have to rent
             regional_families.update(self.allocate_to_households(dict(list(regional_families.items())[:rental_size]),

@@ -23,12 +23,12 @@ SAVE_PLOTS_FIGURES = True
 # If plots should be generated separately for each simulation run or just aggregated
 # When PLOT_EACH_RUN is True, DATA for banks, construction, firms, regional, stats are also SAVED
 # *be aware of theirs sizes*
-PLOT_EACH_RUN = True
+PLOT_EACH_RUN = False
 # Spatial plots only works when PLOT_EACH_RUN is True
 SAVE_SPATIAL_PLOTS = False
 # 'png' or 'eps'
 PLOT_FORMAT = 'png'
-PLOT_REGIONAL = True
+PLOT_REGIONAL = False
 
 # Plot DPI. Lower ones will plot faster
 PLOT_DPI = 80
@@ -42,8 +42,8 @@ SAVE_AGENTS_DATA = 'MONTHLY'
 # If you don't save "house" data for instance you can't generate housing plots.
 # Can include: ['agents', 'grave', 'house', 'family', 'banks']
 # If None, set to empty list: []
-# SAVE_DATA = []
-SAVE_DATA = ['house', 'family', 'banks', 'firms']
+SAVE_DATA = []
+# SAVE_DATA = ['house', 'family', 'banks', 'firms']
 
 # What data to average across all runs. If plotting, needs to include them in SAVE_DATA as well
 # Options: ['stats', 'families', 'houses', 'firms', 'regional', 'banks', 'construction']
