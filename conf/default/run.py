@@ -2,8 +2,8 @@
 # Change your output directory as necessary
 
 
-OUTPUT_PATH = 'output'
-# OUTPUT_PATH = r'\\STORAGE1\CARGA\MODELO DINAMICO DE SIMULACAO\EXITS_PYTHON\PS2020'
+# OUTPUT_PATH = 'output'
+OUTPUT_PATH = r'\\STORAGE1\CARGA\MODELO DINAMICO DE SIMULACAO\EXITS_PYTHON\PS2020'
 
 KEEP_RANDOM_SEED = False
 
@@ -25,7 +25,7 @@ SAVE_PLOTS_FIGURES = True
 # *be aware of theirs sizes*
 PLOT_EACH_RUN = True
 # Spatial plots only works when PLOT_EACH_RUN is True
-SAVE_SPATIAL_PLOTS = True
+SAVE_SPATIAL_PLOTS = False
 # 'png' or 'eps'
 PLOT_FORMAT = 'png'
 PLOT_REGIONAL = True
@@ -43,14 +43,14 @@ SAVE_AGENTS_DATA = 'MONTHLY'
 # Can include: ['agents', 'grave', 'house', 'family', 'banks']
 # If None, set to empty list: []
 # SAVE_DATA = []
-SAVE_DATA = ['house', 'family', 'banks']
+SAVE_DATA = ['house', 'family', 'banks', 'firms']
 
 # What data to average across all runs. If plotting, needs to include them in SAVE_DATA as well
 # Options: ['stats', 'families', 'houses', 'firms', 'regional', 'banks', 'construction']
 # You need to INCLUDE STATS to generate SPATIAL PLOTS. 'stats' also refer to general averaged plots
 AVERAGE_DATA = ['stats', 'regional', 'construction', 'banks', 'families', 'houses', 'firms']
 # 'median' or 'mean'
-AVERAGE_TYPE = 'median'
+AVERAGE_TYPE = 'mean'
 
 # Whether or not to save data for the transit simulation
 SAVE_TRANSIT_DATA = False

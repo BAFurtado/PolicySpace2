@@ -60,6 +60,13 @@ class Statistics(object):
     def calculate_avg_regional_house_price(self, regional_families):
         return np.average([f.house.price for f in regional_families if f.num_members > 0])
 
+    def calculate_house_vacancy(self, houses):
+        vacants = np.sum([1 for h in houses if houses[h].family_id is None])
+        num_houses = len(houses)
+        logger.info(f'Vacant houses {vacants:,.0f}')
+        logger.info(f'Total houses {num_houses:,.0f}')
+        return vacants / num_houses
+
     def update_GDP_capita(self, firms, mun_id, mun_pop):
         dummy_gdp = np.sum([firms[firm].revenue for firm in firms.keys()
                             if firms[firm].region_id[:7] == mun_id])

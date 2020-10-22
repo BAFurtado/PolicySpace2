@@ -28,7 +28,7 @@ OUTPUT_DATA_SPEC = {
         },
         'columns': ['month', 'price_index', 'gdp_index', 'gdp_growth', 'unemployment', 'average_workers',
                     'families_wealth', 'families_savings', 'firms_wealth', 'firms_profit', 'gini_index',
-                    'average_utility', 'inflation', 'average_qli', 'equally', 'locally', 'fpm', 'bank']
+                    'average_utility', 'inflation', 'average_qli', 'house_vacancy', 'equally', 'locally', 'fpm', 'bank']
     },
     'families': {
         'avg': {
@@ -135,24 +135,24 @@ class Output:
         gini_index = sim.stats.calculate_GINI(sim.families)
         average_utility = sim.stats.calculate_utility(sim.families)
         average_qli = sim.stats.average_qli(sim.regions)
-
+        house_vacancy = sim.stats.calculate_house_vacancy(sim.houses)
         mun_applied_treasure = defaultdict(int)
         mun_applied_treasure['bank'] = bank_taxes
         for k in ['equally', 'locally', 'fpm']:
             mun_applied_treasure[k] = sum(r.applied_treasure[k] for r in sim.regions.values())
 
-        report = '{};{:.3f};{:.3f};{:.3f};{:.3f};{:.3f};{:.3f};{:.3f};{:.3f};{:.3f};{:.3f};{:.3f};{:.4f};{:.4f};' \
-                 '{:.4f};{:.4f};{:.4f};{:.4f}\n'.format(
+        report = '{};{:.3f};{:.3f};{:.3f};{:.3f};{:.3f};{:.3f};{:.3f};{:.3f};{:.3f};{:.4f};{:.3f};{:.3f};{:.4f};' \
+                 '{:.4f};{:.4f};{:.4f};{:.4f};{:.4f}\n'.format(
                     sim.clock.days, price_index, gdp_index,
                     gdp_growth, unemployment, average_workers,
                     families_wealth, families_savings,
                     firms_wealth, firms_profit, gini_index,
                     average_utility, inflation, average_qli,
-            mun_applied_treasure['equally'],
-            mun_applied_treasure['locally'],
-            mun_applied_treasure['fpm'],
-            mun_applied_treasure['bank']
-        )
+                    house_vacancy,
+                    mun_applied_treasure['equally'],
+                    mun_applied_treasure['locally'],
+                    mun_applied_treasure['fpm'],
+                    mun_applied_treasure['bank'])
 
         with open(self.stats_path, 'a') as f:
             f.write(report)
@@ -232,10 +232,10 @@ class Output:
         with open(self.firms_path, 'a') as f:
             [f.write('%s; %s; %s; %s; %.3f; %.3f; %.3f; %s; %.3f; %.3f; %.3f ; %.3f; %.3f; %.3f; %.3f \n' %
                             (sim.clock.days, firm.id, firm.region_id, firm.region_id[:7], firm.address.x,
-                            firm.address.y, firm.total_balance, firm.num_employees,
-                            firm.total_quantity, firm.amount_produced, firm.inventory[0].price,
-                            firm.amount_sold, firm.revenue, firm.profit,
-                            firm.wages_paid))
+                             firm.address.y, firm.total_balance, firm.num_employees,
+                             firm.total_quantity, firm.amount_produced, firm.inventory[0].price,
+                             firm.amount_sold, firm.revenue, firm.profit,
+                             firm.wages_paid))
             for firm in sim.consumer_firms.values()]
 
         with open(self.construction_path, 'a') as f:
@@ -273,18 +273,18 @@ class Output:
     def save_house_data(self, sim):
         with open(self.houses_path, 'a') as f:
             [f.write('%s;%s;%f;%f;%.2f;%.2f;%s;%.1f;%.2f;%.2f;%s;%s;%s\n' % (sim.clock.days,
-                                                                        house.id,
-                                                                        house.address.x,
-                                                                        house.address.y,
-                                                                        house.size,
-                                                                        house.price,
-                                                                        house.rent_data[0] if house.rent_data else '',
-                                                                        house.quality,
-                                                                        sim.regions[house.region_id].index,
-                                                                        house.on_market,
-                                                                        house.family_id,
-                                                                        house.region_id,
-                                                                        house.region_id[:7]))
+                                                                             house.id,
+                                                                             house.address.x,
+                                                                             house.address.y,
+                                                                             house.size,
+                                                                             house.price,
+                                                                             house.rent_data[0] if house.rent_data else '',
+                                                                             house.quality,
+                                                                             sim.regions[house.region_id].index,
+                                                                             house.on_market,
+                                                                             house.family_id,
+                                                                             house.region_id,
+                                                                             house.region_id[:7]))
              for house in sim.houses.values()]
 
     def save_family_data(self, sim):
