@@ -334,11 +334,13 @@ class ConstructionFirm(Firm):
         return h
 
     # Selling house
-    def update_balance(self, amount, acc_months=1, date=datetime.date(2000, 1, 1)):
-        acc_months = int(acc_months)
+    def update_balance(self, amount, acc_months=None, date=datetime.date(2000, 1, 1)):
         self.total_balance += amount
-        for i in range(acc_months):
-            self.cash_flow[date + relativedelta.relativedelta(months=+1)] += amount/acc_months
+        if acc_months is not None:
+            acc_months = int(acc_months)
+            for i in range(acc_months):
+                self.cash_flow[date] += amount/acc_months
+                date += relativedelta.relativedelta(months=+1)
 
     def wage_base(self, unemployment, ignore_unemployment, date=datetime.date(2000, 1, 1)):
         self.revenue = self.cash_flow[date]
