@@ -222,19 +222,18 @@ class ConstructionFirm(Firm):
         super().__init__(*args, **kwargs)
         self.houses_built = []
         self.houses_for_sale = []
-        self.building = False
-        self.building_region = None
-        self.building_size = None
-        self.building_cost = None
-        self.building_quality = None
+        self.building = defaultdict(dict)
         self.cash_flow = defaultdict(float)
 
-    def plan_house(self, regions, houses, lot_price, markup, seed):
+    def plan_house(self, regions, houses, params, seed):
         """Decide where to build"""
 
-        # H   E   R   E
+        # Check whether production capacity does not exceed hired construction
+        # for the next construction cash flow period
         if self.building:
-            return
+            if sum([self.building[b]['cost'] for b in self.building]) > self.total_qualification(params['ALPHA']) \
+                    / params['PRODUCTIVITY']:
+                return
 
         # Candidate regions for licenses and check of funds to buy license
         regions = [r for r in regions if r.licenses > 0 and self.total_balance > r.license_price]
@@ -266,13 +265,14 @@ class ConstructionFirm(Firm):
         gross_cost = building_size * building_quality
         # Productivity of the company may vary double than exogenous set markup.
         # Productivity reduces the cost of construction and sets the size of profiting when selling
-        productivity = seed.randint(100 - int(2 * markup * 100), 100) / 100
+        productivity = seed.randint(100 - int(2 * params['MARKUP'] * 100), 100) / 100
         building_cost = gross_cost * productivity
 
         # Choose region where construction is most profitable
         # There might not be samples for all regions, so fallback to price of 0
         region_mean_prices = {r_id: sum(vs)/len(vs) for r_id, vs in region_prices.items()}
-        region_profitability = [region_mean_prices.get(r.id, 0) - (r.license_price * building_cost * (1 + lot_price))
+        region_profitability = [region_mean_prices.get(r.id, 0) - (r.license_price * building_cost *
+                                                                   (1 + params['LOT_COST']))
                                 for r in regions]
         regions = [(r, p) for r, p in zip(regions, region_profitability) if p > 0]
 
@@ -282,19 +282,18 @@ class ConstructionFirm(Firm):
 
         # Choose region with highest profitability
         region = max(regions, key=lambda rp: rp[1])[0]
-        self.building_region = region.id
-        self.building_size = building_size
-        self.building_quality = building_quality
-        #
+        idx = len(self.building)
+        self.building[idx]['region'] = region.id
+        self.building[idx]['size'] = building_size
+        self.building[idx]['quality'] = building_quality
+
         # Product.quantity increases as construction moves forward and is deducted at once
-        # H   E   R   E
-        self.building_cost = building_cost * region.license_price
-        self.building = True
+        self.building[idx]['cost'] = building_cost * region.license_price
 
         # Buy license
         region.licenses -= 1
         # Region license price is current QLI. Lot price is the model parameter
-        cost_of_land = region.license_price * building_cost * lot_price
+        cost_of_land = region.license_price * building_cost * params['LOT_COST']
         self.total_balance -= cost_of_land
         region.collect_taxes(cost_of_land, 'transaction')
 
@@ -304,33 +303,33 @@ class ConstructionFirm(Firm):
             return
 
         # Not finished
-        # H   E   R   E
-        if self.total_quantity < self.building_cost:
+        min_cost_idx = [k for k in self.building if self.building[k]['cost'] < self.total_quantity]
+        if not min_cost_idx:
             return
+        else:
+            min_cost_idx = min_cost_idx[0]
 
         # Finished, expend inputs
-        for k, product in self.inventory.items():
-            paid = min(self.building_cost, product.quantity)
-            product.quantity -= paid
-            self.building_cost -= paid
+        # Remember: if inventory of products is expanded for more than 1, this needs adapting
+        paid = min(self.building[min_cost_idx]['cost'], self.inventory[0].quantity)
+        self.inventory[0].quantity -= paid
 
         # Choose random place in region
-        region = regions[self.building_region]
+        region = regions[self.building[min_cost_idx]['region']]
         probability_urban = generator.prob_urban(region)
         address = generator.random_address(region, probability_urban)
 
         # Create the house
         house_id = generator.gen_id()
-        size = self.building_size
-        quality = self.building_quality
+        size = self.building[min_cost_idx]['size']
+        quality = self.building[min_cost_idx]['quality']
         price = (size * quality) * region.index
         h = House(house_id, address, size, price, region.id, quality, owner_id=self.id, owner_type=House.Owner.FIRM)
 
-        # H E R E
+        # Register accomplishments within firms' house inventory
         self.houses_built.append(h)
         self.houses_for_sale.append(h)
 
-        self.building = False
         return h
 
     # Selling house
