@@ -231,8 +231,10 @@ class ConstructionFirm(Firm):
         # Check whether production capacity does not exceed hired construction
         # for the next construction cash flow period
         if self.building:
-            if sum([self.building[b]['cost'] for b in self.building]) > self.total_qualification(params['ALPHA']) \
-                    / params['PRODUCTIVITY']:
+            # Number of houses being built is endogenously dependent on number of works and productivity within a
+            # parameter-specified number of months.
+            if sum([self.building[b]['cost'] for b in self.building]) > params['CONSTRUCTION_ACC_CASH_FLOW'] * \
+                    self.total_qualification(params['ALPHA']) / params['PRODUCTIVITY']:
                 return
 
         # Candidate regions for licenses and check of funds to buy license
