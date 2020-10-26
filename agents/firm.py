@@ -62,7 +62,7 @@ class Firm:
     def update_product_quantity(self, alpha, productivity):
         """Production equation = Labor * qualification ** alpha"""
         if self.employees and self.inventory:
-            # Call get_sum_qualification below: sum([employee.qualification ** parameters.ALPHA
+            # Call get_sum_qualification below: sum([employee.qualification ** parameters.PRODUCTIVITY_EXPONENT
             #                                   for employee in self.employees.values()])
 
             # Divide production by an order of magnitude adjustment parameter
@@ -234,7 +234,7 @@ class ConstructionFirm(Firm):
             # Number of houses being built is endogenously dependent on number of works and productivity within a
             # parameter-specified number of months.
             if sum([self.building[b]['cost'] for b in self.building]) > params['CONSTRUCTION_ACC_CASH_FLOW'] * \
-                    self.total_qualification(params['ALPHA']) / params['PRODUCTIVITY']:
+                    self.total_qualification(params['PRODUCTIVITY_EXPONENT']) / params['PRODUCTIVITY_MAGNITUDE_DIVISOR']:
                 return
 
         # Candidate regions for licenses and check of funds to buy license

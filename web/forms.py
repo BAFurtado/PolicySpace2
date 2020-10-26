@@ -17,4 +17,4 @@ class SimulationForm(FlaskForm):
     n_cpus = IntegerField('Number of cores to use', [Required()], default=2)
     params = TextAreaField('Parameters', [Required()], default=PARAMS)
     config = TextAreaField('Run config', [Required()], default=CONFIG)
-    sensitivity_params = TextAreaField('Sensitivity Params', [Required()], default='WAGE_IGNORE_UNEMPLOYMENT\nALPHA:.04:.94:.1')
+    sensitivity_params = TextAreaField('Sensitivity Params', [Required()], default='WAGE_IGNORE_UNEMPLOYMENT\nPRODUCTIVITY_EXPONENT:.04:.94:.1')
