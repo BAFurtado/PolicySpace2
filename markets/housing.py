@@ -121,11 +121,12 @@ class HousingMarket:
 
     def sales_market(self, sim, purchasing, for_sale):
         # Proceed to Sales market ###########################################################
+        vacancy = sim.stats.calculate_house_vacancy(sim.houses, False)
         # For each family
         for family in purchasing:
-            self.negotiating(family, for_sale, sim)
+            self.negotiating(family, for_sale, sim, vacancy)
 
-    def negotiating(self, family, for_sale, sim):
+    def negotiating(self, family, for_sale, sim, vacancy):
         savings = family.savings
         savings_with_mortgage = family.savings_with_loan
         my_market = sim.seed.sample(for_sale, min(len(for_sale), int(sim.PARAMS['SIZE_MARKET']) * 3))
@@ -137,6 +138,9 @@ class HousingMarket:
         for house in my_market:
             cash = 0
             p = house.price
+            # A large empty market makes those selling ask for a lower price
+            if sim.PARAMS['OFFER_SIZE_ON_PRICE']:
+                p = p * (1 - vacancy)
             # If savings is enough, then price is established as the average of the two
             if savings > p:
                 # Restrict OFFERs that are above a 30% threshold
