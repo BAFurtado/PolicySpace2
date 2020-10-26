@@ -164,7 +164,7 @@ class Simulation:
 
         # Update firm products
         for firm in self.firms.values():
-            firm.update_product_quantity(self.PARAMS['PRODUCTIVITY'])
+            firm.update_product_quantity(self.PARAMS['ALPHA'], self.PARAMS['PRODUCTIVITY'])
 
         # Call demographics
         # Update agent life cycles
@@ -212,7 +212,7 @@ class Simulation:
         for firm in self.firms.values():
             # Tax workers when paying salaries
             firm.make_payment(self.regions, current_unemployment,
-                              self.PARAMS['PRODUCTIVITY'],
+                              self.PARAMS['ALPHA'],
                               self.PARAMS['TAX_LABOR'],
                               self.PARAMS['WAGE_IGNORE_UNEMPLOYMENT'])
             # Tax firms before profits: (revenue - salaries paid)

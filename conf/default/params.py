@@ -4,7 +4,7 @@ import datetime
 # MODEL PARAMETERS
 # FIRMS
 # Production function, labour with decaying exponent, Alpha for K. [0, 1]
-PRODUCTIVITY = .1
+ALPHA = .1
 # By how much percentage to increase prices
 MARKUP = 0.08
 # Frequency firms change prices. Probability > than parameter
@@ -93,6 +93,8 @@ TAXES_STRUCTURE = {'consumption_equal': .1875, 'fpm': .235}
 # GENERAL CALIBRATION PARAMETERS
 # Order of magnitude parameter of input into municipality investment
 TREASURE_INTO_SERVICES = .00034
+# Order of magnitude correction of production. Production divided by parameter
+PRODUCTIVITY = 12
 
 WAGE_TO_CAR_OWNERSHIP_QUANTILES = [
     0.1174,

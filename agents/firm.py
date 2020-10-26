@@ -59,14 +59,14 @@ class Firm:
             self.prices = sum(p.price for p in self.inventory.values()) / len(self.inventory)
 
     # Production department
-    def update_product_quantity(self, productivity):
-        """Production equation = Labor * qualification ** productivity"""
+    def update_product_quantity(self, alpha, productivity):
+        """Production equation = Labor * qualification ** alpha"""
         if self.employees and self.inventory:
-            # Call get_sum_qualification below: sum([employee.qualification ** parameters.PRODUCTIVITY
+            # Call get_sum_qualification below: sum([employee.qualification ** parameters.ALPHA
             #                                   for employee in self.employees.values()])
 
             # Divide production by an order of magnitude adjustment parameter
-            quantity = self.total_qualification(productivity) / (1 - productivity) * 10
+            quantity = self.total_qualification(alpha) / productivity
             # Currently, each firm has only a single product. If more products should be introduced, allocation of
             # quantity per product should be adjusted accordingly
             # Currently, the index for the single product is 0
@@ -146,8 +146,8 @@ class Firm:
             regions[self.region_id].collect_taxes(self.taxes_paid, 'firm')
 
     # Employees' procedures #########
-    def total_qualification(self, productivity):
-        return sum([employee.qualification ** productivity for employee in self.employees.values()])
+    def total_qualification(self, alpha):
+        return sum([employee.qualification ** alpha for employee in self.employees.values()])
 
     def wage_base(self, unemployment, ignore_unemployment):
         if not ignore_unemployment:
@@ -156,18 +156,18 @@ class Firm:
         else:
             return self.revenue
 
-    def make_payment(self, regions, unemployment, productivity, tax_labor, ignore_unemployment):
-        """Pay employees based on revenue, relative employee qualification, labor taxes, and productivity param"""
+    def make_payment(self, regions, unemployment, alpha, tax_labor, ignore_unemployment):
+        """Pay employees based on revenue, relative employee qualification, labor taxes, and alpha param"""
         if self.employees:
             # Total salary, including labor taxes
             total_salary_paid = self.wage_base(unemployment, ignore_unemployment=ignore_unemployment)
             if total_salary_paid > 0:
-                total_qualification = self.total_qualification(productivity)
+                total_qualification = self.total_qualification(alpha)
                 for employee in self.employees.values():
                     # Making payment according to employees' qualification.
                     # Deducing it from firms' balance
                     # Deduce LABOR TAXES from employees' salaries as a percentual of each salary
-                    wage = (total_salary_paid * (employee.qualification ** productivity)
+                    wage = (total_salary_paid * (employee.qualification ** alpha)
                             / total_qualification) * (1 - tax_labor)
                     employee.money += wage
                     employee.last_wage = wage
@@ -234,7 +234,7 @@ class ConstructionFirm(Firm):
             # Number of houses being built is endogenously dependent on number of works and productivity within a
             # parameter-specified number of months.
             if sum([self.building[b]['cost'] for b in self.building]) > params['CONSTRUCTION_ACC_CASH_FLOW'] * \
-                    self.total_qualification(params['PRODUCTIVITY']) / (1 - params['PRODUCTIVITY']) * 10:
+                    self.total_qualification(params['ALPHA']) / params['PRODUCTIVITY']:
                 return
 
         # Candidate regions for licenses and check of funds to buy license
