@@ -1,6 +1,6 @@
 """
 This is the model that organizes the full simulation.
-It handles all the choices of the model, usually set at the Parameters module.
+It handles all the choices of the model, set at the 'params' module.
 
 
 Disclaimer:
@@ -317,6 +317,7 @@ def sensitivity(ctx, params):
             p_name = param
             p_vals = [True, False]
             # TODO: allow for multiple parameters to be update at a time
+        ctx.obj['output_dir'] = ctx.obj['output_dir'].replace('sensitivity', p_name)
         confs = [{p_name: v} for v in p_vals]
 
         # fix the same seed for each run
