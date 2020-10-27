@@ -159,15 +159,15 @@ class Plotter:
 
         to_plot = {
             'price': {
-                'title': 'Median house prices by month',
+                'title': 'Mean house prices by month',
                 'name': 'prices'
             },
             'on_market': {
-                'title': 'Median house time on market by month',
+                'title': 'Mean house time on market by month',
                 'name': 'time_on_market'
             }
         }
-        df = dat.groupby(['month', 'mun_id'], as_index=False).median()
+        df = dat.groupby(['month', 'mun_id'], as_index=False).mean()
         for k, d in to_plot.items():
             title = d['title']
             name = d['name']
@@ -184,32 +184,32 @@ class Plotter:
 
         to_plot = {
             'house_rent': {
-                'title': 'Median rent value by month',
+                'title': 'Mean rent value by month',
                 'name': 'rents'
             },
             'total_wage': {
-                'title': 'Median total wage by month',
+                'title': 'Mean total wage by month',
                 'name': 'total_wages'
             },
             'savings': {
-                'title': 'Median savings by month',
+                'title': 'Mean savings by month',
                 'name': 'savings'
             },
             'affordable_rent': {
-                'title': 'Median number of families for whom rent is affordable (30%) by month',
+                'title': 'Mean number of families for whom rent is affordable (30%) by month',
                 'name': 'affordable'
             },
             'income_towards_rent': {
-                'title': 'Median rent as share of income by month',
+                'title': 'Mean rent as share of income by month',
                 'name': 'rent_shares'
             },
             'renting': {
-                'title': 'Median number of families that are renting by month',
+                'title': 'Mean number of families that are renting by month',
                 'name': 'renting'
             }
         }
 
-        df = dat.groupby(['month', 'mun_id'], as_index=False).median()
+        df = dat.groupby(['month', 'mun_id'], as_index=False).mean()
         for k, d in to_plot.items():
             title = d['title']
             name = d['name']

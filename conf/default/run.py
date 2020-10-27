@@ -2,8 +2,8 @@
 # Change your output directory as necessary
 
 
-# OUTPUT_PATH = 'output'
-OUTPUT_PATH = r'\\STORAGE1\CARGA\MODELO DINAMICO DE SIMULACAO\EXITS_PYTHON\PS2020'
+OUTPUT_PATH = 'output'
+# OUTPUT_PATH = r'\\STORAGE1\CARGA\MODELO DINAMICO DE SIMULACAO\EXITS_PYTHON\PS2020'
 
 KEEP_RANDOM_SEED = False
 
@@ -42,8 +42,8 @@ SAVE_AGENTS_DATA = 'MONTHLY'
 # If you don't save "house" data for instance you can't generate housing plots.
 # Can include: ['agents', 'grave', 'house', 'family', 'banks']
 # If None, set to empty list: []
-SAVE_DATA = []
-# SAVE_DATA = ['house', 'family', 'banks', 'firms']
+# SAVE_DATA = []
+SAVE_DATA = ['house', 'family', 'banks', 'firms']
 
 # What data to average across all runs. If plotting, needs to include them in SAVE_DATA as well
 # Options: ['stats', 'families', 'houses', 'firms', 'regional', 'banks', 'construction']
