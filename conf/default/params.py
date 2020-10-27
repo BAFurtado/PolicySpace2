@@ -4,7 +4,7 @@ import datetime
 # MODEL PARAMETERS
 # FIRMS
 # Production function, labour with decaying exponent, Alpha for K. [0, 1]
-PRODUCTIVITY_EXPONENT = .4
+PRODUCTIVITY_EXPONENT = .5
 # Order of magnitude correction of production. Production divided by parameter
 PRODUCTIVITY_MAGNITUDE_DIVISOR = 10
 # By how much percentage to increase prices
@@ -15,14 +15,14 @@ STICKY_PRICES = .5
 SIZE_MARKET = 10
 
 # Frequency firms enter the market
-LABOR_MARKET = 0.3
+LABOR_MARKET = 0.4
 
 # Percentage of employees firms hire by distance
 PCT_DISTANCE_HIRING = .4
 # Ignore unemployment in wage base calculation
 WAGE_IGNORE_UNEMPLOYMENT = False
 # Candidate sample size for the labor market
-HIRING_SAMPLE_SIZE = 23
+HIRING_SAMPLE_SIZE = 20
 
 # TAXES
 TAX_CONSUMPTION = .3
@@ -69,12 +69,12 @@ ON_MARKET_DECAY_FACTOR = -.02
 MAX_OFFER_DISCOUNT = .5
 
 # CONSTRUCTION
-# LICENSES ARE URBANIZED LOTS AVAILABLE FOR CONSTRUCTION
-T_LICENSES_PER_REGION = 10
+# LICENSES ARE URBANIZED LOTS AVAILABLE FOR CONSTRUCTION PER NEIGHBORHOOD PER MONTH
+T_LICENSES_PER_REGION = 1
 PERCENT_CONSTRUCTION_FIRMS = 0.05
 # Months that construction firm will divide its income into monthly revenue installments.
 # Although prices are accounted for at once.
-CONSTRUCTION_ACC_CASH_FLOW = 24
+CONSTRUCTION_ACC_CASH_FLOW = 36
 # Cost of lot in PERCENTAGE of construction
 LOT_COST = .1
 
@@ -95,8 +95,7 @@ TAXES_STRUCTURE = {'consumption_equal': .1875, 'fpm': .235}
 
 # GENERAL CALIBRATION PARAMETERS
 # Order of magnitude parameter of input into municipality investment
-TREASURE_INTO_SERVICES = .00034
-
+TREASURE_INTO_SERVICES = .00007
 
 WAGE_TO_CAR_OWNERSHIP_QUANTILES = [
     0.1174,
