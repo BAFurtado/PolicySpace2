@@ -1,6 +1,6 @@
 """
 This is the model that organizes the full simulation.
-It handles all the choices of the model, usually set at the Parameters module.
+It handles all the choices of the model, set at the 'params' module.
 
 
 Disclaimer:
