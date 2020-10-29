@@ -65,10 +65,10 @@ def cut(f, n=10000):
     return f
 
 
-def reg_simulated(data, cols_x):
+def reg_simulated(data, cols_x, col_y='house_value'):
     data = data[data['months'] == '2019-12-01']
     x = data[cols_x]
-    y = data[['house_value']]
+    y = data[[col_y]]
     regression(x, y, 'simulated')
 
 
@@ -87,8 +87,6 @@ def regression(x, y, name):
 
     results = pd.DataFrame(lm1.params)
     results.reset_index().to_csv(f'{name}_params_results.csv', sep=';', index=False)
-
-    # print_reg3(lm1, f'{name}2.md')
 
 
 def auxiliar_cols_names(data, names):
@@ -129,7 +127,10 @@ def prepare_simulated_data(loc, year=2010):
     data['price_area'] = data['house_value'] / data['size']
 
     # Exclude 'lat', 'long'
-    cols = ['size', 'quality', 'price_area']
+    cols = ['size', 'quality']
+    print('-------- BASIC DESCRIPTION -- SIMULATED DATA ---------')
+    basic_description(data, cols + ['house_value'])
+    basic_description(data, ['price_area'])
     data = normalize_data(data, 'house_value')
     for col in cols:
         data = normalize_data(data, col)
@@ -145,9 +146,7 @@ def prepare_simulated_data(loc, year=2010):
     return data, cols + dummies_cols
 
 
-def print_plot_basic_data(data):
-    print('-------- BASIC DESCRIPTION -- SIMULATED DATA ---------')
-    basic_description(data, cols + ['house_value'])
+def plot_basic_data(data):
     plot_distribution(data, 'house_value', 'simulated')
     plot_distribution(data, 'price_area', 'simulated_util')
 
@@ -172,17 +171,18 @@ def prepare_real_data(data):
 
 
 if __name__ == '__main__':
-    import os
-    print(os.getcwd())
     # # # # #      S I M U L A T E D     # # # # #
     # Enter file location for simulated data
-    file = r'/home/furtadobb/MyModels/PolicySpace2/output/run__2020-10-27T13_41_14.110383/0/temp_houses.csv'
+    file = r'../output/run__2020-10-27T13_41_14.110383/0/temp_houses.csv'
     # file = '../other/PS2_validation/input_data/reduced_house.csv'
 
     # mun_names = pd.read_csv('../../input/names_and_codes_municipalities.csv', sep=';')
     simulated_data, cols = prepare_simulated_data(file)
-    print_plot_basic_data(simulated_data)
+    plot_basic_data(simulated_data)
     reg_simulated(simulated_data, cols)
+    print('SIMULATED DATA RENTAL REGRESSION')
+    rent_simulated = simulated_data.dropna()
+    reg_simulated(rent_simulated, cols, 'rent')
 
     # # # # #      R  E  A  L     # # # # #
     # Enter file location for REAL data
