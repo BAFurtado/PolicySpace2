@@ -5,7 +5,11 @@ import folium
 import pandas as pd
 from folium.plugins import HeatMap
 
-from analysis.house_values import organize
+
+def organize(f):
+    f.columns = ['months', 'id', 'long', 'lat', 'size', 'house_value', 'rent', 'quality', 'qli', 'on_market',
+                 'family_id', 'region_id', 'mun_id']
+    return f
 
 
 def generate_base_map(lat=-17.8, long=-47.8, default_zoom_start=11):

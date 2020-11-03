@@ -134,22 +134,18 @@ def cut(f, n=10000):
 
 
 if __name__ == "__main__":
-    location = r'/home/furtadobb/MyModels/PolicySpace2/output/run__2020-10-27T13_41_14.110383/0/temp_houses.csv'
-    if len(sys.argv) > 1:
-        file = pd.read_csv(sys.argv[1], sep=';', header=None)
-    else:
-        try:
-            file = pd.read_csv(location, sep=';', header=None)
-        except FileNotFoundError:
-            file = pd.read_csv(r'output/run__2020-09-29T1_03_40.706787/0/temp_houses.csv', sep=';', header=None)
+    location = r'../output/run__2020-11-03T17_40_07.703931/0/temp_houses.csv'
+    try:
+        file = pd.read_csv(location, sep=';', header=None)
+    except FileNotFoundError:
+        file = pd.read_csv(r'output/run__2020-09-29T1_03_40.706787/0/temp_houses.csv', sep=';', header=None)
     try:
         mun_names = pd.read_csv('./input/names_and_codes_municipalities.csv', sep=';', header=0)
     except FileNotFoundError:
         mun_names = pd.read_csv('../input/names_and_codes_municipalities.csv', sep=';', header=0)
     basics(file, mun_names, 'mun_id')
     plot(file)
-    # m = 50000
-    # file = cut(file, m)
+
     file = organize(file)
     print(file.columns)
     chord_base = prepare_chord(file, mun_names)
