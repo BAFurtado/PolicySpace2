@@ -202,5 +202,3 @@ if __name__ == '__main__':
     reg_realdata(real_rental_data, cols, 'price', 'rent')
 
     # TODO: Add chords
-    # TODO: Check histograms
-

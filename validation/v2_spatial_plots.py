@@ -1,0 +1,78 @@
+import pandas as pd
+import branca
+import folium
+import geopandas as gpd
+import matplotlib.pyplot as plt
+import pandas as pd
+from collections import defaultdict
+from folium.plugins import HeatMap
+from analysis.house_values import organize
+
+
+def generate_base_map(lat=-17.8, long=-47.8, default_zoom_start=11):
+    return folium.Map(location=[lat, long], control_scale=True, zoom_start=default_zoom_start)
+
+
+def generate_heatmap(data, gradient, base_map, radius=8):
+    HeatMap(data=data, gradient=gradient, radius=radius, max_zoom=2).add_to(base_map)
+
+
+def generate_legend(col):
+    steps = 20
+    colormap = branca.colormap.linear.RdYlGn_07.scale(0, 1).to_step(steps)
+    colormap.caption = col.capitalize()
+    gradient_map = defaultdict(dict)
+    for i in range(steps):
+        gradient_map[1 / steps * i] = colormap.rgb_hex_str(1 / steps * i)
+    return colormap, gradient_map
+
+
+def normalize_data(data, col):
+    mn = data[col].min()
+    if mn > 0:
+        mn = -mn
+    data[col] += mn
+    data[col] = data[col]/data[col].max()
+    return data
+
+
+def main(data, col, flag='rent', rad=12):
+    base = generate_base_map(-15.77972, -47.92972)
+    # data = restrict_quantile(data, col)
+    data = normalize_data(data, col)
+    heat_ = data[['latitude', 'longitude', col]]
+    heat_ = heat_.dropna()
+    heat_data = heat_.values.tolist()
+    leg, gradient = generate_legend(col)
+    generate_heatmap(heat_data, gradient, base, radius=rad)
+    leg.add_to(base)
+    filepath = f'output/{flag}_{col}_r{rad}.html'
+    base.save(filepath)
+
+
+if __name__ == '__main__':
+    # Comparable between REAL and SIMULATED data
+    # #######     SIMULATED DATA ###############
+    # Read file
+    file = r'../output/run__2020-11-03T17_40_07.703931/0/temp_houses.csv'
+    file = pd.read_csv(file, sep=';')
+    # Add columns
+    file = organize(file)
+    # Restricting to DF data
+    file = file[file.region_id.astype(str).str.startswith('53')]
+    # Restricting to last month of simulation
+    file = file[file['months'] == '2019-12-01']
+    file = file.rename(columns={'lat': 'latitude', 'long': 'longitude'})
+
+    main(file, 'house_value', 'simulated_sales')
+    main(file, 'rent', 'simulated_rent')
+
+    # #######     REAL DATA ###############
+    n = 300
+    file = f'sensible_sales_{n}.csv'
+    real_sales_data = pd.read_csv(file, sep=';')
+    main(real_sales_data, 'price', 'real_sales')
+
+    file = f'sensible_rent_{n}.csv'
+    real_rent_data = pd.read_csv(file, sep=';')
+    main(real_rent_data, 'price', 'real_rent')

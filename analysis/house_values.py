@@ -125,7 +125,7 @@ def plot_chord(df):
     # To save to figure
     # hv.extension("matplotlib")
     # hv.output(fig='svg', size=250)
-    hv.save(chord, 'chord.html')
+    hv.save(chord, '../other/PS2_validation/chord.html')
 
 
 def cut(f, n=10000):
