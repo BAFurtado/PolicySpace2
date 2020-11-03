@@ -1,11 +1,10 @@
-import pandas as pd
+from collections import defaultdict
+
 import branca
 import folium
-import geopandas as gpd
-import matplotlib.pyplot as plt
 import pandas as pd
-from collections import defaultdict
 from folium.plugins import HeatMap
+
 from analysis.house_values import organize
 
 
@@ -71,8 +70,8 @@ if __name__ == '__main__':
     n = 300
     file = f'sensible_sales_{n}.csv'
     real_sales_data = pd.read_csv(file, sep=';')
-    main(real_sales_data, 'price', 'real_sales')
+    main(real_sales_data, 'price', 'real_sales', rad=14)
 
     file = f'sensible_rent_{n}.csv'
     real_rent_data = pd.read_csv(file, sep=';')
-    main(real_rent_data, 'price', 'real_rent')
+    main(real_rent_data, 'price', 'real_rent', rad=16)
