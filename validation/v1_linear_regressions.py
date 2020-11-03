@@ -65,28 +65,28 @@ def cut(f, n=10000):
     return f
 
 
-def reg_simulated(data, cols_x, col_y='house_value'):
+def reg_simulated(data, cols_x, col_y='house_value', name='sales'):
     data = data[data['months'] == '2019-12-01']
     x = data[cols_x]
     y = data[[col_y]]
-    regression(x, y, 'simulated')
+    regression(x, y, f'simulated_{name}')
 
 
-def reg_realdata(data, cols_x):
+def reg_realdata(data, cols_x, col_y='price', name='sales'):
     x = data[cols_x]
-    y = data[['price']]
-    regression(x, y, 'real')
+    y = data[[col_y]]
+    regression(x, y, f'real_{name}')
 
 
 def regression(x, y, name):
     lm1 = reg2(y, x.astype(np.float), name)
     print(lm1.summary())
     # Gravação de resultados
-    with open(f'{name}1.md', 'w') as f:
+    with open(f'output/{name}1.md', 'w') as f:
         f.write(lm1.summary().as_text())
 
     results = pd.DataFrame(lm1.params)
-    results.reset_index().to_csv(f'{name}_params_results.csv', sep=';', index=False)
+    results.reset_index().to_csv(f'output/{name}_params_results.csv', sep=';', index=False)
 
 
 def auxiliar_cols_names(data, names):
@@ -99,7 +99,7 @@ def auxiliar_cols_names(data, names):
 
 
 def plot_distribution(data, col, title):
-    plt.hist(data[col], bins=50)
+    plt.hist(data[col], bins=200)
     plt.title(title)
     plt.show()
 
@@ -173,28 +173,34 @@ def prepare_real_data(data):
 if __name__ == '__main__':
     # # # # #      S I M U L A T E D     # # # # #
     # Enter file location for simulated data
-    file = r'../output/run__2020-10-27T13_41_14.110383/0/temp_houses.csv'
-    # file = '../other/PS2_validation/input_data/reduced_house.csv'
-
-    # mun_names = pd.read_csv('../../input/names_and_codes_municipalities.csv', sep=';')
+    file = r'../output/run__2020-11-03T17_40_07.703931/0/temp_houses.csv'
     simulated_data, cols = prepare_simulated_data(file)
     plot_basic_data(simulated_data)
+
+    print('SIMULATED DATA SALES REGRESSION')
     reg_simulated(simulated_data, cols)
+
     print('SIMULATED DATA RENTAL REGRESSION')
     rent_simulated = simulated_data.dropna()
-    reg_simulated(rent_simulated, cols, 'rent')
+    reg_simulated(rent_simulated, cols, 'rent', 'rent')
 
     # # # # #      R  E  A  L     # # # # #
     # Enter file location for REAL data
     n = 300
-    # r = pd.read_csv(f'data/sensible_rent_{n}.csv', sep=';')
-    file = f'sensible_rent_{n}.csv'
+    print('REAL DATA SALES REGRESSION')
+    file = f'sensible_sales_{n}.csv'
     real_sales_data = pd.read_csv(file, sep=';')
     real_sales_data, cols = prepare_real_data(real_sales_data)
     plot_distribution(real_sales_data, 'price', 'real_price')
     plot_distribution(real_sales_data, 'price_util', 'real_price_util')
     reg_realdata(real_sales_data, cols)
 
+    print('REAL DATA RENTAL REGRESSION')
+    file = f'sensible_rent_{n}.csv'
+    real_rental_data = pd.read_csv(file, sep=';')
+    real_rental_data, cols = prepare_real_data(real_rental_data)
+    reg_realdata(real_rental_data, cols, 'price', 'rent')
+
     # TODO: Add chords
     # TODO: Check histograms
-    # TODO: Add rent analysis
+
