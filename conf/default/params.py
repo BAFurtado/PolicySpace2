@@ -12,7 +12,7 @@ MARKUP = 0.08
 # Frequency firms change prices. Probability > than parameter
 STICKY_PRICES = .5
 # Number of firms consulted before consumption
-SIZE_MARKET = 10
+SIZE_MARKET = 12
 
 # Frequency firms enter the market
 LABOR_MARKET = 0.4
@@ -95,7 +95,7 @@ TAXES_STRUCTURE = {'consumption_equal': .1875, 'fpm': .235}
 
 # GENERAL CALIBRATION PARAMETERS
 # Order of magnitude parameter of input into municipality investment
-TREASURE_INTO_SERVICES = .0001
+TREASURE_INTO_SERVICES = .00008
 
 WAGE_TO_CAR_OWNERSHIP_QUANTILES = [
     0.1174,
