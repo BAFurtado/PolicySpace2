@@ -173,7 +173,7 @@ def prepare_real_data(data):
 if __name__ == '__main__':
     # # # # #      S I M U L A T E D     # # # # #
     # Enter file location for simulated data
-    file = r'../output/run__2020-11-03T17_40_07.703931/0/temp_houses.csv'
+    file = r'input/reduced_house_rental_.3.csv'
     simulated_data, cols = prepare_simulated_data(file)
     plot_basic_data(simulated_data)
 
