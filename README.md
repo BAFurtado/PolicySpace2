@@ -65,6 +65,9 @@ up to permanent income
 19. A neighborhood effect (wealth of resident families influence price of houses)
 20. Decay effect on prices due to excess of houses on offer 
 21. Data updated (from census 2000 to census 2010)
+22. Offer decay (time depreciation) implemented
+23. Global availability of houses (vacancy) influences prices
+24. Neighborhood effects (based on families' wealth) influence prices.
 
 #### How do I get set up?
 
