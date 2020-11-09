@@ -200,5 +200,3 @@ if __name__ == '__main__':
     real_rental_data = pd.read_csv(file, sep=';')
     real_rental_data, cols = prepare_real_data(real_rental_data)
     reg_realdata(real_rental_data, cols, 'price', 'rent')
-
-    # TODO: Add chords

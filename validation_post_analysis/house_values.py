@@ -134,16 +134,13 @@ def cut(f, n=10000):
 
 
 if __name__ == "__main__":
-    location = r'../output/run__2020-11-03T17_40_07.703931/0/temp_houses.csv'
-    try:
-        file = pd.read_csv(location, sep=';', header=None)
-    except FileNotFoundError:
-        file = pd.read_csv(r'output/run__2020-09-29T1_03_40.706787/0/temp_houses.csv', sep=';', header=None)
+    location = f'../output/run__2020-11-04T16_58_43.402477/0/temp_houses.csv'
+    file = pd.read_csv(location, sep=';', header=None)
     try:
         mun_names = pd.read_csv('./input/names_and_codes_municipalities.csv', sep=';', header=0)
     except FileNotFoundError:
         mun_names = pd.read_csv('../input/names_and_codes_municipalities.csv', sep=';', header=0)
-    basics(file, mun_names, 'mun_id')
+    file = basics(file, mun_names, 'mun_id')
     plot(file)
 
     file = organize(file)
