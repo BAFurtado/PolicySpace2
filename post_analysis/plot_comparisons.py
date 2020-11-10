@@ -36,22 +36,24 @@ def restrict_quantile(data, col, max_q=.9, min_q=.1):
 
 
 def prepare_data(file):
-    s_sales_price = pd.read_csv(file, sep=';', header=None, usecols=[4, 5])
+    s_sales_price = pd.read_csv(file, sep=';', header=None, usecols=[0, 4, 5])
+    s_sales_price = s_sales_price[s_sales_price[0] == '2019-12-01']
     s_sales_price['price_util'] = s_sales_price[5] / s_sales_price[4]
     s_sales_price = restrict_quantile(s_sales_price, 'price_util')
     s_sales_price = normalize_data(s_sales_price, 'price_util')
     s_sales_price = s_sales_price[['price_util']]
-    s_rent_price = pd.read_csv(file, sep=';', header=None, usecols=[4, 6])
+    s_rent_price = pd.read_csv(file, sep=';', header=None, usecols=[0, 4, 6])
+    s_rent_price = s_rent_price[s_rent_price[0] == '2019-12-01']
     s_rent_price = s_rent_price.dropna()
     s_rent_price['price_util'] = s_rent_price[6]/s_rent_price[4]
     s_rent_price = restrict_quantile(s_rent_price, 'price_util')
     s_rent_price = normalize_data(s_rent_price, 'price_util')
     s_rent_price = s_rent_price[['price_util']]
     n = 300
-    file = f'post_analysis/sensible_sales_{n}.csv'
+    file = f'sensible_sales_{n}.csv'
     real_sales_data = pd.read_csv(file, sep=';', usecols=['price_util'])
     real_sales_data = normalize_data(real_sales_data, 'price_util')
-    file = f'post_analysis/sensible_rent_{n}.csv'
+    file = f'sensible_rent_{n}.csv'
     real_rental_data = pd.read_csv(file, sep=';', usecols=['price_util'])
     real_rental_data = normalize_data(real_rental_data, 'price_util')
     return s_sales_price, real_sales_data, s_rent_price, real_rental_data
