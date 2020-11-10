@@ -1,8 +1,6 @@
-import pandas as pd
-import numpy as np
 from scipy import stats
-from linear_regressions import normalize_data
-from plot_comparisons import prepare_data
+
+from post_analysis.plot_comparisons import prepare_data
 
 
 def ks_test(rvs1, rvs2, significance_level=0.1):

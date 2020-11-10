@@ -1,11 +1,10 @@
 import matplotlib.pyplot as plt
+import numpy as np
 import pandas as pd
 import seaborn as sns
-import numpy as np
-from scipy.stats import ks_2samp
-from sklearn.preprocessing import scale
 from statsmodels.graphics.gofplots import qqplot_2samples as qq
-from linear_regressions import normalize_data
+
+from post_analysis.linear_regressions import normalize_data
 
 
 def plot_hist(x, y):
@@ -49,10 +48,10 @@ def prepare_data(file):
     s_rent_price = normalize_data(s_rent_price, 'price_util')
     s_rent_price = s_rent_price[['price_util']]
     n = 300
-    file = f'sensible_sales_{n}.csv'
+    file = f'post_analysis/sensible_sales_{n}.csv'
     real_sales_data = pd.read_csv(file, sep=';', usecols=['price_util'])
     real_sales_data = normalize_data(real_sales_data, 'price_util')
-    file = f'sensible_rent_{n}.csv'
+    file = f'post_analysis/sensible_rent_{n}.csv'
     real_rental_data = pd.read_csv(file, sep=';', usecols=['price_util'])
     real_rental_data = normalize_data(real_rental_data, 'price_util')
     return s_sales_price, real_sales_data, s_rent_price, real_rental_data
