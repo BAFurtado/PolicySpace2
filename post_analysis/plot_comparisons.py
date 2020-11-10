@@ -11,28 +11,23 @@ from linear_regressions import normalize_data
 def plot_hist(x, y):
     sns.set()
     plt.figure()
-    sns.distplot(x, hist=True)
-    sns.distplot(y, hist=True)
+    sns.distplot(x, hist=True, label='simulated')
+    sns.distplot(y, hist=True, label='real')
+    plt.legend()
     plt.show()
 
 
 def plot_qq(x, y):
     # Checking length
+    plt.figure()
     if len(x) > len(y):
-        x = x[:len(y)]
+        x = np.random.choice(x, len(y))
     else:
         y = y[:len(x)]
     qq(x, y, line='45')
+    labels = ['simulated', 'real']
+    plt.legend(labels)
     plt.show()
-
-
-def plot_density_test_ks(x, y):
-    sns.set()
-    plt.figure()
-    sns.distplot(x, hist=False)
-    sns.distplot(y, hist=False)
-    # plt.legend()
-    plot_qq(x, y)
 
 
 def restrict_quantile(data, col, max_q=.9, min_q=.1):
@@ -66,11 +61,11 @@ def prepare_data(file):
 if __name__ == "__main__":
     # Get Data
     # column 5 - house_prices, column 6 - rent, column 4 - size
-    f = r'../output/run__2020-11-09T18_39_50.100306/0/temp_houses.csv'
+    f = r'../output/run__2020-11-04T16_58_43.402477/0/temp_houses.csv'
     s_sales, r_sales, s_rent, r_rent = prepare_data(f)
 
-    plot_density_test_ks(s_sales['price_util'], r_sales['price_util'])
-    plot_density_test_ks(s_rent['price_util'], r_rent['price_util'])
+    plot_qq(s_sales['price_util'], r_sales['price_util'])
+    plot_qq(s_rent['price_util'], r_rent['price_util'])
 
     plot_hist(s_sales['price_util'], r_sales['price_util'])
     plot_hist(s_rent['price_util'], r_rent['price_util'])
