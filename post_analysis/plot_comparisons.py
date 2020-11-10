@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import seaborn as sns
+import os
 from statsmodels.graphics.gofplots import qqplot_2samples as qq
 
 from post_analysis.linear_regressions import normalize_data
@@ -35,7 +36,7 @@ def restrict_quantile(data, col, max_q=.9, min_q=.1):
     return tmp
 
 
-def prepare_data(file):
+def prepare_data(file, real_sales_data=None, real_rental_data=None):
     s_sales_price = pd.read_csv(file, sep=';', header=None, usecols=[0, 4, 5])
     s_sales_price = s_sales_price[s_sales_price[0] == '2019-12-01']
     s_sales_price['price_util'] = s_sales_price[5] / s_sales_price[4]
@@ -49,20 +50,21 @@ def prepare_data(file):
     s_rent_price = restrict_quantile(s_rent_price, 'price_util')
     s_rent_price = normalize_data(s_rent_price, 'price_util')
     s_rent_price = s_rent_price[['price_util']]
-    n = 300
-    file = f'sensible_sales_{n}.csv'
-    real_sales_data = pd.read_csv(file, sep=';', usecols=['price_util'])
-    real_sales_data = normalize_data(real_sales_data, 'price_util')
-    file = f'sensible_rent_{n}.csv'
-    real_rental_data = pd.read_csv(file, sep=';', usecols=['price_util'])
-    real_rental_data = normalize_data(real_rental_data, 'price_util')
+    if real_sales_data is None:
+        file = r'C:\Users\R1702898\Documents\PolicySpace2\post_analysis/sensible_sales_300.csv'
+        real_sales_data = pd.read_csv(file, sep=';', usecols=['price_util'])
+        real_sales_data = normalize_data(real_sales_data, 'price_util')
+        file = r'C:\Users\R1702898\Documents\PolicySpace2\post_analysis/sensible_rent_300.csv'
+        real_rental_data = pd.read_csv(file, sep=';', usecols=['price_util'])
+        real_rental_data = normalize_data(real_rental_data, 'price_util')
     return s_sales_price, real_sales_data, s_rent_price, real_rental_data
 
 
 if __name__ == "__main__":
     # Get Data
     # column 5 - house_prices, column 6 - rent, column 4 - size
-    f = r'../output/run__2020-11-04T16_58_43.402477/0/temp_houses.csv'
+    f = r'\\STORAGE1\CARGA\MODELO DINAMICO DE SIMULACAO\Exits_python\PS2020' \
+        r'\RENTAL_SHARE__2020-11-03T23_17_41.490300\RENTAL_SHARE=0.3\0\temp_houses.csv'
     s_sales, r_sales, s_rent, r_rent = prepare_data(f)
 
     plot_qq(s_sales['price_util'], r_sales['price_util'])
