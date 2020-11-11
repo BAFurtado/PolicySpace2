@@ -1,7 +1,9 @@
+import numpy as np
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import seaborn as sns
+from scipy import stats
 from statsmodels.graphics.gofplots import qqplot_2samples as qq
 
 from post_analysis.linear_regressions import normalize_data
@@ -59,10 +61,18 @@ def prepare_data(file):
     return s_sales_price, real_sales_data, s_rent_price, real_rental_data
 
 
+def ks_test(rvs1, rvs2, significance_level=0.1):
+    """kolmogorov-smirnov test. if returns True, then cannot reject the null hypothesis that
+    both samples are from the same distribution, else reject
+    """
+    d, p = stats.ks_2samp(rvs1, rvs2)
+    return p > significance_level, p, d
+
+
 if __name__ == "__main__":
     # Get Data
     # column 5 - house_prices, column 6 - rent, column 4 - size
-    f = r'../output/run__2020-11-04T16_58_43.402477/0/temp_houses.csv'
+    f = r'../output/run__2020-11-11T12_35_02.282507/0/temp_houses.csv'
     s_sales, r_sales, s_rent, r_rent = prepare_data(f)
 
     plot_qq(s_sales['price_util'], r_sales['price_util'])
@@ -70,3 +80,6 @@ if __name__ == "__main__":
 
     plot_hist(s_sales['price_util'], r_sales['price_util'])
     plot_hist(s_rent['price_util'], r_rent['price_util'])
+
+    print(ks_test(s_sales['price_util'], r_sales['price_util']))
+    print(ks_test(s_rent['price_util'], r_rent['price_util']))
