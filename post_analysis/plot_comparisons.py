@@ -18,7 +18,7 @@ def plot_hist(x, y):
     plt.show()
 
 
-def plot_qq(x, y):
+def plot_qq(x, y, name=None):
     # Checking length
     plt.figure()
     if len(x) > len(y):
@@ -28,7 +28,10 @@ def plot_qq(x, y):
     qq(x, y, line='45')
     labels = ['simulated', 'real']
     plt.legend(labels)
-    plt.show()
+    if name:
+        plt.savefig(f'{name}.png')
+    else:
+        plt.show()
 
 
 def restrict_quantile(data, col, max_q=.9, min_q=.1):
