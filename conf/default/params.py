@@ -1,5 +1,5 @@
 import datetime
-
+import random
 
 # MODEL PARAMETERS
 # FIRMS
@@ -68,8 +68,9 @@ RENTAL_SHARE = 0.4
 INITIAL_RENTAL_PRICE = .0028
 
 # CONSTRUCTION
-# LICENSES ARE URBANIZED LOTS AVAILABLE FOR CONSTRUCTION PER NEIGHBORHOOD PER MONTH
-T_LICENSES_PER_REGION = 1
+# LICENSES ARE URBANIZED LOTS AVAILABLE FOR CONSTRUCTION PER NEIGHBORHOOD PER MONTH.
+# If random, it will vary between 1 and 0, otherwise an integer
+T_LICENSES_PER_REGION = 'random'
 PERCENT_CONSTRUCTION_FIRMS = 0.05
 # Months that construction firm will divide its income into monthly revenue installments.
 # Although prices are accounted for at once.

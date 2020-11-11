@@ -54,7 +54,7 @@ class Generator:
         idhm = idhm.loc[idhm['year'] == self.sim.geo.year]
         regions = {}
         for item in self.shapes:
-            r = Region(item, licenses=self.sim.PARAMS['T_LICENSES_PER_REGION'])
+            r = Region(item, 1)
             # mun code is always first 7 digits of id,
             # if it's a municipality shape or an AP shape
             mun_code = r.id[:7]

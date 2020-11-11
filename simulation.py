@@ -157,7 +157,10 @@ class Simulation:
 
         # Create new land licenses
         for region in self.regions.values():
-            region.licenses += self.PARAMS['T_LICENSES_PER_REGION']
+            if self.PARAMS['T_LICENSES_PER_REGION'] == 'random':
+                region.licenses += self.seed.choice([True, False])
+            else:
+                region.licenses += self.PARAMS['T_LICENSES_PER_REGION']
 
         # Create new firms according to average historical growth
         firm_growth(self)
