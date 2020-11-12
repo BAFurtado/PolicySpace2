@@ -28,7 +28,8 @@ OUTPUT_DATA_SPEC = {
         },
         'columns': ['month', 'price_index', 'gdp_index', 'gdp_growth', 'unemployment', 'average_workers',
                     'families_wealth', 'families_savings', 'firms_wealth', 'firms_profit', 'gini_index',
-                    'average_utility', 'inflation', 'average_qli', 'house_vacancy', 'equally', 'locally', 'fpm', 'bank']
+                    'average_utility', 'inflation', 'average_qli', 'house_vacancy', 'house_price', 'house_rent',
+                    'equally', 'locally', 'fpm', 'bank']
     },
     'families': {
         'avg': {
@@ -121,8 +122,7 @@ class Output:
             AGENTS_PATH,
             '_'.join([str(self.sim.PARAMS[name]) for name in GENERATOR_PARAMS]),
             '_'.join(sim.geo.states_on_process),
-            '_'.join(sim.geo.processing_acps_codes)
-        )
+            '_'.join(sim.geo.processing_acps_codes))
 
     def save_stats_report(self, sim, bank_taxes):
         price_index, inflation = sim.stats.update_price(sim.firms)
@@ -136,23 +136,19 @@ class Output:
         average_utility = sim.stats.calculate_utility(sim.families)
         average_qli = sim.stats.average_qli(sim.regions)
         house_vacancy = sim.stats.calculate_house_vacancy(sim.houses)
+        house_price = sim.stats.calculate_house_price(sim.houses)
+        house_rent = sim.stats.calculate_rent_price(sim.houses)
         mun_applied_treasure = defaultdict(int)
         mun_applied_treasure['bank'] = bank_taxes
         for k in ['equally', 'locally', 'fpm']:
             mun_applied_treasure[k] = sum(r.applied_treasure[k] for r in sim.regions.values())
 
-        report = '{};{:.3f};{:.3f};{:.3f};{:.3f};{:.3f};{:.3f};{:.3f};{:.3f};{:.3f};{:.4f};{:.3f};{:.3f};{:.4f};' \
-                 '{:.4f};{:.4f};{:.4f};{:.4f};{:.4f}\n'.format(
-                    sim.clock.days, price_index, gdp_index,
-                    gdp_growth, unemployment, average_workers,
-                    families_wealth, families_savings,
-                    firms_wealth, firms_profit, gini_index,
-                    average_utility, inflation, average_qli,
-                    house_vacancy,
-                    mun_applied_treasure['equally'],
-                    mun_applied_treasure['locally'],
-                    mun_applied_treasure['fpm'],
-                    mun_applied_treasure['bank'])
+        report = f"{sim.clock.days};{price_index:.3f};{gdp_index:.3f};{gdp_growth:.3f};{unemployment:.3f};" \
+                 f"{average_workers:.3f};{families_wealth:.3f};{families_savings:.3f};{firms_wealth:.3f};" \
+                 f"{firms_profit:.3f};{gini_index:.3f};{average_utility:.4f};{inflation:.4f};{average_qli:.3f};" \
+                 f"{house_vacancy:.3f};{house_price:.4f};{house_rent:.4f};{mun_applied_treasure['equally']:.4f};" \
+                 f"{mun_applied_treasure['locally']:.4f};{mun_applied_treasure['fpm']:.4f};" \
+                 f"{mun_applied_treasure['bank']:.4f}\n"
 
         with open(self.stats_path, 'a') as f:
             f.write(report)
@@ -206,12 +202,12 @@ class Output:
             mun_qli = sum(r.index for r in regions)/len(regions)
 
             reports.append('%s;%s;%.3f;%d;%.3f;%.4f;%.3f;%.4f;%.5f;%.3f;%.6f;%.6f;%.6f;%.6f;%s'
-                                % (sim.clock.days, mun_id, commuting, mun_pop, mun_gdp, mun_gini, mun_house_values,
-                                   mun_unemployment, mun_qli, GDP_mun_capita, mun_cumulative_treasure,
-                                   mun_applied_treasure['equally'],
-                                   mun_applied_treasure['locally'],
-                                   mun_applied_treasure['fpm'],
-                                   licenses))
+                           % (sim.clock.days, mun_id, commuting, mun_pop, mun_gdp, mun_gini, mun_house_values,
+                              mun_unemployment, mun_qli, GDP_mun_capita, mun_cumulative_treasure,
+                              mun_applied_treasure['equally'],
+                              mun_applied_treasure['locally'],
+                              mun_applied_treasure['fpm'],
+                              licenses))
 
         with open(self.regional_path, 'a') as f:
             f.write('\n'+'\n'.join(reports))

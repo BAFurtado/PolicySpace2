@@ -68,6 +68,12 @@ class Statistics(object):
             logger.info(f'Total houses {num_houses:,.0f}')
         return vacants / num_houses
 
+    def calculate_house_price(self, houses):
+        return np.average([h.price for h in houses.values()])
+
+    def calculate_rent_price(self, houses):
+        return np.average([h.rent_data[0] for h in houses.values() if h.rent_data is not None])
+
     def update_GDP_capita(self, firms, mun_id, mun_pop):
         dummy_gdp = np.sum([firms[firm].revenue for firm in firms.keys()
                             if firms[firm].region_id[:7] == mun_id])

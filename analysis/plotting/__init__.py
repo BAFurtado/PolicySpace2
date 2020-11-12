@@ -128,13 +128,13 @@ class Plotter:
 
         cols = ['price_index', 'gdp_index', 'gdp_growth', 'unemployment', 'average_workers', 'families_wealth',
                 'families_savings', 'firms_wealth', 'firms_profit', 'gini_index', 'average_utility', 'inflation',
-                'average_qli', 'house_vacancy', 'equally', 'locally', 'fpm', 'bank']
+                'average_qli', 'house_vacancy', 'house_price', 'house_rent', 'equally', 'locally', 'fpm', 'bank']
         titles = ['Average prices\' level', 'GDP absolute value', 'GDP growth in % m-m', 'Unemployment',
                   'Average workers per firm', 'Families\' disposable cash', 'Families\' absolute savings',
                   'Firms\' absolute capital', 'Firms\' profit', 'GINI index', 'Average families\' utility',
-                  'Monthly inflation', 'Average QLI index value', 'House vacancies', 'Taxes invested equally',
-                  'Taxes invested locally',
-                  'Taxes invested via FPM', 'Taxes paid by the banks on top of interests']
+                  'Monthly inflation', 'Average QLI index value', 'House vacancies', 'House prices',
+                  'House rent prices', 'Taxes invested equally', 'Taxes invested locally', 'Taxes invested via FPM',
+                  'Taxes paid by the banks on top of interests']
 
         # General plotting
         dats = [d.set_index('month') for d in dats]
