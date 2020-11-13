@@ -144,7 +144,7 @@ PUBLIC_TRANSIT_COST = 0.2
 
 # Percentage of actual population to run the simulation
 # Minimum value to run depends on the size of municipality 0,001 is recommended minimum
-PERCENTAGE_ACTUAL_POP = 0.01
+PERCENTAGE_ACTUAL_POP = 0.002
 
 # Write exactly like the list
 PROCESSING_ACPS = ['BRASILIA']
@@ -153,6 +153,6 @@ PROCESSING_ACPS = ['BRASILIA']
 STARTING_DAY = datetime.date(2010, 1, 1)
 
 # Maximum running time (restrained by official data) is 30 years,
-TOTAL_DAYS = (datetime.date(2020, 1, 1) - STARTING_DAY).days
+TOTAL_DAYS = (datetime.date(2011, 1, 1) - STARTING_DAY).days
 
 

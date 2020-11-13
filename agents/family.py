@@ -129,6 +129,7 @@ class Family:
         # Having loans will impact on a lower long-run permanent income consumption and on a monthly strongly
         # reduction of consumption. However, the price of the house may be appreciating in the market.
         # If cash at hand is positive consume it capped to permanent income
+        money_to_spend = None
         if money > 0:
             if money > permanent_income:
                 money_to_spend = permanent_income
@@ -136,21 +137,24 @@ class Family:
                 self.savings += money - permanent_income
             else:
                 money_to_spend = money
-            return money_to_spend
         # If there is no cash available, withdraw at most permanent income from savings
         elif self.savings > permanent_income:
             self.savings -= permanent_income
-            return permanent_income
+            money_to_spend = permanent_income
         elif self.savings > 0:
             money_to_spend = self.savings
             self.savings = 0
-            return money_to_spend
         else:
             # If there is no cash and no savings, pass
             # Withdraw from any long-term deposits if any
             if central.wallet[self]:
                 cash = self.grab_savings(central, year, month)
-            return None
+                if cash > permanent_income:
+                    cash -= permanent_income
+                    money_to_spend = permanent_income
+                else:
+                    money_to_spend = cash
+        return money_to_spend
 
     def consume(self, firms, central, regions, params, seed, year, month):
         """Family consumes its permanent income, based on members wages, working life expectancy

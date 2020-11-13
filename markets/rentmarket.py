@@ -17,7 +17,7 @@ def collect_rent(houses, sim):
             if payment < rent:
                 difference = rent - payment
                 # Try savings
-                if payment + tenant.savings > rent:
+                if tenant.savings > difference:
                     # Withdraw difference from savings
                     tenant.savings -= difference
                     # And add to payemnt made
@@ -25,7 +25,7 @@ def collect_rent(houses, sim):
                 # If money still not enough, try deposits in the bank
                 if payment < rent:
                     if sim.central.wallet[tenant]:
-                        cash = tenant.grab_savings(sim.central, sim.clock.year, sim.clock.months)
+                        cash = tenant.grab_savings(sim.central, sim.clock.year, (sim.clock.months % 12) + 1)
                         difference = payment - rent
                         if cash > difference:
                             tenant.savings += cash - difference
