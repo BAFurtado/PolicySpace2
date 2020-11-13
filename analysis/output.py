@@ -285,7 +285,7 @@ class Output:
 
     def save_family_data(self, sim):
         with open(self.families_path, 'a') as f:
-            [f.write('%s;%s;%s;%s;%s;%.2f;%.2f;%.2f\n' % (sim.clock.days,
+            [f.write('%s;%s;%s;%s;%s;%.5f;%.2f;%.2f\n' % (sim.clock.days,
                                                           family.id,
                                                           family.region_id[:7],
                                                           family.house.price if family.house else '',

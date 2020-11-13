@@ -1,21 +1,42 @@
 
 def collect_rent(houses, sim):
     for house in houses:
-        rent = house.rent_data[0]
-        tenant = sim.families[house.family_id]
-        landperson = sim.families[house.owner_id]
+        if house.rent_data:
+            rent = house.rent_data[0]
+            tenant = sim.families[house.family_id]
+            landperson = sim.families[house.owner_id]
 
-        # Collect taxes on transaction
-        taxes = rent * sim.PARAMS['TAX_LABOR']
-        sim.regions[house.region_id].collect_taxes(taxes, 'labor')
+            # Collect taxes on transaction
+            taxes = rent * sim.PARAMS['TAX_LABOR']
+            sim.regions[house.region_id].collect_taxes(taxes, 'labor')
 
-        # Withdraw money from family members
-        money = sum(m.grab_money() for m in tenant.members.values())
-        # Deposit change
-        tenant.update_balance(money - rent)
+            # Withdraw money from family members
+            payment = sum(m.grab_money() for m in tenant.members.values())
 
-        # Deposit money on selling family
-        landperson.update_balance(rent - taxes)
+            # If cash is not enough to pay rent
+            if payment < rent:
+                difference = rent - payment
+                # Try savings
+                if payment + tenant.savings > rent:
+                    # Withdraw difference from savings
+                    tenant.savings -= difference
+                    # And add to payemnt made
+                    payment += difference
+                # If money still not enough, try deposits in the bank
+                if payment < rent:
+                    if sim.central.wallet[tenant]:
+                        cash = tenant.grab_savings(sim.central, sim.clock.year, sim.clock.months)
+                        difference = payment - rent
+                        if cash > difference:
+                            tenant.savings += cash - difference
+                            payment += difference
+                        else:
+                            payment += cash
+            # Deposit change
+            tenant.update_balance(payment - rent)
+
+            # Deposit money on selling family
+            landperson.update_balance(rent - taxes)
 
 
 class RentalMarket:

@@ -121,7 +121,7 @@ class Family:
             return employed / (employed + unemployed)
 
     # Consumption ####################################################################################################
-    def to_consume(self, central, r):
+    def to_consume(self, central, r, year, month):
         """Grabs all money from all members"""
         money = sum(m.grab_money() for m in self.members.values())
         permanent_income = self.permanent_income(central, r)
@@ -147,14 +147,16 @@ class Family:
             return money_to_spend
         else:
             # If there is no cash and no savings, pass
-            # TODO: should keep tabs on how many families go hungry
+            # Withdraw from any long-term deposits if any
+            if central.wallet[self]:
+                cash = self.grab_savings(central, year, month)
             return None
 
-    def consume(self, firms, central, regions, params, seed):
+    def consume(self, firms, central, regions, params, seed, year, month):
         """Family consumes its permanent income, based on members wages, working life expectancy
         and real estate and savings real interest
         """
-        money_to_spend = self.to_consume(central, params['INTEREST_RATE'])
+        money_to_spend = self.to_consume(central, params['INTEREST_RATE'], year, month)
         # Decision on how much money to consume or save
 
         if money_to_spend is not None:

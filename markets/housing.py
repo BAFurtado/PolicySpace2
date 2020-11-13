@@ -73,7 +73,7 @@ class HousingMarket:
 
         # Families check the bank for potential credit
         for f in looking:
-            f.savings_with_loan = f.savings + sim.central.max_loan(f)
+            f.savings_with_loan = f.savings + sim.central.sum_deposits(f) + sim.central.max_loan(f)
 
         # Sorting. Those with larger savings first
         looking.sort(key=lambda fam: fam.savings_with_loan, reverse=True)
@@ -127,7 +127,7 @@ class HousingMarket:
             self.negotiating(family, for_sale, sim, vacancy)
 
     def negotiating(self, family, for_sale, sim, vacancy):
-        savings = family.savings
+        savings = family.savings + sim.central.sum_deposits(family)
         savings_with_mortgage = family.savings_with_loan
         my_market = sim.seed.sample(for_sale, min(len(for_sale), int(sim.PARAMS['SIZE_MARKET']) * 3))
         my_market = [h for h in my_market if h.price < savings_with_mortgage]
@@ -160,7 +160,8 @@ class HousingMarket:
                 if not success:
                     continue
                 cash += loan_amount
-            # Withdraw the money of buying family from the bank
+            # Withdraw the money of buying family from the bank and from savings
+            cash += family.savings
             cash += family.grab_savings(sim.central, sim.clock.year, ((sim.clock.months % 12) + 1))
             change = cash - price
 
