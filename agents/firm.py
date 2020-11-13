@@ -225,13 +225,13 @@ class ConstructionFirm(Firm):
         self.building = defaultdict(dict)
         self.cash_flow = defaultdict(float)
 
-    def plan_house(self, regions, houses, params, seed):
+    def plan_house(self, regions, houses, params, seed, vacancy, consider_vacancy):
         """Decide where to build"""
 
         # Check whether production capacity does not exceed hired construction
         # for the next construction cash flow period
         if self.building:
-            # Number of houses being built is endogenously dependent on number of works and productivity within a
+            # Number of houses being built is endogenously dependent on number of workers and productivity within a
             # parameter-specified number of months.
             if sum([self.building[b]['cost'] for b in self.building]) > params['CONSTRUCTION_ACC_CASH_FLOW'] * \
                     self.total_qualification(params['PRODUCTIVITY_EXPONENT']) / params['PRODUCTIVITY_MAGNITUDE_DIVISOR']:
@@ -241,6 +241,11 @@ class ConstructionFirm(Firm):
         regions = [r for r in regions if r.licenses > 0 and self.total_balance > r.license_price]
         if not regions:
             return
+
+        # Probability depends on size of market
+        if consider_vacancy:
+            if seed.random() > 1 - vacancy:
+                return
 
         # Targets
         building_size = seed.randrange(20, 120)
