@@ -52,7 +52,7 @@ MAX_LOAN_AGE = 80
 MAX_LOAN_REPAYMENT_PERCENT_INCOME = 0.3
 MAX_LOAN_BANK_PERCENT = 0.7
 
-# Percentage of households pursuing new location
+# Influence of vacancy size on house prices
 OFFER_SIZE_ON_PRICE = True
 # TOO LONG ON THE MARKET:
 # value = (1 - MAX_OFFER_DISCOUNT) * e ** (ON_MARKET_DECAY_FACTOR * MONTHS ON MARKET) + MAX_OFFER_DISCOUNT
@@ -60,6 +60,7 @@ OFFER_SIZE_ON_PRICE = True
 ON_MARKET_DECAY_FACTOR = -.03
 # LOWER BOUND, THAT IS, AT LEAST 50% PERCENT OF VALUE WILL REMAIN AT END OF PERIOD, IF PARAMETER IS .5
 MAX_OFFER_DISCOUNT = .7
+# Percentage of households pursuing new location
 PERCENTAGE_CHECK_NEW_LOCATION = 0.002
 NEIGHBORHOOD_EFFECT = 4
 
@@ -143,7 +144,7 @@ PUBLIC_TRANSIT_COST = 0.2
 
 # Percentage of actual population to run the simulation
 # Minimum value to run depends on the size of municipality 0,001 is recommended minimum
-PERCENTAGE_ACTUAL_POP = 0.01
+PERCENTAGE_ACTUAL_POP = 0.02
 
 # Write exactly like the list
 PROCESSING_ACPS = ['BRASILIA']

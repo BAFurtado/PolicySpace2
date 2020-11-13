@@ -53,7 +53,12 @@ class RentalMarket:
     def rental_market(self, families, sim, to_rent=None):
         # Families that come here without a house (from marriage or immigration) need to move in or give up their plans
         # In that case, the list of houses is any unoccupied houses. Not a sample list separated for the rental market
-        base_price = sim.PARAMS['INITIAL_RENTAL_PRICE']
+        try:
+            vacancy = sim.stats.calculate_house_vacancy(sim.houses, False)
+        # When houses have not generated yet, at time 0
+        except AttributeError:
+            vacancy = 0
+        base_proportion = sim.PARAMS['INITIAL_RENTAL_PRICE']
         self.update_list(sim, to_rent)
         if families:
             families.sort(key=lambda f: f.last_permanent_income, reverse=True)
@@ -63,12 +68,11 @@ class RentalMarket:
                 # Matching
                 my_market = sim.seed.sample(self.unoccupied, min(len(self.unoccupied),
                                                                  int(sim.PARAMS['SIZE_MARKET']) * 3))
-                in_budget = [h for h in my_market if h.price * base_price < family.last_permanent_income]
+                in_budget = [h for h in my_market if h.price * base_proportion < family.last_permanent_income]
                 if in_budget:
                     sim.seed.shuffle(in_budget)
                     house = in_budget[0]
-                    price = house.price * base_price
-
+                    price = house.price * base_proportion
                 else:
                     if my_market:
                         my_market.sort(key=lambda h: h.price)
@@ -78,7 +82,9 @@ class RentalMarket:
                     else:
                         # Family may go without a house. Check
                         return
-                # Ask for reduced price, because out of budget. Varying according to number of available houses
-                price = house.price * (base_price - (len(my_market) / 100000))
+                    # Ask for reduced price, because out of budget. Varying according to number of available houses
+                    price = house.price * (base_proportion - (len(my_market) / 100000))
+                if sim.PARAMS['OFFER_SIZE_ON_PRICE']:
+                    price *= (1 - vacancy)
                 # Decision on moving. If no house, move, else, consider
                 self.maybe_move(family, house, price, sim)
