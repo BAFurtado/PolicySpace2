@@ -1,14 +1,13 @@
 import datetime
-import random
 
 # MODEL PARAMETERS
 # FIRMS
 # Production function, labour with decaying exponent, Alpha for K. [0, 1]
-PRODUCTIVITY_EXPONENT = .5
+PRODUCTIVITY_EXPONENT = .3
 # Order of magnitude correction of production. Production divided by parameter
-PRODUCTIVITY_MAGNITUDE_DIVISOR = 10
+PRODUCTIVITY_MAGNITUDE_DIVISOR = 6
 # By how much percentage to increase prices
-MARKUP = 0.08
+MARKUP = 0.05
 # Frequency firms change prices. Probability > than parameter
 STICKY_PRICES = .5
 # Number of firms consulted before consumption
@@ -18,7 +17,7 @@ SIZE_MARKET = 12
 LABOR_MARKET = 0.4
 
 # Percentage of employees firms hire by distance
-PCT_DISTANCE_HIRING = .2
+PCT_DISTANCE_HIRING = .4
 # Ignore unemployment in wage base calculation
 WAGE_IGNORE_UNEMPLOYMENT = False
 # Candidate sample size for the labor market
@@ -61,11 +60,11 @@ ON_MARKET_DECAY_FACTOR = -.03
 # LOWER BOUND, THAT IS, AT LEAST 50% PERCENT OF VALUE WILL REMAIN AT END OF PERIOD, IF PARAMETER IS .5
 MAX_OFFER_DISCOUNT = .7
 # Percentage of households pursuing new location
-PERCENTAGE_CHECK_NEW_LOCATION = 0.002
-NEIGHBORHOOD_EFFECT = 4
+PERCENTAGE_CHECK_NEW_LOCATION = 0.0025
+NEIGHBORHOOD_EFFECT = 1
 
 # RENTAL
-RENTAL_SHARE = 0.4
+RENTAL_SHARE = 0.3
 INITIAL_RENTAL_PRICE = .0028
 
 # CONSTRUCTION
@@ -96,7 +95,7 @@ TAXES_STRUCTURE = {'consumption_equal': .1875, 'fpm': .235}
 
 # GENERAL CALIBRATION PARAMETERS
 # Order of magnitude parameter of input into municipality investment
-TREASURE_INTO_SERVICES = .00008
+TREASURE_INTO_SERVICES = .000001
 
 WAGE_TO_CAR_OWNERSHIP_QUANTILES = [
     0.1174,
@@ -144,7 +143,7 @@ PUBLIC_TRANSIT_COST = 0.2
 
 # Percentage of actual population to run the simulation
 # Minimum value to run depends on the size of municipality 0,001 is recommended minimum
-PERCENTAGE_ACTUAL_POP = 0.002
+PERCENTAGE_ACTUAL_POP = 0.01
 
 # Write exactly like the list
 PROCESSING_ACPS = ['BRASILIA']
@@ -153,6 +152,6 @@ PROCESSING_ACPS = ['BRASILIA']
 STARTING_DAY = datetime.date(2010, 1, 1)
 
 # Maximum running time (restrained by official data) is 30 years,
-TOTAL_DAYS = (datetime.date(2011, 1, 1) - STARTING_DAY).days
+TOTAL_DAYS = (datetime.date(2020, 1, 1) - STARTING_DAY).days
 
 

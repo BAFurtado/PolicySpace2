@@ -143,25 +143,27 @@ class HousingMarket:
                 p = p * (1 - vacancy)
             # If savings is enough, then price is established as the average of the two
             if savings > p:
-                # Restrict OFFERs that are above a 30% threshold
+                # Restrict OFFERs to a maximum of 30% threshold
                 if savings/p > 1.3:
-                    price = p * 1.3
+                    price = p * 1.15
                 else:
                     price = (savings + p) / 2
             # If not, check whether loan can help
             elif savings_with_mortgage > p:
                 if savings_with_mortgage/p > 1.3:
-                    price = p * 1.3
+                    price = p * 1.15
                 else:
                     price = (savings_with_mortgage + p) / 2
                 # Get loan to make up the difference
                 loan_amount = price - savings
                 success = sim.central.request_loan(family, loan_amount, sim.seed)
                 if not success:
-                    continue
+                    # Just one shot at getting a loan
+                    return
                 cash += loan_amount
             # Withdraw the money of buying family from the bank and from savings
             cash += family.savings
+            family.savings = 0
             cash += family.grab_savings(sim.central, sim.clock.year, ((sim.clock.months % 12) + 1))
             change = cash - price
 

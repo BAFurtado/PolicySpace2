@@ -85,7 +85,7 @@ class Family:
     def get_wealth(self, bank):
         """ Calculate current wealth, including real estate. """
         estate_value = sum(h.price for h in self.owned_houses)
-        return self.savings + estate_value - bank.loan_balance(self.id)
+        return self.savings + estate_value + bank.sum_deposits(self) - bank.loan_balance(self.id)
 
     def invest(self, r, bank, y, m):
         # Savings is updated during consumption as the fraction of above permanent income that is not consumed

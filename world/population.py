@@ -261,7 +261,7 @@ def marriage(sim):
                 for each in b.family.members.values():
                     a.family.add_agent(each)
 
-                savings = b.family.grab_savings(sim.central, sim.clock.year, (sim.clock.months % 12)+1)
+                savings = b.family.grab_savings(sim.central, sim.clock.year, (sim.clock.months % 12) + 1)
                 a.family.update_balance(savings)
                 if id in sim.central.loans:
                     loans = sim.central.loans.pop(id)
