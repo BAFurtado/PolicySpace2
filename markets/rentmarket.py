@@ -34,10 +34,10 @@ def collect_rent(houses, sim):
                         else:
                             payment += cash
             # Deposit change
-            tenant.update_balance(round(payment - rent, 4))
+            tenant.update_balance(round(payment - rent, 2))
 
             # Deposit money on selling family
-            landperson.update_balance(round(rent - taxes, 4))
+            landperson.update_balance(round(rent - taxes, 2))
 
 
 class RentalMarket:
@@ -105,7 +105,7 @@ class RentalMarket:
                         # Family may go without a house. Check
                         return
                     # Ask for reduced price, because out of budget. Varying according to number of available houses
-                    price = house.price * (base_proportion - (len(my_market) / 100000))
+                    price = house.price * round((base_proportion - (len(my_market) / 100000)), 6)
                 if sim.PARAMS['OFFER_SIZE_ON_PRICE']:
                     price *= (1 - vacancy)
                 # Decision on moving. If no house, move, else, consider

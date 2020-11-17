@@ -92,6 +92,7 @@ class Family:
         reserve_money = self.permanent_income(bank, r) * 6
         if self.savings > reserve_money:
             bank.deposit(self, self.savings - reserve_money, datetime.date(y, m, 1))
+            self.savings = reserve_money
 
     def total_wage(self):
         return sum(member.last_wage for member in self.members.values() if member.last_wage is not None)
