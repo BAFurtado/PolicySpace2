@@ -95,7 +95,7 @@ TAXES_STRUCTURE = {'consumption_equal': .1875, 'fpm': .235}
 
 # GENERAL CALIBRATION PARAMETERS
 # Order of magnitude parameter of input into municipality investment
-TREASURE_INTO_SERVICES = .000001
+TREASURE_INTO_SERVICES = .00000001
 
 WAGE_TO_CAR_OWNERSHIP_QUANTILES = [
     0.1174,

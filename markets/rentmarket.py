@@ -1,4 +1,5 @@
 
+
 def collect_rent(houses, sim):
     for house in houses:
         if house.rent_data:
@@ -33,10 +34,10 @@ def collect_rent(houses, sim):
                         else:
                             payment += cash
             # Deposit change
-            tenant.update_balance(payment - rent)
+            tenant.update_balance(round(payment - rent, 4))
 
             # Deposit money on selling family
-            landperson.update_balance(rent - taxes)
+            landperson.update_balance(round(rent - taxes, 4))
 
 
 class RentalMarket:

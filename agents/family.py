@@ -20,7 +20,6 @@ class Family:
         self.id = _id
         self.balance = balance
         self.savings = savings
-        self.wealth = None
         self.owned_houses = list()
         self.members = {}
         self.relatives = set()
@@ -71,7 +70,7 @@ class Family:
     def update_balance(self, amount):
         """Evenly distribute money to each member"""
         if self.members:
-            per_member = amount / float(self.num_members)
+            per_member = amount / self.num_members
             for member in self.members.values():
                 member.money += per_member
 
