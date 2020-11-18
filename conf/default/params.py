@@ -3,9 +3,9 @@ import datetime
 # MODEL PARAMETERS
 # FIRMS
 # Production function, labour with decaying exponent, Alpha for K. [0, 1]
-PRODUCTIVITY_EXPONENT = .2
+PRODUCTIVITY_EXPONENT = .1
 # Order of magnitude correction of production. Production divided by parameter
-PRODUCTIVITY_MAGNITUDE_DIVISOR = 20
+PRODUCTIVITY_MAGNITUDE_DIVISOR = 30
 # By how much percentage to increase prices
 MARKUP = 0.05
 # Frequency firms change prices. Probability > than parameter
