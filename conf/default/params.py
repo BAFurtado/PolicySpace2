@@ -3,9 +3,9 @@ import datetime
 # MODEL PARAMETERS
 # FIRMS
 # Production function, labour with decaying exponent, Alpha for K. [0, 1]
-PRODUCTIVITY_EXPONENT = .1
+PRODUCTIVITY_EXPONENT = .2
 # Order of magnitude correction of production. Production divided by parameter
-PRODUCTIVITY_MAGNITUDE_DIVISOR = 1
+PRODUCTIVITY_MAGNITUDE_DIVISOR = 20
 # By how much percentage to increase prices
 MARKUP = 0.05
 # Frequency firms change prices. Probability > than parameter
@@ -52,7 +52,8 @@ MAX_LOAN_REPAYMENT_PERCENT_INCOME = 0.3
 MAX_LOAN_BANK_PERCENT = 0.7
 
 # Influence of vacancy size on house prices
-OFFER_SIZE_ON_PRICE = True
+# It can be True or 1 or if construction companies consider vacancy strongly it might be 2 [1 - (vacancy * VALUE)]
+OFFER_SIZE_ON_PRICE = 1
 # TOO LONG ON THE MARKET:
 # value = (1 - MAX_OFFER_DISCOUNT) * e ** (ON_MARKET_DECAY_FACTOR * MONTHS ON MARKET) + MAX_OFFER_DISCOUNT
 # AS SUCH (-.02) DECAY OF 1% FIRST MONTH, 10% FIRST YEAR. SET TO 0 TO ELIMINATE EFFECT
@@ -71,7 +72,7 @@ INITIAL_RENTAL_PRICE = .0028
 # LICENSES ARE URBANIZED LOTS AVAILABLE FOR CONSTRUCTION PER NEIGHBORHOOD PER MONTH.
 # If random, it will vary between 1 and 0, otherwise an integer
 T_LICENSES_PER_REGION = 'random'
-PERCENT_CONSTRUCTION_FIRMS = 0.05
+PERCENT_CONSTRUCTION_FIRMS = 0.03
 # Months that construction firm will divide its income into monthly revenue installments.
 # Although prices are accounted for at once.
 CONSTRUCTION_ACC_CASH_FLOW = 36
@@ -95,7 +96,7 @@ TAXES_STRUCTURE = {'consumption_equal': .1875, 'fpm': .235}
 
 # GENERAL CALIBRATION PARAMETERS
 # Order of magnitude parameter of input into municipality investment
-TREASURE_INTO_SERVICES = 1e-07
+TREASURE_INTO_SERVICES = 1e-04
 
 WAGE_TO_CAR_OWNERSHIP_QUANTILES = [
     0.1174,

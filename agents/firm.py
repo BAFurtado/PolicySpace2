@@ -244,7 +244,7 @@ class ConstructionFirm(Firm):
 
         # Probability depends on size of market
         if consider_vacancy:
-            if seed.random() > 1 - vacancy:
+            if seed.random() > 1 - (vacancy * consider_vacancy):
                 return
 
         # Targets
