@@ -46,7 +46,7 @@ OUTPUT_DATA_SPEC = {
             'groupings': ['month'],
             'columns': 'ALL'
         },
-        'columns': ['month', 'taxes', 'balance', 'deposits',
+        'columns': ['month', 'balance', 'deposits',
                     'active_loans', 'p_delinquent_loans',
                     'mean_loan_age', 'min_loan', 'max_loan', 'mean_loan']
     },
@@ -300,12 +300,11 @@ class Output:
         with open(self.banks_path, 'a') as f:
             active = bank.active_loans()
             n_active = len(active)
-            mean_age = sum(l.age for l in active)/n_active if n_active else 0
-            p_delinquent = len(bank.delinquent_loans())/n_active if n_active else 0
+            mean_age = sum(l.age for l in active) / n_active if n_active else 0
+            p_delinquent = len(bank.delinquent_loans()) / n_active if n_active else 0
             mn, mx, avg = bank.loan_stats()
-            f.write('%s; %.3f; %.3f; %.3f; %.3f; %.3f; %.3f; %.3f; %.3f; %.3f \n' %
-                            (sim.clock.days, bank.taxes, bank.balance, bank.total_deposits(),
-                             n_active, p_delinquent, mean_age, mn, mx, avg))
+            f.write(f"{sim.clock.days};{bank.balance:.3f};{bank.total_deposits():.3f};{n_active:.2f};"
+                    f"{p_delinquent:.3f};{mean_age:.3f};{mn:.3f};{mx:.3f};{avg:.3f}\n")
 
     def save_transit_data(self, sim, fname):
         region_ids = conf.RUN['LIMIT_SAVED_TRANSIT_REGIONS']

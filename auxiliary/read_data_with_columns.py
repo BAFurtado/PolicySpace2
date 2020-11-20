@@ -60,3 +60,7 @@ def get_path(cols='houses', path=None):
     p3 = r'0/temp_'
     p4 = '.csv'
     return os.path.join(p0, p, path, p3 + cols + p4)
+
+
+if __name__ == '__main__':
+    p = get_path('banks')
