@@ -3,9 +3,13 @@ import datetime
 # MODEL PARAMETERS
 # FIRMS
 # Production function, labour with decaying exponent, Alpha for K. [0, 1]
-PRODUCTIVITY_EXPONENT = .1
+PRODUCTIVITY_EXPONENT = .3
 # Order of magnitude correction of production. Production divided by parameter
-PRODUCTIVITY_MAGNITUDE_DIVISOR = 30
+PRODUCTIVITY_MAGNITUDE_DIVISOR = 40
+# GENERAL CALIBRATION PARAMETERS
+# Order of magnitude parameter of input into municipality investment
+TREASURE_INTO_SERVICES = 5e-04
+
 # By how much percentage to increase prices
 MARKUP = 0.05
 # Frequency firms change prices. Probability > than parameter
@@ -62,7 +66,7 @@ ON_MARKET_DECAY_FACTOR = -.03
 MAX_OFFER_DISCOUNT = .7
 # Percentage of households pursuing new location
 PERCENTAGE_CHECK_NEW_LOCATION = 0.0025
-NEIGHBORHOOD_EFFECT = 1
+NEIGHBORHOOD_EFFECT = 2
 
 # RENTAL
 RENTAL_SHARE = 0.3
@@ -72,7 +76,7 @@ INITIAL_RENTAL_PRICE = .0028
 # LICENSES ARE URBANIZED LOTS AVAILABLE FOR CONSTRUCTION PER NEIGHBORHOOD PER MONTH.
 # If random, it will vary between 1 and 0, otherwise an integer
 T_LICENSES_PER_REGION = 'random'
-PERCENT_CONSTRUCTION_FIRMS = 0.03
+PERCENT_CONSTRUCTION_FIRMS = 0.05
 # Months that construction firm will divide its income into monthly revenue installments.
 # Although prices are accounted for at once.
 CONSTRUCTION_ACC_CASH_FLOW = 36
@@ -93,10 +97,6 @@ MARRIAGE_CHECK_PROBABILITY = .034
 # Consumption_equal: ratio of consumption tax distributed at state level (equal)
 # Fpm: ratio of 'labor' and 'firm' taxes distributed per the fpm ruling
 TAXES_STRUCTURE = {'consumption_equal': .1875, 'fpm': .235}
-
-# GENERAL CALIBRATION PARAMETERS
-# Order of magnitude parameter of input into municipality investment
-TREASURE_INTO_SERVICES = 1e-04
 
 WAGE_TO_CAR_OWNERSHIP_QUANTILES = [
     0.1174,
