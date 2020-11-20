@@ -181,7 +181,7 @@ class Central:
                     continue
                 loan.age += 1
                 if family.savings < loan.payment + loan.missed:
-                    family.savings += family.grab_savings(self, sim.clock.year, (sim.clock.months % 12) + 1)
+                    family.savings += family.grab_savings(self, sim.clock.year, sim.clock.months)
                 payment = min(family.savings, loan.payment + loan.missed)
                 done = loan.pay(payment)
                 family.savings -= payment

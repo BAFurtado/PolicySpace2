@@ -180,8 +180,7 @@ class Simulation:
 
             birthdays = defaultdict(list)
             for agent in self.agents.values():
-                if (self.clock.months % 12 + 1) == agent.month \
-                        and agent.region_id[:2] == state_str:
+                if self.clock.months == agent.month and agent.region_id[:2] == state_str:
                     birthdays[agent.age].append(agent)
 
             demographics.check_demographics(self, birthdays, self.clock.year,
@@ -207,9 +206,6 @@ class Simulation:
 
         # Collect loan repayments
         self.central.collect_loan_payments(self)
-        # Family investments
-        for fam in self.families.values():
-            fam.invest(self.PARAMS['INTEREST_RATE'], self.central, self.clock.year, (self.clock.months % 12) + 1)
 
         # FIRMS
         for firm in self.firms.values():
@@ -262,6 +258,10 @@ class Simulation:
         self.housing.process_monthly_rent(self)
         for house in self.houses.values():
             house.pay_property_tax(self)
+
+        # Family investments
+        for fam in self.families.values():
+            fam.invest(self.PARAMS['INTEREST_RATE'], self.central, self.clock.year, self.clock.months)
 
         # Using all collected taxes to improve public services
         bank_taxes = self.central.collect_taxes()
