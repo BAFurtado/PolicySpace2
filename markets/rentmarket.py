@@ -107,6 +107,9 @@ class RentalMarket:
                     # Ask for reduced price, because out of budget. Varying according to number of available houses
                     price = house.price * round((base_proportion - (len(my_market) / 100000)), 6)
                 if sim.PARAMS['OFFER_SIZE_ON_PRICE']:
-                    price *= (1 - vacancy)
+                    vacancy_value = 1 - (vacancy * sim.PARAMS['OFFER_SIZE_ON_PRICE'])
+                    if vacancy_value < sim.PARAMS['MAX_OFFER_DISCOUNT']:
+                        vacancy_value = sim.PARAMS['MAX_OFFER_DISCOUNT']
+                    price *= vacancy_value
                 # Decision on moving. If no house, move, else, consider
                 self.maybe_move(family, house, price, sim)

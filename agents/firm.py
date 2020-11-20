@@ -225,7 +225,7 @@ class ConstructionFirm(Firm):
         self.building = defaultdict(dict)
         self.cash_flow = defaultdict(float)
 
-    def plan_house(self, regions, houses, params, seed, vacancy, consider_vacancy):
+    def plan_house(self, regions, houses, params, seed, vacancy_prob):
         """Decide where to build"""
 
         # Check whether production capacity does not exceed hired construction
@@ -243,8 +243,8 @@ class ConstructionFirm(Firm):
             return
 
         # Probability depends on size of market
-        if consider_vacancy:
-            if seed.random() > 1 - (vacancy * consider_vacancy):
+        if vacancy_prob:
+            if seed.random() > vacancy_prob:
                 return
 
         # Targets
