@@ -55,6 +55,9 @@ MAX_LOAN_AGE = 80
 MAX_LOAN_REPAYMENT_PERCENT_INCOME = 0.3
 MAX_LOAN_BANK_PERCENT = 0.7
 
+CAPPED_TOP_VALUE = 1.3
+CAPPED_LOW_VALUE = .9
+
 # Influence of vacancy size on house prices
 # It can be True or 1 or if construction companies consider vacancy strongly it might be 2 [1 - (vacancy * VALUE)]
 OFFER_SIZE_ON_PRICE = 1

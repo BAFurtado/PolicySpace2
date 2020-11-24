@@ -144,8 +144,8 @@ class HousingMarket:
             # If savings is enough, then price is established as the average of the two
             if savings > p:
                 # Restrict OFFERs to a maximum of 30% threshold
-                if savings/p > 1.3:
-                    price = p * 1.15
+                if savings/p > sim.PARAMS['CAPPED_TOP_VALUE']:
+                    price = p * sim.PARAMS['CAPPED_TOP_VALUE'] / 2
                 else:
                     price = (savings + p) / 2
             # If not, check whether loan can help
@@ -161,6 +161,13 @@ class HousingMarket:
                     # Just one shot at getting a loan
                     return
                 cash += loan_amount
+            elif savings/p > sim.PARAMS['CAPPED_LOW_VALUE']:
+                if sim.seed.random() < vacancy:
+                    price = savings
+                else:
+                    continue
+            else:
+                continue
             # Withdraw the money of buying family from the bank and from savings
             cash += family.grab_savings(sim.central, sim.clock.year, sim.clock.months)
             change = round(cash - price, 2)
@@ -170,7 +177,7 @@ class HousingMarket:
             # if the procedures have come this far, it means loan or price have being agreed upon.
             # Clean for_sale list.
             self.for_sale[:] = [h for h in for_sale if h is not house]
-            # Then it can move on to the next family
+            # Having bought a house, then it can move on to the next family
             return
 
     def notarial_procedures(self, family, house, price, change, sim):
