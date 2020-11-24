@@ -1,6 +1,7 @@
 """
 This is the model that organizes the full simulation.
-It handles all the choices of the model, set at the 'params' module.
+It handles all the choices of the model,
+set at the 'params' module.
 
 
 Disclaimer:
@@ -309,10 +310,10 @@ def sensitivity(ctx, params):
         elif param == 'STARTING_DAY':
             p_name = param
             p_vals = [datetime.date(2000, 1, 1), datetime.date(2010, 1, 1)]
-        # else, assume boolean
         elif '-' in param:
             p_name = 'PROCESSING_ACPS'
             p_vals = [[i] for i in param.split('-')[1:]]
+        # else, assume boolean
         else:
             p_name = param
             p_vals = [True, False]

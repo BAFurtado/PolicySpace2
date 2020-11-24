@@ -129,7 +129,7 @@ class Plotter:
         cols = ['price_index', 'gdp_index', 'gdp_growth', 'unemployment', 'average_workers', 'families_wealth',
                 'families_savings', 'firms_wealth', 'firms_profit', 'gini_index', 'average_utility', 'inflation',
                 'average_qli', 'house_vacancy', 'house_price', 'house_rent', 'equally', 'locally', 'fpm', 'bank']
-        titles = ['Average prices\' level', 'GDP absolute value', 'GDP growth in % m-m', 'Unemployment',
+        titles = ['Average prices\' level', 'GDP absolute value', 'GDP growth in monthly perc.', 'Unemployment',
                   'Average workers per firm', 'Families\' disposable cash', 'Families\' absolute savings',
                   'Firms\' absolute capital', 'Firms\' profit', 'GINI index', 'Average families\' utility',
                   'Monthly inflation', 'Average QLI index value', 'House vacancies', 'House prices',
