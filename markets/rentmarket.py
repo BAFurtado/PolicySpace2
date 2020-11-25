@@ -5,7 +5,7 @@ def collect_rent(houses, sim):
         if house.rent_data:
             rent = house.rent_data[0]
             tenant = sim.families[house.family_id]
-            landperson = sim.families[house.owner_id]
+            landfamily = sim.families[house.owner_id]
 
             # Collect taxes on transaction
             taxes = rent * sim.PARAMS['TAX_LABOR']
@@ -37,7 +37,7 @@ def collect_rent(houses, sim):
             tenant.update_balance(round(payment - rent, 2))
 
             # Deposit money on selling family
-            landperson.update_balance(round(rent - taxes, 2))
+            landfamily.update_balance(round(rent - taxes, 2))
 
 
 class RentalMarket:

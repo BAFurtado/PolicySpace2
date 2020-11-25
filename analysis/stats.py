@@ -75,13 +75,13 @@ class Statistics(object):
         return np.average([h.rent_data[0] for h in houses.values() if h.rent_data is not None])
 
     def calculate_affordable_rent(self, families):
-        avg_rent_wage = np.average([family.house.rent_data[0]/family.total_wage()
+        avg_rent_wage = np.average([family.house.rent_data[0]/family.last_permanent_income
                                     for family in families.values()
-                                    if family.house.rent_data])
-        affordable = sum([family.house.rent_data[0] / family.total_wage() < .3
+                                    if family.is_renting])
+        affordable = sum([family.house.rent_data[0] / family.last_permanent_income < .3
                           for family in families.values()
-                          if family.house.rent_data])
-        renting = sum([1 for family in families.values() if family.house.rent_data])
+                          if family.is_renting])
+        renting = sum([family.is_renting for family in families.values()])
         return avg_rent_wage, affordable/renting
 
     def update_GDP_capita(self, firms, mun_id, mun_pop):
@@ -124,10 +124,10 @@ class Statistics(object):
 
     # Calculate wealth: families, firms and profits
     def calculate_families_median_wealth(self, families):
-        return np.median([family.get_total_balance() for family in families])
+        return np.median([family.last_permanent_income for family in families])
 
     def calculate_families_wealth(self, families):
-        dummy_wealth = np.sum([families[family].get_total_balance() for family in families.keys()])
+        dummy_wealth = np.sum([families[family].last_permanent_income for family in families.keys()])
         dummy_savings = np.sum([families[family].savings for family in families.keys()])
         return dummy_wealth, dummy_savings
 
@@ -146,7 +146,7 @@ class Statistics(object):
                            if families[family].num_members > 0])
 
     def calculate_GINI(self, families):
-        family_data = [families[family].average_utility for family in families.keys()
+        family_data = [families[family].last_permanent_income for family in families.keys()
                        if families[family].num_members > 0]
 
         # Sort smallest to largest
@@ -162,7 +162,7 @@ class Statistics(object):
         return giniIdx
 
     def calculate_regional_GINI(self, families):
-        family_data = [family.average_utility for family in families if family.num_members > 0]
+        family_data = [family.last_permanent_income for family in families if family.num_members > 0]
 
         # Sort smallest to largest
         cumm = np.sort(family_data)
