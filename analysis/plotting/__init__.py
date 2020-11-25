@@ -180,8 +180,6 @@ class Plotter:
     def plot_families(self):
         dat = self._load_single_run('families', 'temp_families.csv')
         dat['renting'] = pd.notna(dat['house_rent'])
-        dat['income_towards_rent'] = dat['house_rent']/dat['total_wage']
-        dat['affordable_rent'] = (dat['income_towards_rent'] <= 0.3) | (pd.isna(dat['income_towards_rent']))
 
         to_plot = {
             'house_rent': {
@@ -195,14 +193,6 @@ class Plotter:
             'savings': {
                 'title': 'Mean savings by month',
                 'name': 'savings'
-            },
-            'affordable_rent': {
-                'title': 'Mean number of families for whom rent is affordable (30%) by month',
-                'name': 'affordable'
-            },
-            'income_towards_rent': {
-                'title': 'Mean rent as share of income by month',
-                'name': 'rent_shares'
             },
             'renting': {
                 'title': 'Mean number of families that are renting by month',
