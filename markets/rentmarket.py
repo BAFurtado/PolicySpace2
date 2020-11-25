@@ -92,8 +92,7 @@ class RentalMarket:
                                                                  int(sim.PARAMS['SIZE_MARKET']) * 3))
                 in_budget = [h for h in my_market if h.price * base_proportion < family.last_permanent_income]
                 if in_budget:
-                    sim.seed.shuffle(in_budget)
-                    house = in_budget[0]
+                    house = sim.seed.choice(in_budget)
                     price = house.price * base_proportion
                 else:
                     if my_market:
@@ -103,7 +102,7 @@ class RentalMarket:
                         house = self.unoccupied[0]
                     else:
                         # Family may go without a house. Check
-                        return
+                        continue
                     # Ask for reduced price, because out of budget. Varying according to number of available houses
                     price = house.price * round((base_proportion - (len(my_market) / 100000)), 6)
                 if sim.PARAMS['OFFER_SIZE_ON_PRICE']:

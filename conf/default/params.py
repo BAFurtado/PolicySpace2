@@ -113,7 +113,7 @@ WAGE_TO_CAR_OWNERSHIP_QUANTILES = [
     0.7779,
     0.9135,
 ]
-PRIVATE_TRANSIT_COST = 0.5
+PRIVATE_TRANSIT_COST = 0.02
 PUBLIC_TRANSIT_COST = 0.2
 
 # selecting the ACPs (Population Concentration Areas)
