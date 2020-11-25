@@ -21,7 +21,6 @@ from itertools import product
 
 import click
 import matplotlib
-# import validation_tentative
 import numpy as np
 import pandas as pd
 from joblib import Parallel, delayed
@@ -164,7 +163,8 @@ def average_run_data(path, avg='mean'):
 
         # Saving date before averaging
         avg_cols = spec['avg']['columns']
-        if avg_cols == 'ALL': avg_cols = [c for c in spec['columns'] if c not in spec['avg']['groupings']]
+        if avg_cols == 'ALL':
+            avg_cols = [c for c in spec['columns'] if c not in spec['avg']['groupings']]
 
         # Ensure these columns are numeric
         df[avg_cols] = df[avg_cols].apply(pd.to_numeric)
@@ -172,7 +172,8 @@ def average_run_data(path, avg='mean'):
         dfg = df.groupby(spec['avg']['groupings'])
         dfg = dfg[avg_cols]
         df = getattr(dfg, avg)()
-        df = df.reset_index() # "ungroup" by
+        # "ungroup" by
+        df = df.reset_index()
         df.to_csv(os.path.join(output_path, fname), header=False, index=False, sep=';')
     return output_path
 
@@ -211,7 +212,7 @@ def plot(input_paths, output_path, params, avg=None, sim=None, only=None):
         plotter.plot_geo(sim, 'final')
 
 
-def plot_runs_with_avg(run_data):
+def plot_runs_with_avg(run_data, only=None):
     """Plot results of simulations sharing a configuration,
     with their average results"""
     # individual runs
@@ -221,7 +222,8 @@ def plot_runs_with_avg(run_data):
     output_path = os.path.join(run_data['path'], 'plots')
 
     # plot
-    plot(labels_paths, output_path, {}, avg=(run_data['avg_type'], run_data['avg']))
+    only = ['general'] + only if only is not None else ['general']
+    plot(labels_paths, output_path, {}, avg=(run_data['avg_type'], run_data['avg']), only=only)
 
 
 def plot_results(output_dir):
@@ -231,7 +233,7 @@ def plot_results(output_dir):
     avgs = []
     for r in results:
         if not conf.RUN.get('SKIP_PARAM_GROUP_PLOTS'):
-            plot_runs_with_avg(r)
+            plot_runs_with_avg(r, conf.RUN.get('AVERAGE_DATA'))
 
         # group averages, with labels, to plot together
         label = conf_to_str(r['overrides'], delimiter='\n')
@@ -241,11 +243,6 @@ def plot_results(output_dir):
     if len(avgs) > 1:
         output_path = os.path.join(output_dir, 'plots')
         plot(avgs, output_path, {}, only=['general'])
-
-
-def impute(data):
-    """very naive/imprecise data imputation, can be improved"""
-    return data.interpolate(limit_direction='both').fillna(method='bfill')
 
 
 def gen_output_dir(command):
@@ -310,9 +307,14 @@ def sensitivity(ctx, params):
         elif param == 'STARTING_DAY':
             p_name = param
             p_vals = [datetime.date(2000, 1, 1), datetime.date(2010, 1, 1)]
+        # else, assume boolean
         elif '-' in param:
             p_name = 'PROCESSING_ACPS'
             p_vals = [[i] for i in param.split('-')[1:]]
+        # TODO: Include two or more parameters altering together
+        # elif '*' in param:
+        #     params, vals = param.split('*')
+        #     confs = [{p_name: v} for p_name in params for v in val[p_name]]
         # else, assume boolean
         else:
             p_name = param
@@ -404,28 +406,6 @@ def make_plots(output_dir):
     (Re)generate plots for an output directory
     """
     plot_results(output_dir)
-
-
-# @main.command()
-# @click.option('-s', '--sig-level', help='Significance level', default=0.05)
-# @click.pass_context
-# def validate(ctx, sig_level):
-#     """
-#     Validate simulation output
-#     """
-#     df = pd.read_csv('validating_data/general.csv')
-#     rw_data = {
-#         'inflation': impute(df['real_inflation']).values,
-#         'consumption': impute(df['real_consumption']).values
-#     }
-#
-#     ab_data = [{
-#         'inflation': impute(df['model_inflation']).values,
-#         'consumption': impute(df['model_consumption']).values
-#     }]
-#     rw_data_len = len(df['real_inflation'].values)
-#     results = validation_tentative.validate(rw_data, ab_data, rw_data_len, sig_level)
-#     print(results)
 
 
 @main.command()

@@ -3,9 +3,9 @@ import datetime
 # MODEL PARAMETERS
 # FIRMS
 # Production function, labour with decaying exponent, Alpha for K. [0, 1]
-PRODUCTIVITY_EXPONENT = .4
+PRODUCTIVITY_EXPONENT = .35
 # Order of magnitude correction of production. Production divided by parameter
-PRODUCTIVITY_MAGNITUDE_DIVISOR = 12
+PRODUCTIVITY_MAGNITUDE_DIVISOR = 13
 # GENERAL CALIBRATION PARAMETERS
 # Order of magnitude parameter of input into municipality investment
 TREASURE_INTO_SERVICES = .0004

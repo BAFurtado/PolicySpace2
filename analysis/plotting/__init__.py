@@ -65,7 +65,6 @@ class Plotter:
         plot.set_xlabel('Time')
         if y_label is not None:
             plot.set_ylabel(y_label)
-        # plot.set_axis_bgcolor('w')
         fig = plot.get_figure()
         fig.set_size_inches(15, 10)
         return fig
@@ -234,7 +233,7 @@ class Plotter:
                 'gdp_percapita', 'regional_unemployment', 'qli_index', 'pop',
                 'treasure', 'licenses']
         titles = ['GDP', 'GINI', 'House values', 'per capita GDP', 'Unemployment', 'QLI index', 'Population',
-                'Total Taxes', 'Land licenses']
+                  'Total Taxes', 'Land licenses']
         for col, title in zip(cols, titles):
             title = 'Evolution of {} by region, monthly'.format(title)
             dat_to_plot = dat.pivot(index='month', columns='mun_id', values=col).astype(float)

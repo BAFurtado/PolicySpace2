@@ -101,8 +101,7 @@ class PopulationEstimates:
     def __init__(self, fname):
         df = pd.read_csv(fname).set_index('mun_code')
 
-        # Compute linear models to impute
-        # missing data. Not always accurate unfortunately,
+        # Compute linear models to impute missing data. Not always accurate unfortunately,
         # because not all population trends are linear
         self.linear_models = {}
         for mun_code, pops in df.iterrows():
