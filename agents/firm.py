@@ -224,6 +224,7 @@ class ConstructionFirm(Firm):
         self.houses_for_sale = []
         self.building = defaultdict(dict)
         self.cash_flow = defaultdict(float)
+        self.planned_revenue = 0
 
     def plan_house(self, regions, houses, params, seed, vacancy_prob):
         """Decide where to build"""
@@ -297,6 +298,9 @@ class ConstructionFirm(Firm):
         # Product.quantity increases as construction moves forward and is deducted at once
         self.building[idx]['cost'] = building_cost * region.license_price
 
+        # Provide temporary cashflow revenue numbers before sales start to trickle in
+        self.planned_revenue += self.building[idx]['cost'] / params['CONSTRUCTION_ACC_CASH_FLOW']
+
         # Buy license
         region.licenses -= 1
         # Region license price is current QLI. Lot price is the model parameter
@@ -350,6 +354,9 @@ class ConstructionFirm(Firm):
 
     def wage_base(self, unemployment, ignore_unemployment, date=datetime.date(2000, 1, 1)):
         self.revenue = self.cash_flow[date]
+        # Using temporary planned income before money starts to flow in
+        if self.revenue == 0:
+            self.revenue = self.planned_revenue
         if not ignore_unemployment:
             # Observing global economic performance has the added advantage of not spending all revenue on salaries
             return self.revenue * (1 - unemployment)
