@@ -133,7 +133,8 @@ class Plotter:
                   'Average workers per firm', 'Families\' disposable cash', 'Families\' absolute savings',
                   'Firms\' absolute capital', 'Firms\' profit', 'GINI index', 'Average families\' utility',
                   'Monthly inflation', 'Average QLI index value', 'House vacancies', 'House prices',
-                  'House rent prices', 'Proportion of rent over total wages', 'Prop. families with affordable rent',
+                  'House rent prices', 'Proportion of rent over permanent income',
+                  'Affordable rent (less than 30% permanent income)',
                   'Taxes invested equally', 'Taxes invested locally', 'Taxes invested via FPM',
                   'Taxes paid by the banks on top of interests']
 

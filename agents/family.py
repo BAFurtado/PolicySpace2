@@ -125,6 +125,7 @@ class Family:
         """Grabs all money from all members"""
         money = sum(m.grab_money() for m in self.members.values())
         permanent_income = self.permanent_income(central, r)
+        # Provision for loan payments
         permanent_income -= self.monthly_loan_payments
         # Having loans will impact on a lower long-run permanent income consumption and on a monthly strongly
         # reduction of consumption. However, the price of the house may be appreciating in the market.
