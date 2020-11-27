@@ -36,7 +36,7 @@ def collect_rent(houses, sim):
             # Deposit change
             tenant.update_balance(round(payment - rent, 2))
 
-            # Deposit money on selling family
+            # Deposit money on landfamily
             landfamily.update_balance(round(rent - taxes, 2))
 
 
@@ -101,8 +101,8 @@ class RentalMarket:
                     elif self.unoccupied:
                         house = self.unoccupied[0]
                     else:
-                        # Family may go without a house. Check
-                        continue
+                        # Family may go without a house. Try next month if there are vacancies
+                        return
                     # Ask for reduced price, because out of budget. Varying according to number of available houses
                     price = house.price * round((base_proportion - (len(my_market) / 100000)), 6)
                 if sim.PARAMS['OFFER_SIZE_ON_PRICE']:

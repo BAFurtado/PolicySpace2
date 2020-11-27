@@ -130,7 +130,6 @@ class HousingMarket:
         savings = family.savings + sim.central.sum_deposits(family)
         savings_with_mortgage = family.savings_with_loan
         my_market = sim.seed.sample(for_sale, min(len(for_sale), int(sim.PARAMS['SIZE_MARKET']) * 3))
-        # my_market = [h for h in my_market if h.price < savings_with_mortgage]
         my_market.sort(key=lambda h: h.price, reverse=True)
         # If family has enough funds, or successfully gets a loan, it buys the first house of the stack.
         # Only houses that are within savings or savings plus loan compose each family individual market

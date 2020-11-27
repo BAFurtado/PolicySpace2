@@ -90,7 +90,7 @@ class Family:
         # Savings is updated during consumption as the fraction of above permanent income that is not consumed
         # If savings is above a six-month period reserve money, the surplus is invested in the bank.
         reserve_money = self.permanent_income(bank, r) * 6
-        if self.savings > reserve_money:
+        if self.savings > reserve_money > 0:
             bank.deposit(self, self.savings - reserve_money, datetime.date(y, m, 1))
             self.savings = reserve_money
 
@@ -125,29 +125,26 @@ class Family:
         """Grabs all money from all members"""
         money = sum(m.grab_money() for m in self.members.values())
         permanent_income = self.permanent_income(central, r)
-        # Provision for loan payments
-        permanent_income -= self.monthly_loan_payments
         # Having loans will impact on a lower long-run permanent income consumption and on a monthly strongly
         # reduction of consumption. However, the price of the house may be appreciating in the market.
         # If cash at hand is positive consume it capped to permanent income
         money_to_spend = None
         if money > 0:
-            if money > permanent_income:
+            if money > permanent_income > 0:
                 money_to_spend = permanent_income
                 # Deposit family money above that of permanent income
                 self.savings += money - permanent_income
             else:
                 money_to_spend = money
         # If there is no cash available, withdraw at most permanent income from savings
-        elif self.savings > permanent_income:
+        elif self.savings > permanent_income > 0:
             self.savings -= permanent_income
             money_to_spend = permanent_income
         elif self.savings > 0:
             money_to_spend = self.savings
             self.savings = 0
         else:
-            # If there is no cash and no savings, pass
-            # Withdraw from any long-term deposits if any
+            # If there is no cash and no savings withdraw from any long-term deposits if any
             if central.wallet[self]:
                 cash = self.grab_savings(central, year, month)
                 if cash > permanent_income:

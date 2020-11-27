@@ -275,7 +275,8 @@ class Output:
                                                                              house.address.y,
                                                                              house.size,
                                                                              house.price,
-                                                                             house.rent_data[0] if house.rent_data else '',
+                                                                             house.rent_data[0] if house.rent_data
+                                                                             else '',
                                                                              house.quality,
                                                                              sim.regions[house.region_id].index,
                                                                              house.on_market,
