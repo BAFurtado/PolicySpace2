@@ -75,17 +75,12 @@ class Statistics(object):
         return np.average([h.rent_data[0] for h in houses.values() if h.rent_data is not None])
 
     def calculate_affordable_rent(self, families):
-        rent_wage = sum([family.house.rent_data[0]/family.last_permanent_income
-                         if family.is_renting
-                         and family.last_permanent_income != 0 else 0
-                         for family in families.values()])
-
         affordable = sum([1 if family.is_renting
                           and family.last_permanent_income != 0
                           and (family.house.rent_data[0] / family.last_permanent_income) < .3 else 0
                           for family in families.values()])
         renting = sum([family.is_renting for family in families.values()])
-        return rent_wage/renting, affordable/renting
+        return affordable/renting
 
     def update_GDP_capita(self, firms, mun_id, mun_pop):
         dummy_gdp = np.sum([firms[firm].revenue for firm in firms.keys()
