@@ -144,9 +144,9 @@ def immigration(sim):
     for mun_code, pop in sim.mun_pops.items():
         estimated_pop = pop_estimates.estimate_for_year(mun_code, year)
         estimated_pop *= sim.PARAMS['PERCENTAGE_ACTUAL_POP']
-        immigration = max(estimated_pop - pop, 0)
-        immigration *= 1/12
-        n_migrants = math.ceil(immigration)
+        n_immigration = max(estimated_pop - pop, 0)
+        n_immigration *= 1/12
+        n_migrants = math.ceil(n_immigration)
         if not n_migrants:
             continue
 

@@ -166,7 +166,8 @@ class Generator:
         sample = self.seed.sample(list(self.sim.agents.values()), n_agents)
         for a in sample:
             agent_id = self.gen_id()
-            new_agent = Agent(agent_id, a.gender, a.age, a.qualification, a.money, a.month)
+            money = self.seed.randrange(1, 34)
+            new_agent = Agent(agent_id, a.gender, a.age, a.qualification, money, a.month)
             new_agents[agent_id] = new_agent
         return new_agents
 
