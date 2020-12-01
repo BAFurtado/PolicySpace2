@@ -3,12 +3,12 @@ import datetime
 # MODEL PARAMETERS
 # FIRMS
 # Production function, labour with decaying exponent, Alpha for K. [0, 1]
-PRODUCTIVITY_EXPONENT = .35
+PRODUCTIVITY_EXPONENT = .4
 # Order of magnitude correction of production. Production divided by parameter
-PRODUCTIVITY_MAGNITUDE_DIVISOR = 13
+PRODUCTIVITY_MAGNITUDE_DIVISOR = 12
 # GENERAL CALIBRATION PARAMETERS
 # Order of magnitude parameter of input into municipality investment
-TREASURE_INTO_SERVICES = .0004
+TREASURE_INTO_SERVICES = .0005
 
 # By how much percentage to increase prices
 MARKUP = 0.05
@@ -55,8 +55,8 @@ MAX_LOAN_AGE = 80
 MAX_LOAN_REPAYMENT_PERCENT_INCOME = 0.3
 MAX_LOAN_BANK_PERCENT = 0.7
 
-CAPPED_TOP_VALUE = 1.3
-CAPPED_LOW_VALUE = .9
+CAPPED_TOP_VALUE = 1.2
+CAPPED_LOW_VALUE = .8
 
 # Influence of vacancy size on house prices
 # It can be True or 1 or if construction companies consider vacancy strongly it might be 2 [1 - (vacancy * VALUE)]
