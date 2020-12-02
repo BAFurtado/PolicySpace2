@@ -32,20 +32,20 @@ class Funds:
             mun_code = region.id[:7]
             regional_fpm = fpm_region[id] / sum(set(fpm_region.values())) * value * pop_t[id] / pop_mun_t[mun_code]
             # Actually investing the FPM
-            region.update_index(regional_fpm * self.sim.PARAMS['TREASURE_INTO_SERVICES'])
+            region.update_index(regional_fpm * self.sim.PARAMS['MUNICIPAL_EFFICIENCY_MANAGEMENT'])
             region.update_applied_taxes(regional_fpm, 'fpm')
 
     def locally(self, value, regions, mun_code, pop_t, pop_mun_t):
         for mun in mun_code.keys():
             for id in mun_code[mun]:
                 amount = value[mun] * pop_t[id] / pop_mun_t[mun]
-                regions[id].update_index(amount * self.sim.PARAMS['TREASURE_INTO_SERVICES'])
+                regions[id].update_index(amount * self.sim.PARAMS['MUNICIPAL_EFFICIENCY_MANAGEMENT'])
                 regions[id].update_applied_taxes(amount, 'locally')
 
     def equally(self, value, regions, pop_t, pop_total):
         for id, region in regions.items():
             amount = value * pop_t[id] / pop_total
-            region.update_index(amount * self.sim.PARAMS['TREASURE_INTO_SERVICES'])
+            region.update_index(amount * self.sim.PARAMS['MUNICIPAL_EFFICIENCY_MANAGEMENT'])
             region.update_applied_taxes(amount, 'equally')
 
     def invest_taxes(self, year, bank_taxes):
