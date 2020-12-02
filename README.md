@@ -68,6 +68,10 @@ up to permanent income
 22. Offer decay (time depreciation) implemented
 23. Global availability of houses (vacancy) influences prices
 24. Neighborhood effects (based on families' wealth) influence prices.
+25. Possibility of negotiating house prices below the offer
+26. Vacancy size (offer) now impacts willingness to build of construction firms and prices
+27. New output analysis
+
 
 #### How do I get set up?
 
