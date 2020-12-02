@@ -8,7 +8,7 @@ PRODUCTIVITY_EXPONENT = .35
 PRODUCTIVITY_MAGNITUDE_DIVISOR = 13
 # GENERAL CALIBRATION PARAMETERS
 # Order of magnitude parameter of input into municipality investment
-MUNICIPAL_EFFICIENCY_MANAGEMENT = .0004
+TREASURE_INTO_SERVICES = .0004
 
 # By how much percentage to increase prices
 MARKUP = 0.05
