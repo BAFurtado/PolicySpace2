@@ -85,8 +85,7 @@ def firm_growth(sim):
         # Normalize probabilities
         region_ps = region_ps/np.sum(region_ps)
 
-        # For each new firm, randomly select
-        # its region based on the probabilities we computed
+        # For each new firm, randomly select its region based on the probabilities we computed
         # and then create the new firm
         for _ in range(growth):
             region_id = sim.seed.choices(regions, weights=region_ps)

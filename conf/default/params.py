@@ -8,7 +8,7 @@ PRODUCTIVITY_EXPONENT = .35
 PRODUCTIVITY_MAGNITUDE_DIVISOR = 13
 # GENERAL CALIBRATION PARAMETERS
 # Order of magnitude parameter of input into municipality investment
-TREASURE_INTO_SERVICES = .0004
+MUNICIPAL_EFFICIENCY_MANAGEMENT = .0004
 
 # By how much percentage to increase prices
 MARKUP = 0.05
@@ -146,16 +146,16 @@ PUBLIC_TRANSIT_COST = 0.2
 # "DF"     -      "BRASILIA"
 
 # Percentage of actual population to run the simulation
-# Minimum value to run depends on the size of municipality 0,001 is recommended minimum
-PERCENTAGE_ACTUAL_POP = 0.01
+# Minimum value to run depends on the size of municipality 0.001 is recommended minimum
+PERCENTAGE_ACTUAL_POP = 0.002
 
 # Write exactly like the list
-PROCESSING_ACPS = ['BRASILIA']
+PROCESSING_ACPS = ['BRASILIA', 'GOIANIA']
 
 # Selecting the starting year to build the Agents, can be: 1991, 2000 or 2010
 STARTING_DAY = datetime.date(2010, 1, 1)
 
 # Maximum running time (restrained by official data) is 30 years,
-TOTAL_DAYS = (datetime.date(2012, 1, 1) - STARTING_DAY).days
+TOTAL_DAYS = (datetime.date(2020, 12, 1) - STARTING_DAY).days
 
 

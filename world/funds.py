@@ -26,7 +26,7 @@ class Funds:
                 if region.id[:2] == states_numbers[i]:
                     mun_code = region.id[:7]
                     fpm_region[id] = self.fpm[state][(self.fpm[state].ano == float(year)) &
-                                    (self.fpm[state].cod == float(mun_code))].fpm.iloc[0]
+                                                     (self.fpm[state].cod == float(mun_code))].fpm.iloc[0]
 
         for id, region in regions.items():
             mun_code = region.id[:7]

@@ -55,8 +55,7 @@ class Generator:
         regions = {}
         for item in self.shapes:
             r = Region(item, 1)
-            # mun code is always first 7 digits of id,
-            # if it's a municipality shape or an AP shape
+            # mun code is always first 7 digits of id whether it's a municipality shape or an AP shape
             mun_code = r.id[:7]
             r.index = idhm[idhm['cod_mun'] == int(mun_code)]['idhm'].iloc[0]
             regions[r.id] = r
@@ -188,7 +187,6 @@ class Generator:
         chd = [a for a in agents if a not in adults]
         # Assume there are more adults than families
         # First, distribute adults as equally as possible
-        # Including +1 to avoid division by zero
         for i in range(len(adults)):
             if not adults[i].belongs_to_family:
                 fams[i % len(fams)].add_agent(adults[i])
