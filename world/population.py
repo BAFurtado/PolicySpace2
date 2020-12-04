@@ -197,7 +197,7 @@ def marriage(sim):
             if sim.seed.random() < agent.p_marriage:
                 to_marry.append(agent)
 
-    # Marry individuals
+    # Marry individuals.
     # NOTE individuals are paired randomly
     sim.seed.shuffle(to_marry)
     to_marry = iter(to_marry)
