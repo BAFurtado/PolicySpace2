@@ -3,12 +3,12 @@ import datetime
 # MODEL PARAMETERS
 # FIRMS
 # Production function, labour with decaying exponent, Alpha for K. [0, 1]
-PRODUCTIVITY_EXPONENT = .35
+PRODUCTIVITY_EXPONENT = .4
 # Order of magnitude correction of production. Production divided by parameter
-PRODUCTIVITY_MAGNITUDE_DIVISOR = 13
+PRODUCTIVITY_MAGNITUDE_DIVISOR = 15
 # GENERAL CALIBRATION PARAMETERS
 # Order of magnitude parameter of input into municipality investment
-MUNICIPAL_EFFICIENCY_MANAGEMENT = .0004
+MUNICIPAL_EFFICIENCY_MANAGEMENT = .0005
 
 # By how much percentage to increase prices
 MARKUP = 0.05
@@ -55,8 +55,8 @@ MAX_LOAN_AGE = 80
 MAX_LOAN_REPAYMENT_PERCENT_INCOME = 0.3
 MAX_LOAN_BANK_PERCENT = 0.7
 
-CAPPED_TOP_VALUE = 1.3
-CAPPED_LOW_VALUE = .9
+CAPPED_TOP_VALUE = 1.2
+CAPPED_LOW_VALUE = .8
 
 # Influence of vacancy size on house prices
 # It can be True or 1 or if construction companies consider vacancy strongly it might be 2 [1 - (vacancy * VALUE)]
@@ -146,16 +146,16 @@ PUBLIC_TRANSIT_COST = 0.2
 # "DF"     -      "BRASILIA"
 
 # Percentage of actual population to run the simulation
-# Minimum value to run depends on the size of municipality 0.001 is recommended minimum
-PERCENTAGE_ACTUAL_POP = 0.002
+# Minimum value to run depends on the size of municipality 0,001 is recommended minimum
+PERCENTAGE_ACTUAL_POP = 0.01
 
 # Write exactly like the list
-PROCESSING_ACPS = ['BRASILIA', 'GOIANIA']
+PROCESSING_ACPS = ['BRASILIA']
 
 # Selecting the starting year to build the Agents, can be: 1991, 2000 or 2010
 STARTING_DAY = datetime.date(2010, 1, 1)
 
 # Maximum running time (restrained by official data) is 30 years,
-TOTAL_DAYS = (datetime.date(2020, 12, 1) - STARTING_DAY).days
+TOTAL_DAYS = (datetime.date(2020, 1, 1) - STARTING_DAY).days
 
 
