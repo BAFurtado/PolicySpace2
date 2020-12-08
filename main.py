@@ -303,7 +303,8 @@ def sensitivity(ctx, params):
             # round to 8 decimal places
             p_vals = [round(v, 8) for v in p_vals]
 
-        # TODO: Fix plots for starting-day. Yearly information refers to 2010-2020. Should go the whole period.
+        # TODO: Fix plots for starting-day sensitivity analysis.
+        #  Yearly information refers to 2010-2020. Should go the whole period.
         elif param == 'STARTING_DAY':
             p_name = param
             p_vals = [datetime.date(2000, 1, 1), datetime.date(2010, 1, 1)]
@@ -315,11 +316,10 @@ def sensitivity(ctx, params):
         # elif '*' in param:
         #     params, vals = param.split('*')
         #     confs = [{p_name: v} for p_name in params for v in val[p_name]]
-        # else, assume boolean
+        # Else, assume boolean
         else:
             p_name = param
             p_vals = [True, False]
-            # TODO: allow for multiple parameters to be update at a time
         ctx.obj['output_dir'] = ctx.obj['output_dir'].replace('sensitivity', p_name)
         confs = [{p_name: v} for v in p_vals]
 

@@ -2,8 +2,7 @@
 
 **Enhancements**
 
-1. Check credit market (central bank point of view). 
-12. REMINDER. Validate transport via OD matrices?
+1. REMINDER. Validate transport via OD matrices?
 
 **Research and further checks**
 
@@ -15,6 +14,10 @@ Answer. Not entirely, spatial location favors jobs, rather than preferences/perc
 
 **Future implementations**
 1. Make the assets market work for firms (currently, functional for families only)
+2. Include endogenous worker qualification increase
+3. Include urban amenities
+4. Include urban and land-use regulation
+5. Maybe, include other assets (stocks) as alternative investment portfolio.
 
 **Forecasting?**
 1. Imagine we would calibrate the model using half of the data: 
@@ -22,3 +25,4 @@ Answer. Not entirely, spatial location favors jobs, rather than preferences/perc
 
 **Old Fixes**
 1. plotter.plot_firms_diagnosis()
+2. General clean-up variables at firm, family level

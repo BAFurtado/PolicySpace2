@@ -87,8 +87,6 @@ class LaborMarket:
             candidates = self.seed.sample(candidates, min(len(candidates), int(params['HIRING_SAMPLE_SIZE'])))
             for c in candidates:
                 transit_cost = params['PRIVATE_TRANSIT_COST'] if c.has_car else params['PUBLIC_TRANSIT_COST']
-                # TODO: check units of distance_to_firm and relevance comparatively to potential wage.
-                #  Anyway, it differentiates among candidates for the same firm
                 score = wage - (c.family.house.distance_to_firm(firm) * transit_cost)
                 if flag:
                     offers.append((firm, c, c.qualification + score))

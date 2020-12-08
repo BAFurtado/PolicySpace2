@@ -56,7 +56,6 @@ def plot(sim, text):
     family_coords = gen_coords(sim.families.values(), True)
 
     # Loading the shapefiles
-    # TODO: Come back to update plotting shapes
     full_region = geopandas.read_file('input/shapes/mun_ACPS_ibge_2014_latlong_wgs1984_fixed.shp')
     urban_region = geopandas.read_file('input/shapes/URBAN_IBGE_ACPs.shp')
 
