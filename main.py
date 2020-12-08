@@ -17,6 +17,7 @@ import sys
 from collections import defaultdict
 import datetime
 from glob import glob
+import itertools
 from itertools import product
 
 import click
@@ -292,6 +293,7 @@ def sensitivity(ctx, params):
     Boolean param syntax: NAME
     """
     for param in params:
+        flag = None
         ctx.obj['output_dir'] = gen_output_dir(ctx.command.name)
 
         # if ':' present, assume continuous param
@@ -299,10 +301,8 @@ def sensitivity(ctx, params):
             p_name, p_min, p_max, p_step = param.split(':')
             p_min, p_max = float(p_min), float(p_max)
             p_vals = np.linspace(p_min, p_max, int(p_step))
-
             # round to 8 decimal places
             p_vals = [round(v, 8) for v in p_vals]
-
         # TODO: Fix plots for starting-day sensitivity analysis.
         #  Yearly information refers to 2010-2020. Should go the whole period.
         elif param == 'STARTING_DAY':
@@ -312,17 +312,28 @@ def sensitivity(ctx, params):
         elif '-' in param:
             p_name = 'PROCESSING_ACPS'
             p_vals = [[i] for i in param.split('-')[1:]]
-        # TODO: Include two or more parameters altering together
-        # elif '*' in param:
-        #     params, vals = param.split('*')
-        #     confs = [{p_name: v} for p_name in params for v in val[p_name]]
+        elif '*' in param:
+            flag = True
+            # One should include first the params, separated by '+', then '*' and then the list of values also '+'
+            # Such as 'param1+param2*1+2*10+20'.
+            # Thus producing the dict: {'param1': ['10', '20'], 'param2': ['10', '20']}
+            ps = param.split('*')[0]
+            my_dict = {ps.split('+')[i]: [float(f) for f in param.split('*')[i + 1].split('+')]
+                       for i in range(len(ps.split('+')))}
+            keys, values = zip(*my_dict.items())
+            permutations_dicts = [dict(zip(keys, v)) for v in itertools.product(*values)]
         # Else, assume boolean
         else:
             p_name = param
             p_vals = [True, False]
-        ctx.obj['output_dir'] = ctx.obj['output_dir'].replace('sensitivity', p_name)
-        confs = [{p_name: v} for v in p_vals]
-
+        if not flag:
+            ctx.obj['output_dir'] = ctx.obj['output_dir'].replace('sensitivity', p_name)
+            confs = [{p_name: v} for v in p_vals]
+        else:
+            p_name = ps
+            p_vals = my_dict.values()
+            ctx.obj['output_dir'] = ctx.obj['output_dir'].replace('sensitivity', '_'.join(k for k in keys))
+            confs = permutations_dicts
         # fix the same seed for each run
         conf.RUN['KEEP_RANDOM_SEED'] = False
         # conf.RUN['FORCE_NEW_POPULATION'] = False # Ideally this is True, but it slows things down a lot

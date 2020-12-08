@@ -147,12 +147,19 @@ You can also set up multiple sensitivity runs at once.
 For example:
 
 ```
-python main.py sensitivity ALPHA:0:1:0.1 WAGE_IGNORE_UNEMPLOYMENT
+python main.py sensitivity MARKUP:.05:.15:7 WAGE_IGNORE_UNEMPLOYMENT
 ```
 
 is equivalent to running the previous two examples in sequence.
 
+For multiple combinations of parameters one may try the following rules
 
+Include first the params, separated by '+', then '*' and then the list of values also '+'
+Such as 'param1+param2*1+2*10+20'.
+Thus,  producing the dict: {'param1': ['10', '20'], 'param2': ['10', '20']}
+```
+python main.py sensitivity PRODUCTIVITY_EXPONENT+PRODUCTIVITY_MAGNITUDE_DIVISOR*.3+.4*10+20
+```
 #### Distributions
 
 Runs simulation over a different distribution combinations: `ALTERNATIVE0: True/False, FPM_DISTRIBUTION: True/False`.
