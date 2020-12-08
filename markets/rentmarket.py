@@ -99,6 +99,7 @@ class RentalMarket:
                         my_market.sort(key=lambda h: h.price)
                         house = my_market[0]
                     elif self.unoccupied:
+                        self.unoccupied.sort(key=lambda h: h.price)
                         house = self.unoccupied[0]
                     else:
                         # Family may go without a house. Try next month if there are vacancies

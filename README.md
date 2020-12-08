@@ -72,7 +72,6 @@ up to permanent income
 26. Vacancy size (offer) now impacts willingness to build of construction firms and prices
 27. New output analysis
 
-
 #### How do I get set up?
 
 We recommend using conda  and creating an environment that includes all libraries simultaneously.
