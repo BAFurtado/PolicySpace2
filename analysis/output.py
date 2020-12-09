@@ -246,7 +246,7 @@ class Output:
 
     def save_agents_data(self, sim):
         with open(self.agents_path, 'a') as f:
-            [f.write('%s;%s;%s;%.3f;%.3f;%d;%d;%d;%s;%s;%.3f;%.3f;%s\n' % (sim.clock.days, agent.region_id,
+            [f.write('%s;%s;%s;%.3f;%.3f;%s;%s;%s;%s;%s;%.3f;%.3f;%s\n' % (sim.clock.days, agent.region_id,
                                                                            agent.gender, agent.address.x,
                                                                            agent.address.y, agent.id, agent.age,
                                                                            agent.qualification, agent.firm_id,
