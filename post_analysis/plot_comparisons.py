@@ -9,27 +9,34 @@ from statsmodels.graphics.gofplots import qqplot_2samples as qq
 from post_analysis.linear_regressions import normalize_data
 
 
-def plot_hist(x, y):
+def plot_hist(x, y, name=None, params=None):
     sns.set()
-    plt.figure()
+    fig = plt.figure()
+    fig.suptitle(params, fontsize=9)
+    fig.subplots_adjust(top=0.85)
     sns.distplot(x, hist=True, label='simulated')
     sns.distplot(y, hist=True, label='real')
     plt.legend()
-    plt.show()
+    if name:
+        plt.savefig(f'output/{name}.png')
+    else:
+        plt.show()
 
 
-def plot_qq(x, y, name=None):
+def plot_qq(x, y, name=None, params=None):
     # Checking length
-    plt.figure()
+    sns.set()
     if len(x) > len(y):
         x = np.random.choice(x, len(y))
     else:
         y = y[:len(x)]
-    qq(x, y, line='45')
+    fig = qq(x, y, line='45')
+    fig.suptitle(params, fontsize=9)
+    fig.subplots_adjust(top=0.85)
     labels = ['simulated', 'real']
-    plt.legend(labels)
+    plt.legend(labels, frameon=False)
     if name:
-        plt.savefig(f'{name}.png')
+        plt.savefig(f'output/{name}.png')
     else:
         plt.show()
 
@@ -55,10 +62,10 @@ def prepare_data(file, real_sales_data=None, real_rental_data=None):
     s_rent_price = normalize_data(s_rent_price, 'price_util')
     s_rent_price = s_rent_price[['price_util']]
     if real_sales_data is None:
-        file = r'C:\Users\R1702898\Documents\PolicySpace2\post_analysis/sensible_sales_300.csv'
+        file = r'../post_analysis/sensible_sales_300.csv'
         real_sales_data = pd.read_csv(file, sep=';', usecols=['price_util'])
         real_sales_data = normalize_data(real_sales_data, 'price_util')
-        file = r'C:\Users\R1702898\Documents\PolicySpace2\post_analysis/sensible_rent_300.csv'
+        file = r'../post_analysis/sensible_rent_300.csv'
         real_rental_data = pd.read_csv(file, sep=';', usecols=['price_util'])
         real_rental_data = normalize_data(real_rental_data, 'price_util')
     return s_sales_price, real_sales_data, s_rent_price, real_rental_data
@@ -75,14 +82,15 @@ def ks_test(rvs1, rvs2, significance_level=0.1):
 if __name__ == "__main__":
     # Get Data
     # column 5 - house_prices, column 6 - rent, column 4 - size
-    f = r'../output/run__2020-11-11T12_35_02.282507/0/temp_houses.csv'
+    f = r'../output/run__2020-12-08T17_59_47.737770/0/temp_houses.csv'
+    p = f[:-17] + 'conf.json'
     s_sales, r_sales, s_rent, r_rent = prepare_data(f)
 
-    plot_qq(s_sales['price_util'], r_sales['price_util'])
-    plot_qq(s_rent['price_util'], r_rent['price_util'])
+    plot_qq(s_sales['price_util'], r_sales['price_util'], name='qq_sales_' + p[-16:-10], params=p)
+    plot_qq(s_rent['price_util'], r_rent['price_util'], name='qq_rent_' + p[-16:-10], params=p)
 
-    plot_hist(s_sales['price_util'], r_sales['price_util'])
-    plot_hist(s_rent['price_util'], r_rent['price_util'])
+    plot_hist(s_sales['price_util'], r_sales['price_util'], name='h_sales_' + p[-16:-10], params=p)
+    plot_hist(s_rent['price_util'], r_rent['price_util'], name='h_rent_' + p[-16:-10], params=p)
 
     print(ks_test(s_sales['price_util'], r_sales['price_util']))
     print(ks_test(s_rent['price_util'], r_rent['price_util']))

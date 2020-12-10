@@ -57,7 +57,7 @@ if __name__ == '__main__':
     # Comparable between REAL and SIMULATED data
     # #######     SIMULATED DATA ###############
     # Read file
-    file = r'../output/run__2020-11-03T17_40_07.703931/0/temp_houses.csv'
+    file = r'../output/run__2020-12-08T17_59_47.737770/0/temp_houses.csv'
     file = pd.read_csv(file, sep=';')
     # Add columns
     file = organize(file)
