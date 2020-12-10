@@ -411,12 +411,18 @@ def acps(ctx):
 
 
 @main.command()
-@click.argument('output_dir')
-def make_plots(output_dir):
+@click.argument('params', nargs=-1)
+def make_plots(params, flag=None):
     """
     (Re)generate plots for an output directory
     """
+    output_dir = params[0]
     plot_results(output_dir)
+    if params[1]:
+        results = json.load(open(os.path.join(output_dir, 'meta.json'), 'r'))
+        keys = ['general', 'firms', 'construction', 'houses', 'families', 'banks']
+        for res in results:
+            plot([('run', res['runs'][0])], os.path.join(res['runs'][0], 'plots'), params=res['params'], only=keys)
 
 
 @main.command()
