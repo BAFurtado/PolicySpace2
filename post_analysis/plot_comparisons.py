@@ -79,18 +79,23 @@ def ks_test(rvs1, rvs2, significance_level=0.1):
     return p > significance_level, p, d
 
 
-if __name__ == "__main__":
-    # Get Data
-    # column 5 - house_prices, column 6 - rent, column 4 - size
-    f = r'../output/run__2020-12-08T17_59_47.737770/0/temp_houses.csv'
-    p = f[:-17] + 'conf.json'
+def main(file):
+    params = file[:-17] + 'conf.json'
+
     s_sales, r_sales, s_rent, r_rent = prepare_data(f)
 
-    plot_qq(s_sales['price_util'], r_sales['price_util'], name='qq_sales_' + p[-16:-10], params=p)
-    plot_qq(s_rent['price_util'], r_rent['price_util'], name='qq_rent_' + p[-16:-10], params=p)
+    plot_qq(s_sales['price_util'], r_sales['price_util'], name='qq_sales_' + params[-16:-10], params=params)
+    plot_qq(s_rent['price_util'], r_rent['price_util'], name='qq_rent_' + params[-16:-10], params=params)
 
-    plot_hist(s_sales['price_util'], r_sales['price_util'], name='h_sales_' + p[-16:-10], params=p)
-    plot_hist(s_rent['price_util'], r_rent['price_util'], name='h_rent_' + p[-16:-10], params=p)
+    plot_hist(s_sales['price_util'], r_sales['price_util'], name='h_sales_' + params[-16:-10], params=params)
+    plot_hist(s_rent['price_util'], r_rent['price_util'], name='h_rent_' + params[-16:-10], params=params)
 
     print(ks_test(s_sales['price_util'], r_sales['price_util']))
     print(ks_test(s_rent['price_util'], r_rent['price_util']))
+
+
+if __name__ == "__main__":
+    # Get Data
+    # column 5 - house_prices, column 6 - rent, column 4 - size
+    f = 'temp_houses.csv'
+    main(f)
