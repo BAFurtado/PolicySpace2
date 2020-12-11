@@ -212,6 +212,10 @@ class Plotter:
 
     def plot_regional_stats(self):
         dat = self._load_single_run('regional', 'temp_regional.csv')
+        # TODO: adjusted time not working for regional plots
+        # Time to be eliminated (adjustment of the model)
+        # if conf.RUN['TIME_TO_BE_ELIMINATED'] > 0:
+        #     dat = dat.loc[len(dat['month']) * conf.RUN['TIME_TO_BE_ELIMINATED']:, :]
 
         # commuting
         title = 'Evolution of commute by region, monthly'
