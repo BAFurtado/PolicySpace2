@@ -14,8 +14,8 @@ def plot_hist(x, y, name=None, params=None):
     fig = plt.figure()
     fig.suptitle(params, fontsize=9)
     fig.subplots_adjust(top=0.85)
-    sns.distplot(x, hist=True, label='simulated')
-    sns.distplot(y, hist=True, label='real')
+    sns.distplot(x, hist=True, kde=True, label='simulated')
+    sns.distplot(y, hist=True, kde=True, label='real')
     plt.legend()
     if name:
         plt.savefig(f'output/{name}.png')
@@ -97,5 +97,5 @@ def main(file):
 if __name__ == "__main__":
     # Get Data
     # column 5 - house_prices, column 6 - rent, column 4 - size
-    f = 'temp_houses.csv'
+    f = '../output/run__2020-12-08T17_59_47.737770/0/temp_houses.csv'
     main(f)
