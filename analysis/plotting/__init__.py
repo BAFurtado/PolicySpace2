@@ -126,14 +126,14 @@ class Plotter:
         labels, dats = self._load_multiple_runs('stats', 'temp_stats.csv')
 
         cols = ['price_index', 'gdp_index', 'gdp_growth', 'unemployment', 'average_workers', 'families_wealth',
-                'families_savings', 'firms_wealth', 'firms_profit', 'gini_index', 'average_utility', 'inflation',
-                'average_qli', 'house_vacancy', 'house_price', 'house_rent', 'affordable',
-                'equally', 'locally', 'fpm', 'bank']
+                'families_commuting', 'families_savings', 'firms_wealth', 'firms_profit', 'gini_index',
+                'average_utility', 'inflation', 'average_qli', 'house_vacancy', 'house_price', 'house_rent',
+                'affordable', 'equally', 'locally', 'fpm', 'bank']
         titles = ['Average prices\' level', 'GDP absolute value', 'GDP growth in monthly perc.', 'Unemployment',
-                  'Average workers per firm', 'Families\' disposable cash', 'Families\' absolute savings',
-                  'Firms\' absolute capital', 'Firms\' profit', 'GINI index', 'Average families\' utility',
-                  'Monthly inflation', 'Average QLI index value', 'House vacancies', 'House prices',
-                  'House rent prices', 'Affordable rent (less than 30% permanent income)',
+                  'Average workers per firm', 'Families\' disposable cash', 'Families\s total commuting',
+                  'Families\' absolute savings', 'Firms\' absolute capital', 'Firms\' profit', 'GINI index',
+                  'Average families\' utility', 'Monthly inflation', 'Average QLI index value', 'House vacancies',
+                  'House prices', 'House rent prices', 'Affordable rent (less than 30% permanent income)',
                   'Taxes invested equally', 'Taxes invested locally', 'Taxes invested via FPM',
                   'Taxes paid by the banks on top of interests']
 
