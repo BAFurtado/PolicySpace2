@@ -130,7 +130,7 @@ class Plotter:
                 'average_utility', 'inflation', 'average_qli', 'house_vacancy', 'house_price', 'house_rent',
                 'affordable', 'equally', 'locally', 'fpm', 'bank']
         titles = ['Average prices\' level', 'GDP absolute value', 'GDP growth in monthly perc.', 'Unemployment',
-                  'Average workers per firm', 'Families\' disposable cash', 'Families\s total commuting',
+                  'Average workers per firm', 'Families\' disposable cash', 'Families\'s total commuting',
                   'Families\' absolute savings', 'Firms\' absolute capital', 'Firms\' profit', 'GINI index',
                   'Average families\' utility', 'Monthly inflation', 'Average QLI index value', 'House vacancies',
                   'House prices', 'House rent prices', 'Affordable rent (less than 30% permanent income)',

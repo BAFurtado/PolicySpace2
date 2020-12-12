@@ -130,7 +130,7 @@ class Output:
         unemployment = sim.stats.update_unemployment(sim.agents.values(), True)
         average_workers = sim.stats.calculate_average_workers(sim.firms)
         families_wealth, families_savings = sim.stats.calculate_families_wealth(sim.families)
-        commuting = sim.stats.update_commuting(sim.families)
+        commuting = sim.stats.update_commuting(sim.families.values())
         firms_wealth = sim.stats.calculate_firms_wealth(sim.firms)
         firms_profit = sim.stats.calculate_firms_profit(sim.firms)
         gini_index = sim.stats.calculate_GINI(sim.families)

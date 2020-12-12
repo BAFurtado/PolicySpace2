@@ -1,4 +1,3 @@
-import numpy as np
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -6,7 +5,7 @@ import seaborn as sns
 from scipy import stats
 from statsmodels.graphics.gofplots import qqplot_2samples as qq
 
-from post_analysis.linear_regressions import normalize_data
+from linear_regressions import normalize_data
 
 
 def plot_hist(x, y, name=None, params=None):
@@ -21,6 +20,7 @@ def plot_hist(x, y, name=None, params=None):
         plt.savefig(f'output/{name}.png')
     else:
         plt.show()
+    plt.close()
 
 
 def plot_qq(x, y, name=None, params=None):
@@ -39,6 +39,7 @@ def plot_qq(x, y, name=None, params=None):
         plt.savefig(f'output/{name}.png')
     else:
         plt.show()
+    plt.close()
 
 
 def restrict_quantile(data, col, max_q=.9, min_q=.1):
@@ -82,7 +83,7 @@ def ks_test(rvs1, rvs2, significance_level=0.1):
 def main(file):
     params = file[:-17] + 'conf.json'
 
-    s_sales, r_sales, s_rent, r_rent = prepare_data(f)
+    s_sales, r_sales, s_rent, r_rent = prepare_data(file)
 
     plot_qq(s_sales['price_util'], r_sales['price_util'], name='qq_sales_' + params[-16:-10], params=params)
     plot_qq(s_rent['price_util'], r_rent['price_util'], name='qq_rent_' + params[-16:-10], params=params)
