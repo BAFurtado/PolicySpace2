@@ -29,7 +29,7 @@ OUTPUT_DATA_SPEC = {
         'columns': ['month', 'price_index', 'gdp_index', 'gdp_growth', 'unemployment', 'average_workers',
                     'families_wealth', 'families_commuting', 'families_savings', 'firms_wealth', 'firms_profit',
                     'gini_index', 'average_utility', 'inflation', 'average_qli', 'house_vacancy', 'house_price',
-                    'house_rent', 'affordable', 'equally', 'locally', 'fpm', 'bank']
+                    'house_rent', 'affordable', 'p_delinquent', 'equally', 'locally', 'fpm', 'bank']
     },
     'families': {
         'avg': {
@@ -125,6 +125,11 @@ class Output:
             '_'.join(sim.geo.processing_acps_codes))
 
     def save_stats_report(self, sim, bank_taxes):
+        # Banks
+        bank = sim.central
+        active = bank.active_loans()
+        n_active = len(active)
+        p_delinquent = len(bank.delinquent_loans()) / n_active if n_active else 0
         price_index, inflation = sim.stats.update_price(sim.firms)
         gdp_index, gdp_growth = sim.stats.sum_region_gdp(sim.firms, sim.regions)
         unemployment = sim.stats.update_unemployment(sim.agents.values(), True)
@@ -148,7 +153,7 @@ class Output:
         report = f"{sim.clock.days};{price_index:.3f};{gdp_index:.3f};{gdp_growth:.3f};{unemployment:.3f};" \
                  f"{average_workers:.3f};{families_wealth:.3f};{commuting:.3f};{families_savings:.3f};{firms_wealth:.3f};" \
                  f"{firms_profit:.3f};{gini_index:.3f};{average_utility:.4f};{inflation:.4f};{average_qli:.3f};" \
-                 f"{house_vacancy:.3f};{house_price:.4f};{house_rent:.4f};{affordable:.4f};" \
+                 f"{house_vacancy:.3f};{house_price:.4f};{house_rent:.4f};{affordable:.4f};{p_delinquent:.4f};" \
                  f"{mun_applied_treasure['equally']:.4f};{mun_applied_treasure['locally']:.4f};" \
                  f"{mun_applied_treasure['fpm']:.4f};{mun_applied_treasure['bank']:.4f}\n"
 

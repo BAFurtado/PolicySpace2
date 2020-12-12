@@ -370,7 +370,6 @@ def distributions_acps(ctx):
         'FPM_DISTRIBUTION': FPM_DISTRIBUTION
     } for ALTERNATIVE0, FPM_DISTRIBUTION in product([True, False], [True, False])]
 
-    exclude_list = []
     # ACPs with just one municipality
     exclude_list = ['CAMPO GRANDE', 'CAMPO DOS GOYTACAZES', 'FEIRA DE SANTANA', 'MANAUS',
                     'PETROLINA - JUAZEIRO', 'TERESINA', 'UBERLANDIA']
@@ -394,7 +393,6 @@ def acps(ctx):
     Run across ACPs
     """
     confs = []
-    exclude_list = []
     # ACPs with just one municipality
     exclude_list = ['CAMPO GRANDE', 'CAMPO DOS GOYTACAZES', 'FEIRA DE SANTANA', 'MANAUS',
                     'PETROLINA - JUAZEIRO', 'TERESINA', 'UBERLANDIA']
