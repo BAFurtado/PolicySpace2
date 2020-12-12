@@ -20,7 +20,7 @@ SIZE_MARKET = 12
 # Frequency firms enter the market
 LABOR_MARKET = 0.4
 
-# Percentage of employees firms hire by distance
+# Percentage of employees firms hired by distance
 PCT_DISTANCE_HIRING = .4
 # Ignore unemployment in wage base calculation
 WAGE_IGNORE_UNEMPLOYMENT = False
