@@ -33,6 +33,8 @@ def collect_rent(houses, sim):
                             payment += difference
                         else:
                             payment += cash
+
+            tenant.rent_default = 1 if payment == 0 else 0
             # Deposit change
             tenant.update_balance(round(payment - rent, 2))
 

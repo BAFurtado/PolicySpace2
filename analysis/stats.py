@@ -129,6 +129,10 @@ class Statistics(object):
         dummy_savings = np.sum([families[family].savings for family in families.keys()])
         return dummy_wealth, dummy_savings
 
+    def calculate_rent_default(self, families):
+        return np.sum([1 for family in families.values() if family.rent_default == 0 and family.is_renting]) / \
+               np.sum([1 for family in families.values() if family.is_renting])
+
     def calculate_firms_wealth(self, firms):
         return np.sum([firms[firm].total_balance for firm in firms.keys()])
 
