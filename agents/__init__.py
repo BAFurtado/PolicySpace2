@@ -24,7 +24,6 @@ class Agent:
                  money,
                  month,
                  firm_id=None,
-                 utility=1,
                  family=None,
                  distance=0):
 
@@ -35,7 +34,6 @@ class Agent:
         self.qualification = qualification
         self.money = money
         self.firm_id = firm_id
-        self.utility = utility
         self.distance = distance
         self.family = family
         self.last_wage = None

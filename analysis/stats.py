@@ -135,6 +135,9 @@ class Statistics(object):
     def calculate_firms_median_wealth(self, firms):
         return np.median([firms[firm].total_balance for firm in firms.keys()])
 
+    def zero_consumption(self, families):
+        return np.sum([1 for family in families.values() if family.average_utility == 0]) / len(families)
+
     def calculate_firms_profit(self, firms):
         return np.sum([firms[firm].profit for firm in firms.keys()])
 

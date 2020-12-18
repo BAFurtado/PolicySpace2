@@ -28,8 +28,9 @@ OUTPUT_DATA_SPEC = {
         },
         'columns': ['month', 'price_index', 'gdp_index', 'gdp_growth', 'unemployment', 'average_workers',
                     'families_wealth', 'families_commuting', 'families_savings', 'firms_wealth', 'firms_profit',
-                    'gini_index', 'average_utility', 'inflation', 'average_qli', 'house_vacancy', 'house_price',
-                    'house_rent', 'affordable', 'p_delinquent', 'equally', 'locally', 'fpm', 'bank']
+                    'gini_index', 'average_utility', 'pct_zero_consumption', 'inflation', 'average_qli',
+                    'house_vacancy', 'house_price', 'house_rent', 'affordable', 'p_delinquent', 'equally', 'locally',
+                    'fpm', 'bank']
     },
     'families': {
         'avg': {
@@ -140,6 +141,7 @@ class Output:
         firms_profit = sim.stats.calculate_firms_profit(sim.firms)
         gini_index = sim.stats.calculate_GINI(sim.families)
         average_utility = sim.stats.calculate_utility(sim.families)
+        pct_zero_consumption = sim.stats.zero_consumption(sim.families)
         average_qli = sim.stats.average_qli(sim.regions)
         house_vacancy = sim.stats.calculate_house_vacancy(sim.houses)
         house_price = sim.stats.calculate_house_price(sim.houses)
@@ -151,8 +153,9 @@ class Output:
             mun_applied_treasure[k] = sum(r.applied_treasure[k] for r in sim.regions.values())
 
         report = f"{sim.clock.days};{price_index:.3f};{gdp_index:.3f};{gdp_growth:.3f};{unemployment:.3f};" \
-                 f"{average_workers:.3f};{families_wealth:.3f};{commuting:.3f};{families_savings:.3f};{firms_wealth:.3f};" \
-                 f"{firms_profit:.3f};{gini_index:.3f};{average_utility:.4f};{inflation:.4f};{average_qli:.3f};" \
+                 f"{average_workers:.3f};{families_wealth:.3f};{commuting:.3f};{families_savings:.3f};" \
+                 f"{firms_wealth:.3f};{firms_profit:.3f};{gini_index:.3f};{average_utility:.4f};" \
+                 f"{pct_zero_consumption:.4f};{inflation:.4f};{average_qli:.3f};" \
                  f"{house_vacancy:.3f};{house_price:.4f};{house_rent:.4f};{affordable:.4f};{p_delinquent:.4f};" \
                  f"{mun_applied_treasure['equally']:.4f};{mun_applied_treasure['locally']:.4f};" \
                  f"{mun_applied_treasure['fpm']:.4f};{mun_applied_treasure['bank']:.4f}\n"
@@ -252,11 +255,11 @@ class Output:
 
     def save_agents_data(self, sim):
         with open(self.agents_path, 'a') as f:
-            [f.write('%s;%s;%s;%.3f;%.3f;%s;%s;%s;%s;%s;%.3f;%.3f;%s\n' % (sim.clock.days, agent.region_id,
+            [f.write('%s;%s;%s;%.3f;%.3f;%s;%s;%s;%s;%s;%.3f;%s\n' % (sim.clock.days, agent.region_id,
                                                                            agent.gender, agent.address.x,
                                                                            agent.address.y, agent.id, agent.age,
                                                                            agent.qualification, agent.firm_id,
-                                                                           agent.family.id, agent.money, agent.utility,
+                                                                           agent.family.id, agent.money,
                                                                            agent.distance))
             for agent in sim.agents.values()]
 

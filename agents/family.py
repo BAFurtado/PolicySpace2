@@ -180,20 +180,7 @@ class Family:
             self.savings += change
 
             # Update family utility
-            utility = money_to_spend - change
-            self.distribute_utility(utility)
-
-    def distribute_utility(self, utility):
-        """Evenly distribute utility to each member"""
-        if self.members:
-            utilities = []
-            amount = utility / float(self.num_members)
-            for member in self.members.values():
-                member.utility += amount
-                utilities.append(member.utility)
-            self.average_utility = sum(utilities) / float(self.num_members)
-        else:
-            self.average_utility = 0
+            self.average_utility = money_to_spend - change
 
     @property
     def agents(self):

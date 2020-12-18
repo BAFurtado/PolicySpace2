@@ -15,7 +15,7 @@ PRINT_STATISTICS_AND_RESULTS_DURING_PROCESS = True
 PRINT_FINAL_STATISTICS_ABOUT_AGENTS = False
 
 # Inform numbers in percentage of the period
-TIME_TO_BE_ELIMINATED = 0.2
+TIME_TO_BE_ELIMINATED = 0
 
 # Saving adjustments
 SAVE_PLOTS_FIGURES = True
@@ -23,12 +23,12 @@ SAVE_PLOTS_FIGURES = True
 # If plots should be generated separately for each simulation run or just aggregated
 # When PLOT_EACH_RUN is True, DATA for banks, construction, firms, regional, stats are also SAVED
 # *be aware of theirs sizes*
-PLOT_EACH_RUN = True
+PLOT_EACH_RUN = False
 # Spatial plots only works when PLOT_EACH_RUN is True
-SAVE_SPATIAL_PLOTS = True
+SAVE_SPATIAL_PLOTS = False
 # 'png' or 'eps'
 PLOT_FORMAT = 'png'
-PLOT_REGIONAL = True
+PLOT_REGIONAL = False
 
 # Plot DPI. Lower ones will plot faster
 PLOT_DPI = 120
@@ -43,7 +43,7 @@ SAVE_AGENTS_DATA = 'MONTHLY'
 # Can include: ['agents', 'grave', 'house', 'family']
 # If None, set to empty list: []
 # SAVE_DATA = []
-SAVE_DATA = ['agents', 'house', 'family']
+SAVE_DATA = []
 
 # What data to average across all runs. If plotting and not 'firms', 'banks', 'construction' or 'regional',
 # needs to include them in SAVE_DATA as well
