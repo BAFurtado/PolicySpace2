@@ -39,7 +39,7 @@ def collect_rent(houses, sim):
             tenant.update_balance(round(payment - rent, 2))
 
             # Deposit money on landfamily
-            landfamily.update_balance(round(rent - taxes, 2))
+            landfamily.update_balance(round(payment - taxes, 2))
 
 
 class RentalMarket:

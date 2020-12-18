@@ -12,9 +12,11 @@ pd.set_option('display.max_rows', 240)
 files = ['stats', 'regional', 'time', 'firms', 'banks',
          'houses', 'agents', 'families', 'grave', 'construction']
 
-stats = ['sim.clock.days', 'price_index', 'gdp_index', 'gdp_growth', 'unemployment', 'average_workers',
-         'families_wealth', 'families_savings', 'firms_wealth', 'firms_profit', 'gini_index', 'average_utility',
-         'inflation', 'average_qli',  'equally', 'locally', 'fpm', 'bank']
+stats = ['month', 'price_index', 'gdp_index', 'gdp_growth', 'unemployment', 'average_workers',
+         'families_wealth', 'families_commuting', 'families_savings', 'firms_wealth', 'firms_profit',
+         'gini_index', 'average_utility', 'pct_zero_consumption', 'rent_default', 'inflation', 'average_qli',
+         'house_vacancy', 'house_price', 'house_rent', 'affordable', 'p_delinquent', 'equally', 'locally',
+         'fpm', 'bank']
 
 banks = ['sim.clock.days', 'bank.taxes', 'bank.balance', 'bank.total_deposits', 'n_active', 'p_delinquent',
          ' mean_age', 'mn', 'mx', 'avg']
