@@ -125,12 +125,14 @@ class Plotter:
     def plot_general(self):
         labels, dats = self._load_multiple_runs('stats', 'temp_stats.csv')
 
-        cols = ['price_index', 'gdp_index', 'gdp_growth', 'unemployment', 'average_workers', 'families_wealth',
+        cols = ['price_index', 'gdp_index', 'gdp_growth', 'unemployment', 'average_workers',
+                'families_median_wealth', 'families_wealth',
                 'families_commuting', 'families_savings', 'firms_wealth', 'firms_profit', 'gini_index',
                 'average_utility', 'pct_zero_consumption', 'rent_default', 'inflation', 'average_qli', 'house_vacancy',
                 'house_price', 'house_rent', 'affordable', 'p_delinquent', 'equally', 'locally', 'fpm', 'bank']
         titles = ['Average prices\' level', 'GDP absolute value', 'GDP growth in monthly perc.', 'Unemployment',
-                  'Average workers per firm', 'Families\' disposable cash', 'Families\'s total commuting',
+                  'Average workers per firm', 'Families median permanent income',
+                  'Families\' disposable cash', 'Families\'s total commuting',
                   'Families\' absolute savings', 'Firms\' absolute capital', 'Firms\' profit', 'GINI index',
                   'Average families\' utility', 'Percentual families zero consumption',
                   'Percentual default among renting families', 'Monthly inflation',

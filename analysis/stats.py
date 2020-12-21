@@ -122,7 +122,7 @@ class Statistics(object):
 
     # Calculate wealth: families, firms and profits
     def calculate_families_median_wealth(self, families):
-        return np.median([family.last_permanent_income for family in families])
+        return np.median([family.last_permanent_income for family in families.values()])
 
     def calculate_families_wealth(self, families):
         dummy_wealth = np.sum([families[family].last_permanent_income for family in families.keys()])
