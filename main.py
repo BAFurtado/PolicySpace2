@@ -416,11 +416,14 @@ def make_plots(params, flag=None):
     """
     output_dir = params[0]
     plot_results(output_dir)
-    if params[1]:
+    if len(params) > 1:
         results = json.load(open(os.path.join(output_dir, 'meta.json'), 'r'))
         keys = ['general', 'firms', 'construction', 'houses', 'families', 'banks']
         for res in results:
             plot([('run', res['runs'][0])], os.path.join(res['runs'][0], 'plots'), params=res['params'], only=keys)
+    # TODO: ENHANCEMENT: include regional and spatial on redo
+    else:
+        print('To plot internal maps: enter True after output directory')
 
 
 @main.command()

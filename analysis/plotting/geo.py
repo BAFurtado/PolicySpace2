@@ -81,9 +81,9 @@ def plot(sim, text):
         # Plotting the firms and families locations
         # Using colormap suggestion from: https://stackoverflow.com/questions/36008648/colorbar-on-geopandas
         if p in family_plots:
-            ax = family_coords.plot(ax=ax, column=p, cmap=cmap, markersize=12, marker='.')
+            ax = family_coords.plot(ax=ax, column=p, cmap=cmap, markersize=12, marker='.', alpha=.5)
         else:
-            ax = firms_coords.plot(ax=ax, column=p, cmap=cmap, markersize=12, marker='o')
+            ax = firms_coords.plot(ax=ax, column=p, cmap=cmap, markersize=10, marker='.', alpha=.5)
 
         cax = fig.add_axes([0.9, 0.1, 0.03, 0.8])
         sm = plt.cm.ScalarMappable(cmap='viridis', norm=plt.Normalize(vmin=0, vmax=1))
