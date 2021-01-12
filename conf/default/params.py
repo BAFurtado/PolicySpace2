@@ -51,9 +51,14 @@ FPM_DISTRIBUTION = True
 
 # HOUSING AND REAL ESTATE MARKET
 # LOANS
+# Maximum age of borrower at the end of the contract
 MAX_LOAN_AGE = 80
-MAX_LOAN_REPAYMENT_PERCENT_INCOME = 0.3
-MAX_LOAN_BANK_PERCENT = 0.7
+
+DEBT_TO_INCOME = .3
+LOAN_TO_VALUE = .6
+
+# This parameter refers to the total amount of resources available at the bank.
+MAX_LOAN_BANK_PERCENT = .7
 
 CAPPED_TOP_VALUE = 1.2
 CAPPED_LOW_VALUE = .8

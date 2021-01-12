@@ -142,8 +142,7 @@ class Central:
         if self._outstanding_loans + amount > self._total_deposits * conf.PARAMS['MAX_LOAN_BANK_PERCENT']:
             return False
 
-        # Probability of giving loan depends on
-        # amount compared to family wealth
+        # Probability of giving loan depends on amount compared to family wealth. Credit check
         p = 1 - (amount/family.get_wealth(self))
         if seed.random() > p:
             return
@@ -168,7 +167,7 @@ class Central:
 
     def _max_monthly_payment(self, family):
         # Max % of income on loan repayments
-        return family.permanent_income(self, self.interest) * conf.PARAMS['MAX_LOAN_REPAYMENT_PERCENT_INCOME']
+        return family.permanent_income(self, self.interest) * conf.PARAMS['DEBT_TO_INCOME']
 
     def collect_loan_payments(self, sim):
         for family_id, loans in self.loans.items():
