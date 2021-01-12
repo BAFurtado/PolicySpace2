@@ -11,15 +11,19 @@ import conf
 
 
 class Loan:
-    def __init__(self, principal, interest_rate, payment, house_collateral):
+    def __init__(self, principal, mortgage_rate, payment, house_collateral):
         self.age = 0
         self.principal = principal
-        self.balance = principal * (1 + interest_rate)
+        self.balance = principal * (1 + mortgage_rate)
+        self.mortgage_rate = mortgage_rate
         self.payment = payment
         self.missed = 0
         self.collateral = house_collateral
         self.paid_off = False
         self.delinquent = False
+
+    def current_collateral(self):
+        return min(self.collateral/self.balance, 1 + self.mortgage_rate)
 
     def pay(self, amount):
         self.balance -= amount
@@ -115,15 +119,23 @@ class Central:
         for ls in self.loans.values():
             yield from ls
 
-    def prob_default(self):
-        # Sum of loans of clients who are currently missing any payment divided by total outstanding loans.
-        return sum([l.balance for l in self.delinquent_loans()]) / sum([l.balance for l in self.active_loans()])
-
     def active_loans(self):
         return [l for l in self.all_loans() if not l.paid_off]
 
     def delinquent_loans(self):
         return [l for l in self.active_loans() if l.delinquent]
+
+    def mean_collateral_rate(self):
+        return min(1 + self.interest, sum([l.current_collateral() * l.balance for l in self.active_loans()] /
+                                          sum([l.balance for l in self.active_loans()])))
+
+    def prob_default(self):
+        # Sum of loans of clients who are currently missing any payment divided by total outstanding loans.
+        return sum([l.balance for l in self.delinquent_loans()]) / sum([l.balance for l in self.active_loans()])
+
+    def calculate_monthly_mortgage_rate(self):
+        default = self.prob_default()
+        return (1 + self.interest - default * self.mean_collateral_rate()) / (1 - default) - 1
 
     def loan_stats(self):
         loans = self.active_loans()
