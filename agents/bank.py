@@ -50,7 +50,7 @@ class Central:
         self.interest = conf.PARAMS['INTEREST_RATE']
         self.wallet = defaultdict(list)
         self.taxes = 0
-
+        self.mortgage_rate = self.interest
         self._outstanding_loans = 0
         self._total_deposits = 0
 
@@ -135,7 +135,7 @@ class Central:
 
     def calculate_monthly_mortgage_rate(self):
         default = self.prob_default()
-        return (1 + self.interest - default * self.mean_collateral_rate()) / (1 - default) - 1
+        self.mortgage_rate = (1 + self.interest - default * self.mean_collateral_rate()) / (1 - default) - 1
 
     def loan_stats(self):
         loans = self.active_loans()
@@ -165,7 +165,7 @@ class Central:
 
         # Add loan balance
         monthly_payment = self._max_monthly_payment(family)
-        self.loans[family.id].append(Loan(amount, self.interest, monthly_payment, house_collateral))
+        self.loans[family.id].append(Loan(amount, self.mortgage_rate, monthly_payment, house_collateral))
         family.monthly_loan_payments = sum(l.payment for l in self.loans[family.id])
         self.balance -= amount
         self._outstanding_loans += amount

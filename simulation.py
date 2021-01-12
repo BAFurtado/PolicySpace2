@@ -260,6 +260,7 @@ class Simulation:
         self.logger.logger.info(f'Available licenses: {sum([r.licenses for r in self.regions.values()]):,.0f}')
         # Tax transaction taxes (ITBI) when selling house
         # Property tax (IPTU) collected. One twelfth per month
+        self.central.calculate_monthly_mortgage_rate()
         self.housing.housing_market(self)
         self.housing.process_monthly_rent(self)
         for house in self.houses.values():
