@@ -11,13 +11,13 @@ import conf
 
 
 class Loan:
-    def __init__(self, principal, interest_rate, payment):
+    def __init__(self, principal, interest_rate, payment, house_collateral):
         self.age = 0
         self.principal = principal
         self.balance = principal * (1 + interest_rate)
         self.payment = payment
         self.missed = 0
-
+        self.collateral = house_collateral
         self.paid_off = False
         self.delinquent = False
 
@@ -115,6 +115,10 @@ class Central:
         for ls in self.loans.values():
             yield from ls
 
+    def prob_default(self):
+        # Sum of loans of clients who are currently missing any payment divided by total outstanding loans.
+        return sum([l.balance for l in self.delinquent_loans()]) / sum([l.balance for l in self.active_loans()])
+
     def active_loans(self):
         return [l for l in self.all_loans() if not l.paid_off]
 
@@ -129,7 +133,7 @@ class Central:
             return min(amounts), max(amounts), mean
         return 0, 0, 0
 
-    def request_loan(self, family, amount, seed):
+    def request_loan(self, family, house_collateral, amount, seed):
         # Can't loan more than on hand
         if amount > self.balance:
             return False
@@ -149,7 +153,7 @@ class Central:
 
         # Add loan balance
         monthly_payment = self._max_monthly_payment(family)
-        self.loans[family.id].append(Loan(amount, self.interest, monthly_payment))
+        self.loans[family.id].append(Loan(amount, self.interest, monthly_payment, house_collateral))
         family.monthly_loan_payments = sum(l.payment for l in self.loans[family.id])
         self.balance -= amount
         self._outstanding_loans += amount
