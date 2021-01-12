@@ -125,13 +125,20 @@ class Central:
     def delinquent_loans(self):
         return [l for l in self.active_loans() if l.delinquent]
 
+    def outstanding_active_loan(self):
+        return sum([l.balance for l in self.active_loans() if l])
+
     def mean_collateral_rate(self):
-        return min(1 + self.interest, sum([l.current_collateral() * l.balance for l in self.active_loans()] /
-                                          sum([l.balance for l in self.active_loans()])))
+        if self.outstanding_active_loan():
+            mean_collateral = sum([l.current_collateral() * l.balance for l in self.active_loans() if l]) / \
+                              self.outstanding_active_loan()
+            return min(1 + self.interest, mean_collateral)
+        return 1 + self.interest
 
     def prob_default(self):
         # Sum of loans of clients who are currently missing any payment divided by total outstanding loans.
-        return sum([l.balance for l in self.delinquent_loans()]) / sum([l.balance for l in self.active_loans()])
+        outstanding_loans = sum([l.balance for l in self.active_loans()])
+        return sum([l.balance for l in self.delinquent_loans()]) / outstanding_loans if outstanding_loans else 0
 
     def calculate_monthly_mortgage_rate(self):
         default = self.prob_default()
