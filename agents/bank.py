@@ -11,7 +11,7 @@ import conf
 
 
 class Loan:
-    def __init__(self, principal, mortgage_rate, payment, house_collateral):
+    def __init__(self, principal, mortgage_rate, payment, house):
         self.age = 0
         self.principal = principal
         self.balance = principal * (1 + mortgage_rate)
@@ -19,12 +19,12 @@ class Loan:
         self.payment = payment
         self.missed = 0
         # Fixed
-        self.collateral = house_collateral
+        self.collateral = house
         self.paid_off = False
         self.delinquent = False
 
     def current_collateral(self):
-        return min(self.collateral/self.balance, 1 + self.my_mortgage_rate)
+        return min(self.collateral.price/self.balance, 1 + self.my_mortgage_rate)
 
     def pay(self, amount):
         self.balance -= amount
@@ -158,7 +158,7 @@ class Central:
             return min(amounts), max(amounts), mean
         return 0, 0, 0
 
-    def request_loan(self, family, house_collateral, amount, seed):
+    def request_loan(self, family, house, amount, seed):
         # Can't loan more than on hand
         if amount > self.balance:
             return False
@@ -174,12 +174,12 @@ class Central:
         # Probability of giving loan depends on amount compared to family wealth. Credit check
         p = 1 - (amount/family.get_wealth(self))
         if seed.random() > p:
-            return
+            return False
 
         # Add loan balance
         monthly_payment = self._max_monthly_payment(family)
         # Create a new loan for the family
-        self.loans[family.id].append(Loan(amount, self.mortgage_rate, monthly_payment, house_collateral))
+        self.loans[family.id].append(Loan(amount, self.mortgage_rate, monthly_payment, house))
         family.monthly_loan_payments = sum(l.payment for l in self.loans[family.id])
         self.balance -= amount
         self._outstanding_loans += amount
