@@ -15,7 +15,7 @@ PRINT_STATISTICS_AND_RESULTS_DURING_PROCESS = True
 PRINT_FINAL_STATISTICS_ABOUT_AGENTS = False
 
 # Inform numbers in percentage of the period
-TIME_TO_BE_ELIMINATED = 0
+TIME_TO_BE_ELIMINATED = .2
 
 # Saving adjustments
 SAVE_PLOTS_FIGURES = True

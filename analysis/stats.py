@@ -80,7 +80,7 @@ class Statistics(object):
                           and (family.house.rent_data[0] / family.last_permanent_income) < .3 else 0
                           for family in families.values()])
         renting = sum([family.is_renting for family in families.values()])
-        return affordable/renting
+        return affordable / renting
 
     def update_GDP_capita(self, firms, mun_id, mun_pop):
         dummy_gdp = np.sum([firms[firm].revenue for firm in firms.keys()
