@@ -137,8 +137,7 @@ class Central:
 
     def prob_default(self):
         # Sum of loans of clients who are currently missing any payment divided by total outstanding loans.
-        outstanding_loans = sum([l.balance for l in self.active_loans()])
-        return sum([l.balance for l in self.delinquent_loans()]) / outstanding_loans
+        return sum([l.balance for l in self.delinquent_loans()]) / self.outstanding_active_loan()
 
     def calculate_monthly_mortgage_rate(self):
         if not self.loans:
@@ -147,7 +146,7 @@ class Central:
         # First three months, few loans
         # self.interest is economy rate, fixed by monetary policy. Rate of reference
         if default == 1:
-            return self.interest
+            return
         self.mortgage_rate = (1 + self.interest - default * self.mean_collateral_rate()) / (1 - default) - 1
 
     def loan_stats(self):
@@ -159,6 +158,7 @@ class Central:
         return 0, 0, 0
 
     def request_loan(self, family, house, amount, seed):
+        # Bank endogenous criteria
         # Can't loan more than on hand
         if amount > self.balance:
             return False
@@ -172,12 +172,12 @@ class Central:
             return False
 
         # Probability of giving loan depends on amount compared to family wealth. Credit check
-        p = 1 - (amount/family.get_wealth(self))
-        if seed.random() > p:
+        # Criteria related to consumer. Check payments do not compromise more than a monthly percentage
+        monthly_payment = self._max_monthly_payment(family)
+        if monthly_payment / family.get_wealth(self) > conf.PARAMS['LOAN_TO_INCOME']:
             return False
 
         # Add loan balance
-        monthly_payment = self._max_monthly_payment(family)
         # Create a new loan for the family
         self.loans[family.id].append(Loan(amount, self.mortgage_rate, monthly_payment, house))
         family.monthly_loan_payments = sum(l.payment for l in self.loans[family.id])
@@ -197,7 +197,7 @@ class Central:
 
     def _max_monthly_payment(self, family):
         # Max % of income on loan repayments
-        return family.permanent_income(self, self.mortgage_rate) * conf.PARAMS['DEBT_TO_INCOME']
+        return family.permanent_income(self, self.interest) * conf.PARAMS['LOAN_PAYMENTS_TO_WAGE']
 
     def collect_loan_payments(self, sim):
         for family_id, loans in self.loans.items():

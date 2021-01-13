@@ -54,8 +54,9 @@ FPM_DISTRIBUTION = True
 # Maximum age of borrower at the end of the contract
 MAX_LOAN_AGE = 80
 
-DEBT_TO_INCOME = .3
-LOAN_TO_VALUE = .6
+LOAN_PAYMENTS_TO_WAGE = .04
+LOAN_TO_INCOME = .3
+LOAN_TO_VALUE = .9
 
 # This parameter refers to the total amount of resources available at the bank.
 MAX_LOAN_BANK_PERCENT = .7

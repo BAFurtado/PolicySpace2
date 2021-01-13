@@ -15,7 +15,7 @@ PRINT_STATISTICS_AND_RESULTS_DURING_PROCESS = True
 PRINT_FINAL_STATISTICS_ABOUT_AGENTS = False
 
 # Inform numbers in percentage of the period
-TIME_TO_BE_ELIMINATED = 0.2
+TIME_TO_BE_ELIMINATED = 0
 
 # Saving adjustments
 SAVE_PLOTS_FIGURES = True
@@ -25,7 +25,7 @@ SAVE_PLOTS_FIGURES = True
 # *be aware of theirs sizes*
 PLOT_EACH_RUN = True
 # Spatial plots only works when PLOT_EACH_RUN is True
-SAVE_SPATIAL_PLOTS = True
+SAVE_SPATIAL_PLOTS = False
 # 'png' or 'eps'
 PLOT_FORMAT = 'png'
 PLOT_REGIONAL = True
