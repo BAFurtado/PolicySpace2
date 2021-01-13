@@ -150,9 +150,9 @@ class Plotter:
     def plot_banks(self):
         labels, dats = self._load_multiple_runs('banks', 'temp_banks.csv')
 
-        cols = ['balance', 'deposits', 'active_loans', 'p_delinquent_loans',
+        cols = ['balance', 'deposits', 'active_loans', 'mortgage_rate', 'p_delinquent_loans',
                 'mean_loan_age', 'mean_loan']
-        titles = ['Bank balance', 'Bank deposits', 'Bank active loans',
+        titles = ['Bank balance', 'Bank deposits', 'Bank active loans', 'Mortage rate',
                   'Bank perc. delinquent loans', 'Bank mean loan age', 'Bank mean loan amount']
         dats = [d.set_index('month') for d in dats]
         for col, title in zip(cols, titles):

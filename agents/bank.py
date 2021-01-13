@@ -5,7 +5,7 @@
     """
 import datetime
 from collections import defaultdict
-from numpy import fv
+from numpy import fv, nan
 
 import conf
 
@@ -15,15 +15,16 @@ class Loan:
         self.age = 0
         self.principal = principal
         self.balance = principal * (1 + mortgage_rate)
-        self.mortgage_rate = mortgage_rate
+        self.my_mortgage_rate = mortgage_rate
         self.payment = payment
         self.missed = 0
+        # Fixed
         self.collateral = house_collateral
         self.paid_off = False
         self.delinquent = False
 
     def current_collateral(self):
-        return min(self.collateral/self.balance, 1 + self.mortgage_rate)
+        return min(self.collateral/self.balance, 1 + self.my_mortgage_rate)
 
     def pay(self, amount):
         self.balance -= amount
@@ -44,6 +45,7 @@ class Central:
         Given a set rate of real interest rates, it provides capital remuneration
         (internationally, exogenously provided for the moment)
         """
+    # TODO: INCLUDE PLOT MORTGAGE_RATE. Understand why it keeps lending wiht high rate of default
     def __init__(self, id_):
         self.id = id_
         self.balance = 0
@@ -129,19 +131,23 @@ class Central:
         return sum([l.balance for l in self.active_loans() if l])
 
     def mean_collateral_rate(self):
-        if self.outstanding_active_loan():
-            mean_collateral = sum([l.current_collateral() * l.balance for l in self.active_loans() if l]) / \
-                              self.outstanding_active_loan()
-            return min(1 + self.interest, mean_collateral)
-        return 1 + self.interest
+        mean_collateral = sum([l.current_collateral() * l.balance for l in self.active_loans() if l]) / \
+                          self.outstanding_active_loan()
+        return min(1 + self.interest, mean_collateral)
 
     def prob_default(self):
         # Sum of loans of clients who are currently missing any payment divided by total outstanding loans.
         outstanding_loans = sum([l.balance for l in self.active_loans()])
-        return sum([l.balance for l in self.delinquent_loans()]) / outstanding_loans if outstanding_loans else 0
+        return sum([l.balance for l in self.delinquent_loans()]) / outstanding_loans
 
     def calculate_monthly_mortgage_rate(self):
+        if not self.loans:
+            return
         default = self.prob_default()
+        # First three months, few loans
+        # self.interest is economy rate, fixed by monetary policy. Rate of reference
+        if default == 1:
+            return self.interest
         self.mortgage_rate = (1 + self.interest - default * self.mean_collateral_rate()) / (1 - default) - 1
 
     def loan_stats(self):
@@ -172,6 +178,7 @@ class Central:
 
         # Add loan balance
         monthly_payment = self._max_monthly_payment(family)
+        # Create a new loan for the family
         self.loans[family.id].append(Loan(amount, self.mortgage_rate, monthly_payment, house_collateral))
         family.monthly_loan_payments = sum(l.payment for l in self.loans[family.id])
         self.balance -= amount
@@ -185,12 +192,12 @@ class Central:
         max_years = conf.PARAMS['MAX_LOAN_AGE'] - max([m.age for m in family.members.values()])
         max_months = max_years * 12
         max_total = income * max_months
-        max_principal = max_total/(1 + self.interest)
+        max_principal = max_total/(1 + self.mortgage_rate)
         return min(max_principal, self.balance)
 
     def _max_monthly_payment(self, family):
         # Max % of income on loan repayments
-        return family.permanent_income(self, self.interest) * conf.PARAMS['DEBT_TO_INCOME']
+        return family.permanent_income(self, self.mortgage_rate) * conf.PARAMS['DEBT_TO_INCOME']
 
     def collect_loan_payments(self, sim):
         for family_id, loans in self.loans.items():
