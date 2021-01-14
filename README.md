@@ -71,6 +71,7 @@ up to permanent income
 25. Possibility of negotiating house prices below the offer
 26. Vacancy size (offer) now impacts willingness to build of construction firms and prices
 27. New output analysis
+28. Endogenous mortgage rate setting by the bank
 
 #### How do I get set up?
 
