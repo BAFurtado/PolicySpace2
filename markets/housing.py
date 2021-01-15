@@ -73,7 +73,7 @@ class HousingMarket:
 
         # Families check the bank for potential credit
         for f in looking:
-            f.savings_with_loan = f.savings + sim.central.sum_deposits(f) + sim.central.max_loan(f)
+            f.savings_with_loan = f.savings + sim.central.sum_deposits(f) + sim.central.max_loan(f)[0]
 
         # Sorting. Those with larger savings first
         looking.sort(key=lambda fam: fam.savings_with_loan, reverse=True)
@@ -159,7 +159,7 @@ class HousingMarket:
                 if loan_amount / price > sim.PARAMS['LOAN_TO_VALUE']:
                     return
                 # Attempt to actually get the loan from the bank
-                success = sim.central.request_loan(family, house, loan_amount, sim.seed)
+                success = sim.central.request_loan(family, house, loan_amount)
                 if not success:
                     # Just one shot at getting a loan
                     return
