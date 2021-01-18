@@ -10,6 +10,9 @@ class Funds:
             self.fpm = {
                 state: pd.read_csv('input/fpm/%s.csv' % state, sep=',', header=0, decimal='.', encoding='latin1')
                 for state in self.sim.geo.states_on_process}
+        if sim.PARAMS['POLICY_COEFFICIENT']:
+            # Gather the money by municipality. Later gather the families and act upon policy!
+            self.policy_money = defaultdict(float)
 
     def distribute_fpm(self, value, regions, pop_t, pop_mun_t, year):
         """Calculate proportion of FPM per region, in relation to the total of all regions.
@@ -29,8 +32,15 @@ class Funds:
                                                      (self.fpm[state].cod == float(mun_code))].fpm.iloc[0]
 
         for id, region in regions.items():
+            # POLICY: GET MONEY OUT OF VALUE
             mun_code = region.id[:7]
             regional_fpm = fpm_region[id] / sum(set(fpm_region.values())) * value * pop_t[id] / pop_mun_t[mun_code]
+
+            # Separating money for policy
+            if self.sim.PARAMS['POLICY_COEFFICIENT']:
+                self.policy_money[mun_code] += regional_fpm * self.sim.PARAMS['POLICY_COEFFICIENT']
+                regional_fpm *= 1 - self.sim.PARAMS['POLICY_COEFFICIENT']
+
             # Actually investing the FPM
             region.update_index(regional_fpm * self.sim.PARAMS['MUNICIPAL_EFFICIENCY_MANAGEMENT'])
             region.update_applied_taxes(regional_fpm, 'fpm')
@@ -39,12 +49,23 @@ class Funds:
         for mun in mun_code.keys():
             for id in mun_code[mun]:
                 amount = value[mun] * pop_t[id] / pop_mun_t[mun]
+
+                # Separating money for policy
+                if self.sim.PARAMS['POLICY_COEFFICIENT']:
+                    self.policy_money[mun] += amount * self.sim.PARAMS['POLICY_COEFFICIENT']
+                    amount *= 1 - self.sim.PARAMS['POLICY_COEFFICIENT']
+
                 regions[id].update_index(amount * self.sim.PARAMS['MUNICIPAL_EFFICIENCY_MANAGEMENT'])
                 regions[id].update_applied_taxes(amount, 'locally')
 
     def equally(self, value, regions, pop_t, pop_total):
         for id, region in regions.items():
+            # POLICY: GET MONEY OUT OF AMOUNT
             amount = value * pop_t[id] / pop_total
+            # Separating money for policy
+            if self.sim.PARAMS['POLICY_COEFFICIENT']:
+                self.policy_money[id[:7]] += amount * self.sim.PARAMS['POLICY_COEFFICIENT']
+                amount *= 1 - self.sim.PARAMS['POLICY_COEFFICIENT']
             region.update_index(amount * self.sim.PARAMS['MUNICIPAL_EFFICIENCY_MANAGEMENT'])
             region.update_applied_taxes(amount, 'equally')
 

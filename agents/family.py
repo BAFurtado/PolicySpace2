@@ -182,7 +182,7 @@ class Family:
             # Update family utility
             self.average_utility = money_to_spend - change
             # After first year of simulation, add families to poverty register
-            if params['POLICY']:
+            if params['POLICY_COEFFICIENT']:
                 if self.average_utility == 0:
                     if datetime.date(year, month, 1) > datetime.date(2010, 11, 1):
                         regions[self.region_id].registry[datetime.date(year, month, 1)].append(self)

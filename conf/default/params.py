@@ -49,8 +49,9 @@ FPM_DISTRIBUTION = True
 # fpm           TRUE,           FALSE,      TRUE,   FALSE
 # Results     fpm + eq. + loc,  locally,  fpm + eq,   eq
 
-# POVERTY POLICIES. If empty string, do nothing.
-POLICY = 1
+# POVERTY POLICIES. If POLICY_COEFFICIENT = 0, do nothing.
+POLICY_COEFFICIENT = .25
+
 
 # HOUSING AND REAL ESTATE MARKET
 # LOANS
