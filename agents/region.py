@@ -20,6 +20,7 @@ class Region:
         self.cumulative_treasure = defaultdict(int)
         self.treasure = defaultdict(int)
         self.applied_treasure = defaultdict(int)
+        self.registry = defaultdict(list)
 
     @property
     def license_price(self):

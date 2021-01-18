@@ -49,6 +49,9 @@ FPM_DISTRIBUTION = True
 # fpm           TRUE,           FALSE,      TRUE,   FALSE
 # Results     fpm + eq. + loc,  locally,  fpm + eq,   eq
 
+# POVERTY POLICIES. If empty string, do nothing.
+POLICY = 1
+
 # HOUSING AND REAL ESTATE MARKET
 # LOANS
 # Maximum age of borrower at the end of the contract
@@ -156,7 +159,7 @@ PUBLIC_TRANSIT_COST = 0.5
 PERCENTAGE_ACTUAL_POP = 0.005
 
 # Write exactly like the list
-PROCESSING_ACPS = ['BRASILIA']
+PROCESSING_ACPS = ['IPATINGA']
 
 # Selecting the starting year to build the Agents, can be: 1991, 2000 or 2010
 STARTING_DAY = datetime.date(2010, 1, 1)

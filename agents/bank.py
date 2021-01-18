@@ -5,6 +5,7 @@
     """
 import datetime
 from collections import defaultdict
+
 from numpy import fv
 
 import conf
@@ -61,7 +62,6 @@ class Central:
         Given a set rate of real interest rates, it provides capital remuneration
         (internationally, exogenously provided for the moment)
         """
-    # TODO: INCLUDE PLOT MORTGAGE_RATE. Understand why it keeps lending wiht high rate of default
     def __init__(self, id_):
         self.id = id_
         self.balance = 0
