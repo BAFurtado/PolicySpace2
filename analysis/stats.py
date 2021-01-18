@@ -130,7 +130,6 @@ class Statistics(object):
         return dummy_wealth, dummy_savings
 
     def calculate_rent_default(self, families):
-        print('stop')
         return np.sum([1 for family in families.values() if family.rent_default == 1 and family.is_renting]) / \
                np.sum([1 for family in families.values() if family.is_renting])
 

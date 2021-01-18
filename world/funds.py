@@ -2,6 +2,7 @@ import pandas as pd
 from .geography import STATES_CODES, state_string
 from collections import defaultdict
 import datetime
+from markets.housing import HousingMarket
 
 
 class Funds:
@@ -35,20 +36,40 @@ class Funds:
             pass
 
     def buy_houses_give_to_families(self):
-        # Families are sorted in self.policy_families
-        # Check how many houses municipality can buy to give to families
-        # Give them to families
-        # Getting the houses
+        # Families are sorted in self.policy_families. Buy and give as much as money allows
         for mun in self.policy_money.keys():
             for firm in self.sim.firms.values():
                 if firm.type == 'CONSTRUCTION' and firm.region_id[:7] == mun:
+                    # Get the list of the houses for sale within the municipality
                     self.temporary_houses[mun] += firm.houses_for_sale
+            # Sort houses and families by cheapest, poorest
             self.temporary_houses[mun] = sorted(self.temporary_houses[mun], key=lambda h: h.price)
+            # Exclude families who own any house. Exclusively for renters
+            self.policy_families[mun] = [f for f in self.policy_families[mun] if not f.owned_houses]
+            if self.policy_families[mun]:
+                for house in self.temporary_houses[mun]:
+                    # While money is good.
+                    if house.price < self.policy_money[mun]:
+                        family = self.policy_families[mun].pop(0)
+                        # Deposit money on selling firm. Transaction taxes are waived
+                        self.sim.firms[house.owner_id].update_balance(house.price,
+                                                                      self.sim.PARAMS['CONSTRUCTION_ACC_CASH_FLOW'],
+                                                                      self.sim.clock.days)
+                        # Deduce from municipality fund
+                        self.policy_money[mun] -= house.price
+                        # Transfer ownership
+                        self.sim.firms[house.owner_id].houses_for_sale.remove(house)
+                        # Finish notarial procedures
+                        house.owner_id = family.id
+                        house.family_owner = True
+                        family.owned_houses.append(house)
+                        house.on_market = 0
+                        HousingMarket.make_move(family, house, self.sim)
+                    else:
+                        break
 
         # Clean up list for next month
         self.temporary_houses = defaultdict(list)
-
-
 
     def distribute_fpm(self, value, regions, pop_t, pop_mun_t, year):
         """Calculate proportion of FPM per region, in relation to the total of all regions.
