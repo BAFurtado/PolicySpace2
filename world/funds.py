@@ -21,10 +21,12 @@ class Funds:
             for keys in region.registry:
                 if keys > self.sim.clock.days - datetime.timedelta(360):
                     self.policy_families[region.id[:7]] += region.registry[keys]
+        for mun in self.policy_families.keys():
+            sorted(self.policy_families[mun], key=lambda f: f.last_permanent_income)
 
     def apply_policies(self):
         self.update_policy_families()
-        print('wait')
+        pass
 
     def distribute_fpm(self, value, regions, pop_t, pop_mun_t, year):
         """Calculate proportion of FPM per region, in relation to the total of all regions.
