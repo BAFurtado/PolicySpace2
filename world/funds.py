@@ -15,6 +15,7 @@ class Funds:
             # Gather the money by municipality. Later gather the families and act upon policy!
             self.policy_money = defaultdict(float)
             self.policy_families = defaultdict(list)
+            self.temporary_houses = defaultdict(list)
 
     def update_policy_families(self):
         for region in self.sim.regions.values():
@@ -22,11 +23,32 @@ class Funds:
                 if keys > self.sim.clock.days - datetime.timedelta(360):
                     self.policy_families[region.id[:7]] += region.registry[keys]
         for mun in self.policy_families.keys():
-            sorted(self.policy_families[mun], key=lambda f: f.last_permanent_income)
+            self.policy_families[mun] = sorted(self.policy_families[mun], key=lambda f: f.last_permanent_income)
 
     def apply_policies(self):
         self.update_policy_families()
-        pass
+        if self.sim.PARAMS['POLICIES'] == 'buy':
+            self.buy_houses_give_to_families()
+        elif self.sim.PARAMS['POLICIES'] == 'rent':
+            pass
+        elif self.sim.PARAMS['POLICIES'] == 'wage':
+            pass
+
+    def buy_houses_give_to_families(self):
+        # Families are sorted in self.policy_families
+        # Check how many houses municipality can buy to give to families
+        # Give them to families
+        # Getting the houses
+        for mun in self.policy_money.keys():
+            for firm in self.sim.firms.values():
+                if firm.type == 'CONSTRUCTION' and firm.region_id[:7] == mun:
+                    self.temporary_houses[mun] += firm.houses_for_sale
+            self.temporary_houses[mun] = sorted(self.temporary_houses[mun], key=lambda h: h.price)
+
+        # Clean up list for next month
+        self.temporary_houses = defaultdict(list)
+
+
 
     def distribute_fpm(self, value, regions, pop_t, pop_mun_t, year):
         """Calculate proportion of FPM per region, in relation to the total of all regions.
