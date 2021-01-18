@@ -51,6 +51,8 @@ FPM_DISTRIBUTION = True
 
 # POVERTY POLICIES. If POLICY_COEFFICIENT = 0, do nothing.
 POLICY_COEFFICIENT = .25
+# Policies alternatives may include: 'buy', 'rent' or 'wage'. *** POLICY_COEFFICENT needs to be > 0.
+POLICIES = 'buy'
 
 
 # HOUSING AND REAL ESTATE MARKET

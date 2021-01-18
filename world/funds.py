@@ -1,6 +1,7 @@
 import pandas as pd
 from .geography import STATES_CODES, state_string
 from collections import defaultdict
+import datetime
 
 
 class Funds:
@@ -13,6 +14,17 @@ class Funds:
         if sim.PARAMS['POLICY_COEFFICIENT']:
             # Gather the money by municipality. Later gather the families and act upon policy!
             self.policy_money = defaultdict(float)
+            self.policy_families = defaultdict(list)
+
+    def update_policy_families(self):
+        for region in self.sim.regions.values():
+            for keys in region.registry:
+                if keys > self.sim.clock.days - datetime.timedelta(360):
+                    self.policy_families[region.id[:7]] += region.registry[keys]
+
+    def apply_policies(self):
+        self.update_policy_families()
+        print('wait')
 
     def distribute_fpm(self, value, regions, pop_t, pop_mun_t, year):
         """Calculate proportion of FPM per region, in relation to the total of all regions.
