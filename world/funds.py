@@ -33,15 +33,22 @@ class Funds:
         elif self.sim.PARAMS['POLICIES'] == 'rent':
             pass
         elif self.sim.PARAMS['POLICIES'] == 'wage':
-            pass
+            self.distribute_funds_to_families()
+
+    def distribute_funds_to_families(self):
+        for mun in self.policy_money.keys():
+            if self.policy_families[mun]:
+                amount = self.policy_money[mun] / len(self.policy_families[mun])
+                [f.update_balance(amount) for f in self.policy_families[mun]]
+                self.policy_money[mun] = 0
 
     def buy_houses_give_to_families(self):
         # Families are sorted in self.policy_families. Buy and give as much as money allows
         for mun in self.policy_money.keys():
             for firm in self.sim.firms.values():
-                if firm.type == 'CONSTRUCTION' and firm.region_id[:7] == mun:
+                if firm.type == 'CONSTRUCTION':
                     # Get the list of the houses for sale within the municipality
-                    self.temporary_houses[mun] += firm.houses_for_sale
+                    self.temporary_houses[mun] += [h for h in firm.houses_for_sale if h.region_id[:7] == mun]
             # Sort houses and families by cheapest, poorest
             self.temporary_houses[mun] = sorted(self.temporary_houses[mun], key=lambda h: h.price)
             # Exclude families who own any house. Exclusively for renters
@@ -89,7 +96,6 @@ class Funds:
                                                      (self.fpm[state].cod == float(mun_code))].fpm.iloc[0]
 
         for id, region in regions.items():
-            # POLICY: GET MONEY OUT OF VALUE
             mun_code = region.id[:7]
             regional_fpm = fpm_region[id] / sum(set(fpm_region.values())) * value * pop_t[id] / pop_mun_t[mun_code]
 
@@ -117,7 +123,6 @@ class Funds:
 
     def equally(self, value, regions, pop_t, pop_total):
         for id, region in regions.items():
-            # POLICY: GET MONEY OUT OF AMOUNT
             amount = value * pop_t[id] / pop_total
             # Separating money for policy
             if self.sim.PARAMS['POLICY_COEFFICIENT']:
