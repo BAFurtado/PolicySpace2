@@ -24,6 +24,9 @@ class Funds:
                 if keys > self.sim.clock.days - datetime.timedelta(360):
                     self.policy_families[region.id[:7]] += region.registry[keys]
         for mun in self.policy_families.keys():
+            # Make sure families on the list are still valid families
+            self.policy_families[mun] = [f for f in self.policy_families[mun]
+                                         if f.family_id in self.sim.families.keys()]
             self.policy_families[mun] = sorted(self.policy_families[mun], key=lambda f: f.last_permanent_income)
 
     def apply_policies(self):
@@ -31,9 +34,15 @@ class Funds:
         if self.sim.PARAMS['POLICIES'] == 'buy':
             self.buy_houses_give_to_families()
         elif self.sim.PARAMS['POLICIES'] == 'rent':
-            pass
+            self.pay_families_rent()
         elif self.sim.PARAMS['POLICIES'] == 'wage':
             self.distribute_funds_to_families()
+        else:
+            # Baseline scenario. Do nothing!
+            pass
+
+    def pay_families_rent(self):
+        pass
 
     def distribute_funds_to_families(self):
         for mun in self.policy_money.keys():
@@ -56,7 +65,7 @@ class Funds:
             if self.policy_families[mun]:
                 for house in self.temporary_houses[mun]:
                     # While money is good.
-                    if house.price < self.policy_money[mun]:
+                    if house.price < self.policy_money[mun] and self.policy_families[mun]:
                         family = self.policy_families[mun].pop(0)
                         # Deposit money on selling firm. Transaction taxes are waived
                         self.sim.firms[house.owner_id].update_balance(house.price,
