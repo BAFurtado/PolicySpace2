@@ -51,8 +51,9 @@ FPM_DISTRIBUTION = True
 
 # POVERTY POLICIES. If POLICY_COEFFICIENT = 0, do nothing.
 POLICY_COEFFICIENT = .25
-# Policies alternatives may include: 'buy', 'rent' or 'wage'. *** POLICY_COEFFICENT needs to be > 0.
-POLICIES = 'buy'
+# Policies alternatives may include: 'buy', 'rent' or 'wage' or 'no_policy'. For no policy set to empty strings ''
+# POLICY_COEFFICENT needs to be > 0.
+POLICIES = 'rent'
 
 
 # HOUSING AND REAL ESTATE MARKET
@@ -159,10 +160,10 @@ PUBLIC_TRANSIT_COST = 0.5
 
 # Percentage of actual population to run the simulation
 # Minimum value to run depends on the size of municipality 0,001 is recommended minimum
-PERCENTAGE_ACTUAL_POP = 0.01
+PERCENTAGE_ACTUAL_POP = 0.005
 
 # Write exactly like the list
-PROCESSING_ACPS = ['BRASILIA']
+PROCESSING_ACPS = ['IPATINGA']
 
 # Selecting the starting year to build the Agents, can be: 1991, 2000 or 2010
 STARTING_DAY = datetime.date(2010, 1, 1)

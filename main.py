@@ -308,6 +308,9 @@ def sensitivity(ctx, params):
         elif param == 'STARTING_DAY':
             p_name = param
             p_vals = [datetime.date(2000, 1, 1), datetime.date(2010, 1, 1)]
+        elif param == 'POLICIES':
+            p_name = param
+            p_vals = ['buy', 'rent', 'wage', 'no_policy']
         # else, assume boolean
         elif '-' in param:
             p_name = 'PROCESSING_ACPS'
