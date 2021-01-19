@@ -26,6 +26,7 @@ class Family:
         # Refers to the house the family is living on currently
         self.house = house
         self.rent_default = 0
+        self.rent_voucher = 0
         self.average_utility = 0
         self.last_permanent_income = 0
 

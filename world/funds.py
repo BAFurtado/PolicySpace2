@@ -26,7 +26,7 @@ class Funds:
         for mun in self.policy_families.keys():
             # Make sure families on the list are still valid families
             self.policy_families[mun] = [f for f in self.policy_families[mun]
-                                         if f.family_id in self.sim.families.keys()]
+                                         if f.id in self.sim.families.keys()]
             self.policy_families[mun] = sorted(self.policy_families[mun], key=lambda f: f.last_permanent_income)
 
     def apply_policies(self):
@@ -42,7 +42,14 @@ class Funds:
             pass
 
     def pay_families_rent(self):
-        pass
+        for mun in self.policy_money.keys():
+            self.policy_families[mun] = [f for f in self.policy_families[mun] if not f.owned_houses]
+            for family in  self.policy_families[mun]:
+                if family.house.rent_data[0] * 24 < self.policy_money[mun]:
+                    family.rent_voucher = 24
+                    self.policy_money[mun] -= family.house.rent_data[0] * 24
+                else:
+                    break
 
     def distribute_funds_to_families(self):
         for mun in self.policy_money.keys():

@@ -11,8 +11,13 @@ def collect_rent(houses, sim):
             taxes = rent * sim.PARAMS['TAX_LABOR']
             sim.regions[house.region_id].collect_taxes(taxes, 'labor')
 
-            # Withdraw money from family members
-            payment = sum(m.grab_money() for m in tenant.members.values())
+            # If family belongs to rent policy programme, rent is paid for
+            if tenant.rent_voucher:
+                payment = house.rent_data[0]
+                tenant.rent_voucher -= 1
+            else:
+                # Withdraw money from family members
+                payment = sum(m.grab_money() for m in tenant.members.values())
 
             # If cash is not enough to pay rent
             if payment < rent:
