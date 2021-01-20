@@ -272,6 +272,8 @@ class Simulation:
 
         # Using all collected taxes to improve public services
         bank_taxes = self.central.collect_taxes()
+
+        # Separate funds for region index update and separate for the policy case
         self.funds.invest_taxes(self.clock.year, bank_taxes)
 
         # Apply policies if percentage is different than 0

@@ -30,20 +30,21 @@ class Funds:
             self.policy_families[mun] = sorted(self.policy_families[mun], key=lambda f: f.last_permanent_income)
 
     def apply_policies(self):
+        if self.sim.PARAMS['POLICIES'] not in ['buy', 'rent', 'wage']:
+            # Baseline scenario. Do nothing!
+            return
         self.update_policy_families()
         if self.sim.PARAMS['POLICIES'] == 'buy':
             self.buy_houses_give_to_families()
         elif self.sim.PARAMS['POLICIES'] == 'rent':
             self.pay_families_rent()
-        elif self.sim.PARAMS['POLICIES'] == 'wage':
-            self.distribute_funds_to_families()
         else:
-            # Baseline scenario. Do nothing!
-            pass
+            self.distribute_funds_to_families()
 
     def pay_families_rent(self):
         for mun in self.policy_money.keys():
             self.policy_families[mun] = [f for f in self.policy_families[mun] if not f.owned_houses]
+            assert all([f.house.rent_data for f in self.policy_families[mun]])
             for family in self.policy_families[mun]:
                 if family.house.rent_data[0] * 24 < self.policy_money[mun]:
                     if not family.rent_voucher:

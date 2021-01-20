@@ -37,7 +37,8 @@ families = ['sim.clock.days', 'id', 'region_id', 'house.price', 'house.rent_data
             'num_members']
 
 houses = ['sim.clock.days', 'house.id', 'house.address.x', 'house.address.y', 'house.size', 'house.price',
-          'house.on_market', 'house.family_id', 'house.region_id', 'house.region_id']
+          'rent_price', 'quality', 'qli',
+          'house.on_market', 'house.family_id', 'house.region_id', 'house.mun_id']
 
 
 def read_allocate_cols(path, cols=None):
