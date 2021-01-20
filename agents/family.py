@@ -54,6 +54,10 @@ class Family:
             raise Exception
 
     def move_out(self):
+        if self.rent_voucher:
+            if self.house.rent_data:
+                # If family moves out of rented house, the prepaid rent voucher paid by the government goes to waste
+                self.rent_voucher = 0
         self.house.empty()
         self.house = None
 

@@ -13,6 +13,7 @@ def collect_rent(houses, sim):
 
             # If family belongs to rent policy programme, rent is paid for
             if tenant.rent_voucher:
+                # Money has been deducted from municipal balance when voucher was conceded.
                 payment = house.rent_data[0].copy()
                 tenant.rent_voucher -= 1
             else:

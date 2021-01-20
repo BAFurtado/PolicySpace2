@@ -6,7 +6,7 @@ from scipy import stats
 from statsmodels.graphics.gofplots import qqplot_2samples as qq
 
 from linear_regressions import normalize_data
-
+import sys
 
 def plot_hist(x, y, name=None, params=None):
     sns.set()
@@ -98,5 +98,7 @@ def main(file):
 if __name__ == "__main__":
     # Get Data
     # column 5 - house_prices, column 6 - rent, column 4 - size
-    f = '../output/run__2020-12-08T17_59_47.737770/0/temp_houses.csv'
+    f = r'//storage1/carga/modelo dinamico de simulacao/exits_python/ps2020/' \
+        r'LOAN_TO_VALUE__2021-01-12T14_07_23.738101\LOAN_TO_VALUE=0.1/0/temp_houses.csv'
+    # f = sys.argv[1] if sys.argv[1] else f
     main(f)
