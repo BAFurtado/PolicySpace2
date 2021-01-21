@@ -164,7 +164,7 @@ class Family:
         """Family consumes its permanent income, based on members wages, working life expectancy
         and real estate and savings real interest
         """
-        money_to_spend = self.to_consume(central, params['INTEREST_RATE'], year, month)
+        money_to_spend = self.to_consume(central, central.interest, year, month)
         # Decision on how much money to consume or save
 
         if money_to_spend is not None:

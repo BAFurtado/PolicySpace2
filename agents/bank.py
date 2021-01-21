@@ -65,7 +65,7 @@ class Central:
     def __init__(self, id_):
         self.id = id_
         self.balance = 0
-        self.interest = conf.PARAMS['INTEREST_RATE']
+        self.interest = 0
         self.wallet = defaultdict(list)
         self.taxes = 0
         self.mortgage_rate = self.interest
@@ -74,6 +74,9 @@ class Central:
 
         # Track remaining loan balances
         self.loans = defaultdict(list)
+
+    def set_interest(self, rate):
+        self.interest = rate
 
     def pay_interest(self, client, y, m):
         """ Updates interest to the client

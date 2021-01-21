@@ -153,6 +153,9 @@ class Simulation:
         pass
 
     def monthly(self):
+        # Set interest rate
+        self.central.set_interest(conf.PARAMS['INTEREST'][conf.PARAMS['INTEREST'].index.date ==
+                                                          self.clock.days]['interest'].iloc[0])
         current_unemployment = self.stats.global_unemployment_rate / 100
 
         # Create new land licenses
@@ -268,7 +271,7 @@ class Simulation:
 
         # Family investments
         for fam in self.families.values():
-            fam.invest(self.PARAMS['INTEREST_RATE'], self.central, self.clock.year, self.clock.months)
+            fam.invest(self.central.interest, self.central, self.clock.year, self.clock.months)
 
         # Using all collected taxes to improve public services
         bank_taxes = self.central.collect_taxes()

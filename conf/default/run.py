@@ -29,7 +29,7 @@ PLOT_EACH_RUN = False
 SAVE_SPATIAL_PLOTS = False
 # 'png' or 'eps'
 PLOT_FORMAT = 'png'
-PLOT_REGIONAL = True
+PLOT_REGIONAL = False
 
 # Plot DPI. Lower ones will plot faster
 PLOT_DPI = 120
@@ -59,8 +59,7 @@ AVERAGE_TYPE = 'mean'
 # Whether or not to save data for the transit simulation
 SAVE_TRANSIT_DATA = False
 
-# Limit to the following region ids that begin with any
-# of the listed codes (as strings).
+# Limit to the following region ids that begin with any of the listed codes (as strings).
 # If None, include all
 LIMIT_SAVED_TRANSIT_REGIONS = None
 

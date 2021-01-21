@@ -2,6 +2,11 @@ import datetime
 
 import pandas as pd
 
+# Average interest rate - Earmarked new operations - Households - Real estate financing - Market rates
+# PORT. Taxa média de juros das operações de crédito com recursos direcionados - Pessoas físicas -
+# Financiamento imobiliário com taxas de mercado
+# Values before 2011-03-01 when the series began are set at the value of 2011-03-01
+
 INTEREST = pd.read_csv('input/interest_20772.csv', sep=';')
 INTEREST.date = pd.to_datetime(INTEREST.date)
 INTEREST = INTEREST.set_index('date')
@@ -41,9 +46,6 @@ TAX_FIRM = .15
 TAX_PROPERTY = .005
 
 # GOVERNMENT
-# MONTHLY Real interest rate of the economy (SELIC minus INFLATION) for the Brazilian case
-# REAL INTEREST RATE OF 1.5% YEARLY TRANSFORMED INTO MONTHS' VALUES: = ((1.05-.035)**(1/12)) - 1 = 0.0012415
-INTEREST_RATE = .0012415
 # ALTERNATIVE OF DISTRIBUTION OF TAXES COLLECTED. REPLICATING THE NOTION OF A COMMON POOL OF RESOURCES ################
 # Alternative0 is True, municipalities are just normal as INPUT
 # Alternative0 is False, municipalities are all together
@@ -165,10 +167,10 @@ PUBLIC_TRANSIT_COST = 0.5
 
 # Percentage of actual population to run the simulation
 # Minimum value to run depends on the size of municipality 0,001 is recommended minimum
-PERCENTAGE_ACTUAL_POP = 0.005
+PERCENTAGE_ACTUAL_POP = 0.01
 
 # Write exactly like the list
-PROCESSING_ACPS = ['IPATINGA']
+PROCESSING_ACPS = ['BRASILIA']
 
 # Selecting the starting year to build the Agents, can be: 1991, 2000 or 2010
 STARTING_DAY = datetime.date(2010, 1, 1)
