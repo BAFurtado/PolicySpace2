@@ -53,7 +53,12 @@ class Family:
         else:
             raise Exception
 
-    def move_out(self):
+    def move_out(self, funds):
+        # If family still has policy money for rent payment and is moving out, give back the money to municipality
+        if self.house.rent_data:
+            if self.rent_voucher:
+                funds.policy_money[self.region_id[:7]] += self.rent_voucher * self.house.rent_data[0]
+                self.rent_voucher = 0
         self.house.empty()
         self.house = None
 

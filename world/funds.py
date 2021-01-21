@@ -44,7 +44,6 @@ class Funds:
     def pay_families_rent(self):
         for mun in self.policy_money.keys():
             self.policy_families[mun] = [f for f in self.policy_families[mun] if not f.owned_houses]
-            assert all([f.house.rent_data for f in self.policy_families[mun]])
             for family in self.policy_families[mun]:
                 if family.house.rent_data[0] * 24 < self.policy_money[mun]:
                     if not family.rent_voucher:

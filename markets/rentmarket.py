@@ -66,7 +66,7 @@ class RentalMarket:
             # Families who are already settled, will move into rental only if better quality (that is, price)
             if family.house.price > house.price:
                 return
-            family.move_out()
+            family.move_out(sim.funds)
         family.move_in(house)
         self.unoccupied.remove(house)
         # Save information of rental on house

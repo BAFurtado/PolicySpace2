@@ -243,7 +243,7 @@ class HousingMarket:
         # Make the move
         old_r_id = family.region_id
         if family.house is not None:
-            family.move_out()
+            family.move_out(sim.funds)
         family.move_in(house)
         # Only after simulation has begun, it is necessary to update population, not at generation time
         try:
