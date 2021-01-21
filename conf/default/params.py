@@ -5,12 +5,12 @@ import pandas as pd
 # MODEL PARAMETERS
 # FIRMS
 # Production function, labour with decaying exponent, Alpha for K. [0, 1]
-PRODUCTIVITY_EXPONENT = .4
+PRODUCTIVITY_EXPONENT = .6
 # Order of magnitude correction of production. Production divided by parameter
-PRODUCTIVITY_MAGNITUDE_DIVISOR = 15
+PRODUCTIVITY_MAGNITUDE_DIVISOR = 12
 # GENERAL CALIBRATION PARAMETERS
 # Order of magnitude parameter of input into municipality investment
-MUNICIPAL_EFFICIENCY_MANAGEMENT = .0005
+MUNICIPAL_EFFICIENCY_MANAGEMENT = .0003
 
 # By how much percentage to increase prices
 MARKUP = 0.05
@@ -49,15 +49,15 @@ FPM_DISTRIBUTION = True
 # Results     fpm + eq. + loc,  locally,  fpm + eq,   eq
 
 # POVERTY POLICIES. If POLICY_COEFFICIENT = 0, do nothing.
-POLICY_COEFFICIENT = .25
+POLICY_COEFFICIENT = 0
 # Policies alternatives may include: 'buy', 'rent' or 'wage' or 'no_policy'. For no policy set to empty strings ''
-# POLICY_COEFFICENT needs to be > 0.
+# POLICY_COEFFICIENT needs to be > 0.
 POLICIES = 'rent'
 
 # HOUSING AND REAL ESTATE MARKET
 # LOANS
 # Maximum age of borrower at the end of the contract
-MAX_LOAN_AGE = 80
+MAX_LOAN_AGE = 75
 
 LOAN_PAYMENTS_TO_WAGE = .04
 LOAN_TO_INCOME = .3
@@ -71,16 +71,16 @@ CAPPED_LOW_VALUE = .8
 
 # Influence of vacancy size on house prices
 # It can be True or 1 or if construction companies consider vacancy strongly it might be 2 [1 - (vacancy * VALUE)]
-OFFER_SIZE_ON_PRICE = 1
+OFFER_SIZE_ON_PRICE = 2
 # TOO LONG ON THE MARKET:
 # value = (1 - MAX_OFFER_DISCOUNT) * e ** (ON_MARKET_DECAY_FACTOR * MONTHS ON MARKET) + MAX_OFFER_DISCOUNT
 # AS SUCH (-.02) DECAY OF 1% FIRST MONTH, 10% FIRST YEAR. SET TO 0 TO ELIMINATE EFFECT
-ON_MARKET_DECAY_FACTOR = -.03
+ON_MARKET_DECAY_FACTOR = -.05
 # LOWER BOUND, THAT IS, AT LEAST 50% PERCENT OF VALUE WILL REMAIN AT END OF PERIOD, IF PARAMETER IS .5
 MAX_OFFER_DISCOUNT = .7
 # Percentage of households pursuing new location
-PERCENTAGE_CHECK_NEW_LOCATION = 0.0025
-NEIGHBORHOOD_EFFECT = 2
+PERCENTAGE_CHECK_NEW_LOCATION = 0.003
+NEIGHBORHOOD_EFFECT = 3
 
 # RENTAL
 RENTAL_SHARE = 0.3
