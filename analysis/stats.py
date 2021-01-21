@@ -151,34 +151,31 @@ class Statistics(object):
                            if families[family].num_members > 0])
 
     def calculate_GINI(self, families):
-        family_data = [families[family].last_permanent_income for family in families.keys()
-                       if families[family].num_members > 0]
-
+        family_data = [families[family].last_permanent_income for family in families.keys()]
         # Sort smallest to largest
         cumm = np.sort(family_data)
-
+        # Values cannot be 0
+        cumm += .0000001
         # Find cumulative totals
-        index = np.arange(1, cumm.shape[0] + 1)
         n = cumm.shape[0]
-        assert(n > 0), 'Empty list of values'
-        giniIdx = ((np.sum((2 * index - n - 1) * cumm)) / (n * np.sum(cumm)))
-
-        logger.info('GINI: %.3f' % (giniIdx))
-        return giniIdx
+        index = np.arange(1, n + 1)
+        gini = ((np.sum((2 * index - n - 1) * cumm)) / (n * np.sum(cumm)))
+        logger.info(f'GINI: {gini:.3f}')
+        return gini
 
     def calculate_regional_GINI(self, families):
-        family_data = [family.last_permanent_income for family in families if family.num_members > 0]
-
+        family_data = [family.last_permanent_income for family in families]
         # Sort smallest to largest
         cumm = np.sort(family_data)
-
+        # Values cannot be 0
+        cumm += .0000001
         # Find cumulative totals
-        index = np.arange(1, cumm.shape[0] + 1)
         n = cumm.shape[0]
+        index = np.arange(1, n + 1)
         if n == 0:
             return 0
-        giniIdx = ((np.sum((2 * index - n - 1) * cumm)) / (n * np.sum(cumm)))
-        return giniIdx
+        gini = ((np.sum((2 * index - n - 1) * cumm)) / (n * np.sum(cumm)))
+        return gini
 
     def update_commuting(self, families):
         """Total commuting distance"""
