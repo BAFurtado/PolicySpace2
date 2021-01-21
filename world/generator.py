@@ -5,9 +5,9 @@ shapefile input of real limits and real urban/rural areas.
 Then, Agents are created and bundled into families, given population measures.
 Then, houses and firms are created and families are allocated to their first houses.
 """
+import logging
 import math
 import uuid
-import logging
 
 import pandas as pd
 import shapely

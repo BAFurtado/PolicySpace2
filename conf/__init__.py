@@ -4,8 +4,8 @@ File names for configuration files.
 Configuration files should be of the format #{NAME}.py
 """
 
-import inspect
 import importlib
+import inspect
 
 PACKAGE = __package__
 NAMES = [

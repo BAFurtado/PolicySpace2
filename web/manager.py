@@ -6,10 +6,11 @@ and tracks it with a pidfile.
 """
 
 import os
-import psutil
 import signal
-import tempfile
 import subprocess
+import tempfile
+
+import psutil
 
 TMP_DIR = tempfile.gettempdir()
 LOG_FILE = os.path.join(TMP_DIR, 'seal.log')

@@ -1,8 +1,10 @@
-import pandas as pd
-from .geography import STATES_CODES, state_string
-from collections import defaultdict
 import datetime
+from collections import defaultdict
+
+import pandas as pd
+
 from markets.housing import HousingMarket
+from .geography import STATES_CODES, state_string
 
 
 class Funds:

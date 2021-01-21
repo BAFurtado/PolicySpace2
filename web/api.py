@@ -1,5 +1,6 @@
-from . import manager
 from flask import Blueprint, jsonify
+
+from . import manager
 
 bp = Blueprint('api', __name__, url_prefix='/api')
 

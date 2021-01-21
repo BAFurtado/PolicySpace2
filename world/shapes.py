@@ -1,8 +1,9 @@
 import json
+from collections import defaultdict
+
 import geopandas as gpd
 import pandas as pd
 from osgeo import ogr
-from collections import defaultdict
 from shapely.geometry import shape
 
 

@@ -1,4 +1,5 @@
 from flask import Flask
+
 from . import api, web
 
 app = Flask(

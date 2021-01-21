@@ -1,5 +1,11 @@
 import datetime
 
+import pandas as pd
+
+INTEREST = pd.read_csv('input/interest_20772.csv', sep=';')
+INTEREST.date = pd.to_datetime(INTEREST.date)
+INTEREST = INTEREST.set_index('date')
+
 # MODEL PARAMETERS
 # FIRMS
 # Production function, labour with decaying exponent, Alpha for K. [0, 1]
@@ -54,7 +60,6 @@ POLICY_COEFFICIENT = .25
 # Policies alternatives may include: 'buy', 'rent' or 'wage' or 'no_policy'. For no policy set to empty strings ''
 # POLICY_COEFFICENT needs to be > 0.
 POLICIES = 'rent'
-
 
 # HOUSING AND REAL ESTATE MARKET
 # LOANS
@@ -160,10 +165,10 @@ PUBLIC_TRANSIT_COST = 0.5
 
 # Percentage of actual population to run the simulation
 # Minimum value to run depends on the size of municipality 0,001 is recommended minimum
-PERCENTAGE_ACTUAL_POP = 0.01
+PERCENTAGE_ACTUAL_POP = 0.005
 
 # Write exactly like the list
-PROCESSING_ACPS = ['BRASILIA']
+PROCESSING_ACPS = ['IPATINGA']
 
 # Selecting the starting year to build the Agents, can be: 1991, 2000 or 2010
 STARTING_DAY = datetime.date(2010, 1, 1)

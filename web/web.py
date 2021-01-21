@@ -1,8 +1,10 @@
 import os
+
+from flask import Blueprint, render_template, redirect, url_for, send_from_directory
+
 import conf
 from . import manager
 from .forms import SimulationForm
-from flask import Blueprint, render_template, redirect, url_for, send_from_directory
 
 bp = Blueprint('web', __name__)
 

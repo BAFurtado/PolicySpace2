@@ -6,7 +6,6 @@
 
 
 import geopandas as gdp
-import matplotlib.pyplot as plt
 
 aps = gdp.read_file('APS.shp')
 aps[aps.AP == '3509007001001']['geometry'] = aps[aps.AP == '3509007001001'].geometry.buffer(0)

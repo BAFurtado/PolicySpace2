@@ -1,10 +1,12 @@
 import json
-import conf
-from . import manager
+
 from flask_wtf import FlaskForm
-from wtforms.validators import Required, NumberRange
 from wtforms.fields import TextAreaField, SelectField
 from wtforms.fields.html5 import IntegerField
+from wtforms.validators import Required, NumberRange
+
+import conf
+from . import manager
 
 RUN_TYPES = [(rt, rt) for rt in manager.RUN_TYPES]
 PARAMS = json.dumps(conf.PARAMS, sort_keys=True, indent=4, default=str)
