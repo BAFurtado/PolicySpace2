@@ -68,15 +68,15 @@ class Central:
         self.interest = 0
         self.wallet = defaultdict(list)
         self.taxes = 0
-        self.mortgage_rate = self.interest
+        self.mortgage_rate = 0
         self._outstanding_loans = 0
         self._total_deposits = 0
 
         # Track remaining loan balances
         self.loans = defaultdict(list)
 
-    def set_interest(self, rate):
-        self.interest = rate
+    def set_interest(self, interest, mortgage):
+        self.interest, self.mortgage_rate = interest, mortgage
 
     def pay_interest(self, client, y, m):
         """ Updates interest to the client
@@ -152,7 +152,7 @@ class Central:
     def mean_collateral_rate(self):
         mean_collateral = sum([l.current_collateral() * l.balance() for l in self.active_loans() if l]) / \
                           self.outstanding_active_loan()
-        return min(1 + self.interest, mean_collateral)
+        return min(1 + self.mortgage_rate, mean_collateral)
 
     def prob_default(self):
         # Sum of loans of clients who are currently missing any payment divided by total outstanding loans.
@@ -166,7 +166,7 @@ class Central:
         # self.interest is economy rate, fixed by monetary policy. Rate of reference
         if default == 1:
             return
-        self.mortgage_rate = (1 + self.interest - default * self.mean_collateral_rate()) / (1 - default) - 1
+        self.mortgage_rate = (1 + self.mortgage_rate - default * self.mean_collateral_rate()) / (1 - default) - 1
 
     def loan_stats(self):
         loans = self.active_loans()

@@ -2,15 +2,6 @@ import datetime
 
 import pandas as pd
 
-# Average interest rate - Earmarked new operations - Households - Real estate financing - Market rates
-# PORT. Taxa média de juros das operações de crédito com recursos direcionados - Pessoas físicas -
-# Financiamento imobiliário com taxas de mercado
-# Values before 2011-03-01 when the series began are set at the value of 2011-03-01
-
-INTEREST = pd.read_csv('input/interest_20772.csv', sep=';')
-INTEREST.date = pd.to_datetime(INTEREST.date)
-INTEREST = INTEREST.set_index('date')
-
 # MODEL PARAMETERS
 # FIRMS
 # Production function, labour with decaying exponent, Alpha for K. [0, 1]

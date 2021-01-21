@@ -42,6 +42,15 @@ class Simulation:
             self.f[state] = pd.read_csv('input/fertility/fertility_%s.csv' % state,
                                         sep=';', header=0, decimal='.').groupby('age')
 
+        # Interest
+        # Average interest rate - Earmarked new operations - Households - Real estate financing - Market rates
+        # PORT. Taxa média de juros das operações de crédito com recursos direcionados - Pessoas físicas -
+        # Financiamento imobiliário com taxas de mercado
+        # Values before 2011-03-01 when the series began are set at the value of 2011-03-01
+        interest = pd.read_csv('input/interest_4390_25497.csv', sep=';')
+        interest.date = pd.to_datetime(interest.date)
+        self.interest = interest.set_index('date')
+
     def update_pop(self, old_region_id, new_region_id):
         if old_region_id is not None:
             self.mun_pops[old_region_id[:7]] += 1
@@ -153,9 +162,11 @@ class Simulation:
         pass
 
     def monthly(self):
-        # Set interest rate
-        self.central.set_interest(conf.PARAMS['INTEREST'][conf.PARAMS['INTEREST'].index.date ==
-                                                          self.clock.days]['interest'].iloc[0])
+        # Set interest rates
+        i = self.interest[self.interest.index.date == self.clock.days]['interest'].iloc[0]
+        m = self.interest[self.interest.index.date == self.clock.days]['mortgage_interest'].iloc[0]
+        self.central.set_interest(i, m)
+
         current_unemployment = self.stats.global_unemployment_rate / 100
 
         # Create new land licenses
