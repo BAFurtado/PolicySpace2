@@ -193,7 +193,7 @@ class Central:
         # Criteria related to consumer. Check payments do not compromise more than a monthly percentage
         monthly_payment = self._max_monthly_payment(family)
         # Probability of giving loan depends on amount compared to family wealth. Credit check
-        if monthly_payment / family.get_wealth(self) > conf.PARAMS['LOAN_TO_INCOME']:
+        if monthly_payment / family.get_wealth(self) > conf.PARAMS['MAX_LOAN_PAYMENT_TO_WEALTH']:
             return False
 
         # Add loan balance
@@ -216,7 +216,7 @@ class Central:
 
     def _max_monthly_payment(self, family):
         # Max % of income on loan repayments
-        return family.permanent_income(self, self.interest) * conf.PARAMS['LOAN_PAYMENTS_TO_WAGE']
+        return family.permanent_income(self, self.interest) * conf.PARAMS['LOAN_PAYMENTS_TO_PERMANENT_INCOME']
 
     def collect_loan_payments(self, sim):
         for family_id, loans in self.loans.items():

@@ -156,7 +156,7 @@ class HousingMarket:
                 # Get loan to make up the difference
                 loan_amount = price - savings
                 # Check macroprudential policy. If loan to value is above set value, no loan, leave the market.
-                if loan_amount / price > sim.PARAMS['LOAN_TO_VALUE']:
+                if loan_amount / price > sim.PARAMS['MAX_LOAN_TO_VALUE']:
                     return
                 # Attempt to actually get the loan from the bank
                 success = sim.central.request_loan(family, house, loan_amount)

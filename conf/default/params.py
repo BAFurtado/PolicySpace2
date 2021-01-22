@@ -1,29 +1,28 @@
 import datetime
 
-import pandas as pd
 
 # MODEL PARAMETERS
 # FIRMS
 # Production function, labour with decaying exponent, Alpha for K. [0, 1]
-PRODUCTIVITY_EXPONENT = .6
+PRODUCTIVITY_EXPONENT = .7
 # Order of magnitude correction of production. Production divided by parameter
-PRODUCTIVITY_MAGNITUDE_DIVISOR = 12
+PRODUCTIVITY_MAGNITUDE_DIVISOR = 8
 # GENERAL CALIBRATION PARAMETERS
 # Order of magnitude parameter of input into municipality investment
-MUNICIPAL_EFFICIENCY_MANAGEMENT = .0003
+MUNICIPAL_EFFICIENCY_MANAGEMENT = .00005
 
 # By how much percentage to increase prices
 MARKUP = 0.05
 # Frequency firms change prices. Probability > than parameter
 STICKY_PRICES = .5
 # Number of firms consulted before consumption
-SIZE_MARKET = 12
+SIZE_MARKET = 5
 
 # Frequency firms enter the market
-LABOR_MARKET = 0.4
+LABOR_MARKET = 0.75
 
 # Percentage of employees firms hired by distance
-PCT_DISTANCE_HIRING = .4
+PCT_DISTANCE_HIRING = .3
 # Ignore unemployment in wage base calculation
 WAGE_IGNORE_UNEMPLOYMENT = False
 # Candidate sample size for the labor market
@@ -49,25 +48,27 @@ FPM_DISTRIBUTION = True
 # Results     fpm + eq. + loc,  locally,  fpm + eq,   eq
 
 # POVERTY POLICIES. If POLICY_COEFFICIENT = 0, do nothing.
-POLICY_COEFFICIENT = 0
+POLICY_COEFFICIENT = 0.1
 # Policies alternatives may include: 'buy', 'rent' or 'wage' or 'no_policy'. For no policy set to empty strings ''
 # POLICY_COEFFICIENT needs to be > 0.
-POLICIES = 'rent'
+POLICIES = 'no_policy'
 
 # HOUSING AND REAL ESTATE MARKET
 # LOANS
 # Maximum age of borrower at the end of the contract
 MAX_LOAN_AGE = 75
-
-LOAN_PAYMENTS_TO_WAGE = .04
-LOAN_TO_INCOME = .3
-LOAN_TO_VALUE = .9
+# Used to calculate monthly payment for the families, thus limiting maximum loan by number of months and age
+LOAN_PAYMENTS_TO_PERMANENT_INCOME = .05
+# Refers to the maximum loan monthly payment to total wealth
+MAX_LOAN_PAYMENT_TO_WEALTH = .15
+# Refers to the maximum rate of the loan on the value of the estate
+MAX_LOAN_TO_VALUE = .5
 
 # This parameter refers to the total amount of resources available at the bank.
 MAX_LOAN_BANK_PERCENT = .7
 
-CAPPED_TOP_VALUE = 1.2
-CAPPED_LOW_VALUE = .8
+CAPPED_TOP_VALUE = 1.3
+CAPPED_LOW_VALUE = .7
 
 # Influence of vacancy size on house prices
 # It can be True or 1 or if construction companies consider vacancy strongly it might be 2 [1 - (vacancy * VALUE)]
@@ -75,12 +76,12 @@ OFFER_SIZE_ON_PRICE = 2
 # TOO LONG ON THE MARKET:
 # value = (1 - MAX_OFFER_DISCOUNT) * e ** (ON_MARKET_DECAY_FACTOR * MONTHS ON MARKET) + MAX_OFFER_DISCOUNT
 # AS SUCH (-.02) DECAY OF 1% FIRST MONTH, 10% FIRST YEAR. SET TO 0 TO ELIMINATE EFFECT
-ON_MARKET_DECAY_FACTOR = -.05
+ON_MARKET_DECAY_FACTOR = -.01
 # LOWER BOUND, THAT IS, AT LEAST 50% PERCENT OF VALUE WILL REMAIN AT END OF PERIOD, IF PARAMETER IS .5
-MAX_OFFER_DISCOUNT = .7
+MAX_OFFER_DISCOUNT = .6
 # Percentage of households pursuing new location
-PERCENTAGE_CHECK_NEW_LOCATION = 0.003
-NEIGHBORHOOD_EFFECT = 3
+PERCENTAGE_CHECK_NEW_LOCATION = 0.002
+NEIGHBORHOOD_EFFECT = 2
 
 # RENTAL
 RENTAL_SHARE = 0.3
@@ -90,10 +91,10 @@ INITIAL_RENTAL_PRICE = .0028
 # LICENSES ARE URBANIZED LOTS AVAILABLE FOR CONSTRUCTION PER NEIGHBORHOOD PER MONTH.
 # If random, it will vary between 1 and 0, otherwise an integer
 T_LICENSES_PER_REGION = 'random'
-PERCENT_CONSTRUCTION_FIRMS = 0.05
+PERCENT_CONSTRUCTION_FIRMS = 0.025
 # Months that construction firm will divide its income into monthly revenue installments.
 # Although prices are accounted for at once.
-CONSTRUCTION_ACC_CASH_FLOW = 36
+CONSTRUCTION_ACC_CASH_FLOW = 24
 # Cost of lot in PERCENTAGE of construction
 LOT_COST = .15
 
@@ -124,8 +125,8 @@ WAGE_TO_CAR_OWNERSHIP_QUANTILES = [
     0.7779,
     0.9135,
 ]
-PRIVATE_TRANSIT_COST = 0.05
-PUBLIC_TRANSIT_COST = 0.5
+PRIVATE_TRANSIT_COST = 0.2
+PUBLIC_TRANSIT_COST = 0.05
 
 # selecting the ACPs (Population Concentration Areas)
 # ACPs and their STATES - ALL ACPs written in UPPER CASE and without  ACCENT
