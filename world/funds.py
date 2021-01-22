@@ -47,10 +47,11 @@ class Funds:
         for mun in self.policy_money.keys():
             self.policy_families[mun] = [f for f in self.policy_families[mun] if not f.owned_houses]
             for family in self.policy_families[mun]:
-                if family.house.rent_data[0] * 24 < self.policy_money[mun]:
-                    if not family.rent_voucher:
-                        family.rent_voucher = 24
-                        self.policy_money[mun] -= family.house.rent_data[0] * 24
+                if family.house.rent_data:
+                    if family.house.rent_data[0] * 24 < self.policy_money[mun]:
+                        if not family.rent_voucher:
+                            family.rent_voucher = 24
+                            self.policy_money[mun] -= family.house.rent_data[0] * 24
                 else:
                     break
 

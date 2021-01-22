@@ -62,7 +62,7 @@ LOAN_PAYMENTS_TO_PERMANENT_INCOME = .05
 # Refers to the maximum loan monthly payment to total wealth
 MAX_LOAN_PAYMENT_TO_WEALTH = .15
 # Refers to the maximum rate of the loan on the value of the estate
-MAX_LOAN_TO_VALUE = .5
+MAX_LOAN_TO_VALUE = .3
 
 # This parameter refers to the total amount of resources available at the bank.
 MAX_LOAN_BANK_PERCENT = .7
