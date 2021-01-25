@@ -164,8 +164,8 @@ class Simulation:
     def monthly(self):
         # Set interest rates
         i = self.interest[self.interest.index.date == self.clock.days]['interest'].iloc[0]
-        m = self.interest[self.interest.index.date == self.clock.days]['mortgage_interest'].iloc[0]
-        self.central.set_interest(i, m)
+        # m = self.interest[self.interest.index.date == self.clock.days]['mortgage_interest'].iloc[0]
+        self.central.set_interest(i, i)
 
         current_unemployment = self.stats.global_unemployment_rate / 100
 
@@ -274,7 +274,7 @@ class Simulation:
         self.logger.logger.info(f'Available licenses: {sum([r.licenses for r in self.regions.values()]):,.0f}')
         # Tax transaction taxes (ITBI) when selling house
         # Property tax (IPTU) collected. One twelfth per month
-        self.central.calculate_monthly_mortgage_rate()
+        # self.central.calculate_monthly_mortgage_rate()
         self.housing.housing_market(self)
         self.housing.process_monthly_rent(self)
         for house in self.houses.values():
