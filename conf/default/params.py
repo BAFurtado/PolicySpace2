@@ -9,7 +9,7 @@ PRODUCTIVITY_EXPONENT = .6
 PRODUCTIVITY_MAGNITUDE_DIVISOR = 10
 # GENERAL CALIBRATION PARAMETERS
 # Order of magnitude parameter of input into municipality investment
-MUNICIPAL_EFFICIENCY_MANAGEMENT = .00005
+MUNICIPAL_EFFICIENCY_MANAGEMENT = .00007
 
 # By how much percentage to increase prices
 MARKUP = 0.15
@@ -62,7 +62,7 @@ LOAN_PAYMENT_TO_PERMANENT_INCOME = .4
 # Refers to the maximum loan monthly payment to total wealth
 # MAX_LOAN_PAYMENT_TO_WEALTH = .4
 # Refers to the maximum rate of the loan on the value of the estate
-MAX_LOAN_TO_VALUE = .6
+MAX_LOAN_TO_VALUE = .4
 
 # This parameter refers to the total amount of resources available at the bank.
 MAX_LOAN_BANK_PERCENT = .7
@@ -162,7 +162,8 @@ PUBLIC_TRANSIT_COST = 0.05
 PERCENTAGE_ACTUAL_POP = 0.01
 
 # Write exactly like the list
-PROCESSING_ACPS = ['FORTALEZA']
+PROCESSING_ACPS = ['BRASILIA']
+
 
 # Selecting the starting year to build the Agents, can be: 1991, 2000 or 2010
 STARTING_DAY = datetime.date(2010, 1, 1)
