@@ -151,12 +151,13 @@ class Central:
 
     def mean_collateral_rate(self):
         mean_collateral = sum([l.current_collateral() * l.balance() for l in self.active_loans() if l]) / \
-                          self.outstanding_active_loan()
+                          self.outstanding_active_loan() if self.outstanding_active_loan() else 0
         return min(1 + self.mortgage_rate, mean_collateral)
 
     def prob_default(self):
         # Sum of loans of clients who are currently missing any payment divided by total outstanding loans.
-        return sum([l.balance() for l in self.delinquent_loans()]) / self.outstanding_active_loan()
+        return sum([l.balance() for l in self.delinquent_loans()]) / self.outstanding_active_loan() \
+            if self.outstanding_active_loan() else 0
 
     def calculate_monthly_mortgage_rate(self):
         if not self.loans:
@@ -190,10 +191,10 @@ class Central:
         if self._outstanding_loans + amount > self._total_deposits * conf.PARAMS['MAX_LOAN_BANK_PERCENT']:
             return False
 
-        # Criteria related to consumer. Check payments do not compromise more than a monthly percentage
+        # Criteria related to consumer. Check payments fit last months' paycheck
         monthly_payment = self._max_monthly_payment(family)
         # Probability of giving loan depends on amount compared to family wealth. Credit check
-        if monthly_payment / family.get_wealth(self) > conf.PARAMS['MAX_LOAN_PAYMENT_TO_WEALTH']:
+        if monthly_payment > family.total_wage():
             return False
 
         # Add loan balance
@@ -216,7 +217,7 @@ class Central:
 
     def _max_monthly_payment(self, family):
         # Max % of income on loan repayments
-        return family.permanent_income(self, self.interest) * conf.PARAMS['LOAN_PAYMENTS_TO_PERMANENT_INCOME']
+        return family.permanent_income(self, self.interest) * conf.PARAMS['LOAN_PAYMENT_TO_PERMANENT_INCOME']
 
     def collect_loan_payments(self, sim):
         for family_id, loans in self.loans.items():

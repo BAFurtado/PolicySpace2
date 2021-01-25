@@ -4,15 +4,15 @@ import datetime
 # MODEL PARAMETERS
 # FIRMS
 # Production function, labour with decaying exponent, Alpha for K. [0, 1]
-PRODUCTIVITY_EXPONENT = .7
+PRODUCTIVITY_EXPONENT = .6
 # Order of magnitude correction of production. Production divided by parameter
-PRODUCTIVITY_MAGNITUDE_DIVISOR = 8
+PRODUCTIVITY_MAGNITUDE_DIVISOR = 10
 # GENERAL CALIBRATION PARAMETERS
 # Order of magnitude parameter of input into municipality investment
 MUNICIPAL_EFFICIENCY_MANAGEMENT = .00005
 
 # By how much percentage to increase prices
-MARKUP = 0.05
+MARKUP = 0.15
 # Frequency firms change prices. Probability > than parameter
 STICKY_PRICES = .5
 # Number of firms consulted before consumption
@@ -48,7 +48,7 @@ FPM_DISTRIBUTION = True
 # Results     fpm + eq. + loc,  locally,  fpm + eq,   eq
 
 # POVERTY POLICIES. If POLICY_COEFFICIENT = 0, do nothing.
-POLICY_COEFFICIENT = 0.1
+POLICY_COEFFICIENT = 0.2
 # Policies alternatives may include: 'buy', 'rent' or 'wage' or 'no_policy'. For no policy set to empty strings ''
 # POLICY_COEFFICIENT needs to be > 0.
 POLICIES = 'no_policy'
@@ -58,11 +58,11 @@ POLICIES = 'no_policy'
 # Maximum age of borrower at the end of the contract
 MAX_LOAN_AGE = 75
 # Used to calculate monthly payment for the families, thus limiting maximum loan by number of months and age
-LOAN_PAYMENTS_TO_PERMANENT_INCOME = .05
+LOAN_PAYMENT_TO_PERMANENT_INCOME = .4
 # Refers to the maximum loan monthly payment to total wealth
-MAX_LOAN_PAYMENT_TO_WEALTH = .15
+# MAX_LOAN_PAYMENT_TO_WEALTH = .4
 # Refers to the maximum rate of the loan on the value of the estate
-MAX_LOAN_TO_VALUE = .3
+MAX_LOAN_TO_VALUE = .6
 
 # This parameter refers to the total amount of resources available at the bank.
 MAX_LOAN_BANK_PERCENT = .7
@@ -80,8 +80,8 @@ ON_MARKET_DECAY_FACTOR = -.01
 # LOWER BOUND, THAT IS, AT LEAST 50% PERCENT OF VALUE WILL REMAIN AT END OF PERIOD, IF PARAMETER IS .5
 MAX_OFFER_DISCOUNT = .6
 # Percentage of households pursuing new location
-PERCENTAGE_CHECK_NEW_LOCATION = 0.002
-NEIGHBORHOOD_EFFECT = 2
+PERCENTAGE_CHECK_NEW_LOCATION = 0.003
+NEIGHBORHOOD_EFFECT = 3
 
 # RENTAL
 RENTAL_SHARE = 0.3
@@ -91,7 +91,7 @@ INITIAL_RENTAL_PRICE = .0028
 # LICENSES ARE URBANIZED LOTS AVAILABLE FOR CONSTRUCTION PER NEIGHBORHOOD PER MONTH.
 # If random, it will vary between 1 and 0, otherwise an integer
 T_LICENSES_PER_REGION = 'random'
-PERCENT_CONSTRUCTION_FIRMS = 0.025
+PERCENT_CONSTRUCTION_FIRMS = 0.04
 # Months that construction firm will divide its income into monthly revenue installments.
 # Although prices are accounted for at once.
 CONSTRUCTION_ACC_CASH_FLOW = 24
@@ -101,7 +101,7 @@ LOT_COST = .15
 # Families run parameters (on average) for year 2000, or no information. 2010 uses APs average data
 MEMBERS_PER_FAMILY = 2.5
 # Initial percentage of vacant houses
-HOUSE_VACANCY = .11
+HOUSE_VACANCY = .1
 
 # Definition to simplify population by group age groups(TRUE) or including all ages (FALSE)
 SIMPLIFY_POP_EVOLUTION = True
@@ -125,7 +125,7 @@ WAGE_TO_CAR_OWNERSHIP_QUANTILES = [
     0.7779,
     0.9135,
 ]
-PRIVATE_TRANSIT_COST = 0.2
+PRIVATE_TRANSIT_COST = 0.25
 PUBLIC_TRANSIT_COST = 0.05
 
 # selecting the ACPs (Population Concentration Areas)
