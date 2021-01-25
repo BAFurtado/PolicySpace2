@@ -48,7 +48,7 @@ class Funds:
             self.policy_families[mun] = [f for f in self.policy_families[mun] if not f.owned_houses]
             for family in self.policy_families[mun]:
                 if family.house.rent_data:
-                    if family.house.rent_data[0] * 24 < self.policy_money[mun]:
+                    if self.policy_money[mun] > 0 and family.house.rent_data[0] * 24 < self.policy_money[mun]:
                         if not family.rent_voucher:
                             family.rent_voucher = 24
                             self.policy_money[mun] -= family.house.rent_data[0] * 24
@@ -57,7 +57,7 @@ class Funds:
 
     def distribute_funds_to_families(self):
         for mun in self.policy_money.keys():
-            if self.policy_families[mun]:
+            if self.policy_families[mun] and self.policy_money[mun] > 0:
                 amount = self.policy_money[mun] / len(self.policy_families[mun])
                 [f.update_balance(amount) for f in self.policy_families[mun]]
                 self.policy_money[mun] = 0
@@ -76,7 +76,8 @@ class Funds:
             if self.policy_families[mun]:
                 for house in self.temporary_houses[mun]:
                     # While money is good.
-                    if house.price < self.policy_money[mun] and self.policy_families[mun]:
+                    if self.policy_money[mun] > 0 and self.policy_families[mun] \
+                            and house.price < self.policy_money[mun]:
                         family = self.policy_families[mun].pop(0)
                         # Deposit money on selling firm. Transaction taxes are waived
                         self.sim.firms[house.owner_id].update_balance(house.price,
