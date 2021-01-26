@@ -53,7 +53,7 @@ class HousingMarket:
         # Select sample of families looking for houses at this time, given parameter, at the same time,
         # clear list of past houses for sale
         looking = sim.seed.sample(list(sim.families.values()),
-                                  int(len(sim.families) * sim.PARAMS['PERCENTAGE_CHECK_NEW_LOCATION']))
+                                  int(len(sim.families) * sim.PARAMS['PERCENTAGE_ENTERING_ESTATE_MARKET']))
 
         # Update prices of all houses in the simulation and status 'on_market' or not
         self.update_for_sale(sim)

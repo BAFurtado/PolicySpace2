@@ -14,7 +14,7 @@ MUNICIPAL_EFFICIENCY_MANAGEMENT = .00007
 # By how much percentage to increase prices
 MARKUP = 0.15
 # Frequency firms change prices. Probability > than parameter
-STICKY_PRICES = .5
+STICKY_PRICES = .7
 # Number of firms consulted before consumption
 SIZE_MARKET = 5
 
@@ -58,7 +58,7 @@ POLICIES = 'rent'
 # Maximum age of borrower at the end of the contract
 MAX_LOAN_AGE = 75
 # Used to calculate monthly payment for the families, thus limiting maximum loan by number of months and age
-LOAN_PAYMENT_TO_PERMANENT_INCOME = .4
+LOAN_PAYMENT_TO_PERMANENT_INCOME = .5
 # Refers to the maximum loan monthly payment to total wealth
 # MAX_LOAN_PAYMENT_TO_WEALTH = .4
 # Refers to the maximum rate of the loan on the value of the estate
@@ -80,7 +80,7 @@ ON_MARKET_DECAY_FACTOR = -.01
 # LOWER BOUND, THAT IS, AT LEAST 50% PERCENT OF VALUE WILL REMAIN AT END OF PERIOD, IF PARAMETER IS .5
 MAX_OFFER_DISCOUNT = .6
 # Percentage of households pursuing new location
-PERCENTAGE_CHECK_NEW_LOCATION = 0.003
+PERCENTAGE_ENTERING_ESTATE_MARKET = 0.0045
 NEIGHBORHOOD_EFFECT = 3
 
 # RENTAL
@@ -159,13 +159,13 @@ PUBLIC_TRANSIT_COST = 0.05
 
 # Percentage of actual population to run the simulation
 # Minimum value to run depends on the size of municipality 0,001 is recommended minimum
-PERCENTAGE_ACTUAL_POP = 0.005
+PERCENTAGE_ACTUAL_POP = 0.01
 
 # Write exactly like the list
-PROCESSING_ACPS = ['IPATINGA']
+PROCESSING_ACPS = ['BRASILIA']
 
 # Selecting the starting year to build the Agents, can be: 1991, 2000 or 2010
 STARTING_DAY = datetime.date(2010, 1, 1)
 
 # Maximum running time (restrained by official data) is 30 years,
-TOTAL_DAYS = (datetime.date(2030, 1, 1) - STARTING_DAY).days
+TOTAL_DAYS = (datetime.date(2020, 1, 1) - STARTING_DAY).days

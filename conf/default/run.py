@@ -2,8 +2,8 @@
 # Change your output directory as necessary
 
 
-OUTPUT_PATH = 'output'
-# OUTPUT_PATH = r'\\STORAGE1\CARGA\MODELO DINAMICO DE SIMULACAO\EXITS_PYTHON\PS2020'
+# OUTPUT_PATH = 'output'
+OUTPUT_PATH = r'\\STORAGE1\CARGA\MODELO DINAMICO DE SIMULACAO\EXITS_PYTHON\PS2020'
 
 KEEP_RANDOM_SEED = False
 
@@ -15,7 +15,7 @@ PRINT_STATISTICS_AND_RESULTS_DURING_PROCESS = True
 PRINT_FINAL_STATISTICS_ABOUT_AGENTS = False
 
 # Inform numbers in percentage of the period
-TIME_TO_BE_ELIMINATED = 0
+TIME_TO_BE_ELIMINATED = .2
 
 # Saving adjustments
 # If you save_plots (in a multiple run), you need AVERAGE_DATA = ['stats'] below!
@@ -29,7 +29,7 @@ PLOT_EACH_RUN = True
 SAVE_SPATIAL_PLOTS = False
 # 'png' or 'eps'
 PLOT_FORMAT = 'png'
-PLOT_REGIONAL = True
+PLOT_REGIONAL = False
 
 # Plot DPI. Lower ones will plot faster
 PLOT_DPI = 120
