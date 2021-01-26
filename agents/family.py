@@ -190,7 +190,7 @@ class Family:
             # After first year of simulation, add families to poverty register
             if params['POLICY_COEFFICIENT']:
                 if self.average_utility == 0:
-                    if datetime.date(year, month, 1) > datetime.date(2010, 11, 1):
+                    if datetime.date(year, month, 1) > params['STARTING_DAY'] + datetime.timedelta(360):
                         regions[self.region_id].registry[datetime.date(year, month, 1)].append(self)
 
     @property

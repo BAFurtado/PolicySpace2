@@ -127,13 +127,16 @@ class Plotter:
 
         cols = ['price_index', 'gdp_index', 'gdp_growth', 'unemployment', 'average_workers',
                 'families_median_wealth', 'families_wealth',
-                'families_commuting', 'families_savings', 'firms_wealth', 'firms_profit', 'gini_index',
+                'families_commuting', 'families_savings', 'families_helped', 'amount_subsidised',
+                'firms_wealth', 'firms_profit', 'gini_index',
                 'average_utility', 'pct_zero_consumption', 'rent_default', 'inflation', 'average_qli', 'house_vacancy',
                 'house_price', 'house_rent', 'affordable', 'p_delinquent', 'equally', 'locally', 'fpm', 'bank']
         titles = ['Average prices\' level', 'GDP absolute value', 'GDP growth in monthly perc.', 'Unemployment',
                   'Average workers per firm', 'Families median permanent income',
                   'Families\' disposable cash', 'Families\'s total commuting',
-                  'Families\' absolute savings', 'Firms\' absolute capital', 'Firms\' profit', 'GINI index',
+                  'Families\' absolute savings', 'Number of families receiving policy help',
+                  'Amount of $ implemented by policy',
+                  'Firms\' absolute capital', 'Firms\' profit', 'GINI index',
                   'Average families\' utility', 'Percentual families zero consumption',
                   'Percentual default among renting families', 'Monthly inflation',
                   'Average QLI index value', 'House vacancies', 'House prices', 'House rent prices',

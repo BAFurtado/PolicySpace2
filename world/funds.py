@@ -10,6 +10,8 @@ from .geography import STATES_CODES, state_string
 class Funds:
     def __init__(self, sim):
         self.sim = sim
+        self.families_subsided = 0
+        self.money_applied_policy = 0
         if sim.PARAMS['FPM_DISTRIBUTION']:
             self.fpm = {
                 state: pd.read_csv('input/fpm/%s.csv' % state, sep=',', header=0, decimal='.', encoding='latin1')
@@ -26,9 +28,9 @@ class Funds:
                 if keys > self.sim.clock.days - datetime.timedelta(360):
                     self.policy_families[region.id[:7]] += region.registry[keys]
         for mun in self.policy_families.keys():
-            # Make sure families on the list are still valid families
+            # Make sure families on the list are still valid families, residing at the municipality
             self.policy_families[mun] = [f for f in self.policy_families[mun]
-                                         if f.id in self.sim.families.keys()]
+                                         if f.id in self.sim.families.keys() and f.house.region_id[:7] == mun]
             self.policy_families[mun] = sorted(self.policy_families[mun], key=lambda f: f.last_permanent_income)
 
     def apply_policies(self):
@@ -50,16 +52,22 @@ class Funds:
                 if family.house.rent_data:
                     if self.policy_money[mun] > 0 and family.house.rent_data[0] * 24 < self.policy_money[mun]:
                         if not family.rent_voucher:
+                            # Paying rent for a given number of months, independent of rent value.
                             family.rent_voucher = 24
                             self.policy_money[mun] -= family.house.rent_data[0] * 24
-                else:
-                    break
+                            self.money_applied_policy += family.house.rent_data[0] * 24
+                            self.families_subsided += 1
 
     def distribute_funds_to_families(self):
         for mun in self.policy_money.keys():
             if self.policy_families[mun] and self.policy_money[mun] > 0:
+                # Registering subsidies
+                self.money_applied_policy += self.policy_money[mun]
+                self.families_subsided += len(self.policy_families[mun])
+                # Amount is proportional to available funding and families
                 amount = self.policy_money[mun] / len(self.policy_families[mun])
                 [f.update_balance(amount) for f in self.policy_families[mun]]
+                # Reset fund because it has been totally expended.
                 self.policy_money[mun] = 0
 
     def buy_houses_give_to_families(self):
@@ -69,7 +77,9 @@ class Funds:
                 if firm.type == 'CONSTRUCTION':
                     # Get the list of the houses for sale within the municipality
                     self.temporary_houses[mun] += [h for h in firm.houses_for_sale if h.region_id[:7] == mun]
-            # Sort houses and families by cheapest, poorest
+            # Sort houses and families by cheapest, poorest.
+            # Considering # houses is limited, help as many as possible earlier.
+            # Although families in sucession gets better and better houses. Then nothing.
             self.temporary_houses[mun] = sorted(self.temporary_houses[mun], key=lambda h: h.price)
             # Exclude families who own any house. Exclusively for renters
             self.policy_families[mun] = [f for f in self.policy_families[mun] if not f.owned_houses]
@@ -78,9 +88,16 @@ class Funds:
                     # While money is good.
                     if self.policy_money[mun] > 0 and self.policy_families[mun] \
                             and house.price < self.policy_money[mun]:
+                        # Getting poorest family first, given permanent income
                         family = self.policy_families[mun].pop(0)
-                        # Deposit money on selling firm. Transaction taxes are waived
-                        self.sim.firms[house.owner_id].update_balance(house.price,
+                        # Transaction taxes help reduce the price of the bulk buying by the municipality
+                        taxes = house.price * self.sim.PARAMS['TAX_ESTATE_TRANSACTION']
+                        self.sim.regions[house.region_id].collect_taxes(taxes, 'transaction')
+                        # Register subsidies
+                        self.money_applied_policy += house.price
+                        self.families_subsided += 1
+                        # Pay construction company
+                        self.sim.firms[house.owner_id].update_balance(house.price - taxes,
                                                                       self.sim.PARAMS['CONSTRUCTION_ACC_CASH_FLOW'],
                                                                       self.sim.clock.days)
                         # Deduce from municipality fund
@@ -92,6 +109,7 @@ class Funds:
                         house.family_owner = True
                         family.owned_houses.append(house)
                         house.on_market = 0
+                        # Move out. Move in
                         HousingMarket.make_move(family, house, self.sim)
                     else:
                         break
@@ -153,6 +171,8 @@ class Funds:
             region.update_applied_taxes(amount, 'equally')
 
     def invest_taxes(self, year, bank_taxes):
+        if self.sim.PARAMS['POLICIES'] not in ['buy', 'rent', 'wage']:
+            self.sim.PARAMS['POLICY_COEFFICIENT'] = 0
         # Collect and UPDATE pop_t-1 and pop_t
         regions = self.sim.regions
         pop_t_minus_1, pop_t = {}, {}
