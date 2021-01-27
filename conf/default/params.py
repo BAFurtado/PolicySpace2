@@ -11,7 +11,7 @@ PRODUCTIVITY_MAGNITUDE_DIVISOR = 10
 # Order of magnitude parameter of input into municipality investment
 MUNICIPAL_EFFICIENCY_MANAGEMENT = .00007
 # INTEREST. Choose either: 'nominal', 'real' or 'fixed'. Default 'real'
-INTEREST = 'fixo'
+INTEREST = 'real'
 
 # By how much percentage to increase prices
 MARKUP = 0.15
@@ -53,7 +53,7 @@ FPM_DISTRIBUTION = True
 POLICY_COEFFICIENT = 0.2
 # Policies alternatives may include: 'buy', 'rent' or 'wage' or 'no_policy'. For no policy set to empty strings ''
 # POLICY_COEFFICIENT needs to be > 0.
-POLICIES = 'rent'
+POLICIES = 'no_policy'
 
 # HOUSING AND REAL ESTATE MARKET
 # LOANS
@@ -64,7 +64,7 @@ LOAN_PAYMENT_TO_PERMANENT_INCOME = .5
 # Refers to the maximum loan monthly payment to total wealth
 # MAX_LOAN_PAYMENT_TO_WEALTH = .4
 # Refers to the maximum rate of the loan on the value of the estate
-MAX_LOAN_TO_VALUE = .4
+MAX_LOAN_TO_VALUE = .3
 
 # This parameter refers to the total amount of resources available at the bank.
 MAX_LOAN_BANK_PERCENT = .7
@@ -93,7 +93,7 @@ INITIAL_RENTAL_PRICE = .0028
 # LICENSES ARE URBANIZED LOTS AVAILABLE FOR CONSTRUCTION PER NEIGHBORHOOD PER MONTH.
 # If random, it will vary between 1 and 0, otherwise an integer
 T_LICENSES_PER_REGION = 'random'
-PERCENT_CONSTRUCTION_FIRMS = 0.04
+PERCENT_CONSTRUCTION_FIRMS = 0.03
 # Months that construction firm will divide its income into monthly revenue installments.
 # Although prices are accounted for at once.
 CONSTRUCTION_ACC_CASH_FLOW = 24
@@ -163,7 +163,7 @@ PUBLIC_TRANSIT_COST = 0.05
 # Minimum value to run depends on the size of municipality 0,001 is recommended minimum
 PERCENTAGE_ACTUAL_POP = 0.01
 
-# Write exactly like the list
+# Write exactly like the list above
 PROCESSING_ACPS = ['BRASILIA']
 
 # Selecting the starting year to build the Agents, can be: 1991, 2000 or 2010
