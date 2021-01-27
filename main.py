@@ -311,6 +311,9 @@ def sensitivity(ctx, params):
         elif param == 'POLICIES':
             p_name = param
             p_vals = ['buy', 'rent', 'wage', 'no_policy']
+        elif param == 'INTEREST':
+            p_name = param
+            p_vals = ['real', 'nominal', 'fixed']
         # else, assume boolean
         elif '-' in param:
             p_name = 'PROCESSING_ACPS'
