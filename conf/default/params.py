@@ -10,6 +10,8 @@ PRODUCTIVITY_MAGNITUDE_DIVISOR = 10
 # GENERAL CALIBRATION PARAMETERS
 # Order of magnitude parameter of input into municipality investment
 MUNICIPAL_EFFICIENCY_MANAGEMENT = .00007
+# INTEREST. Choose either: 'nominal', 'real' or 'fixed'. Default 'real'
+INTEREST = 'fixo'
 
 # By how much percentage to increase prices
 MARKUP = 0.15
