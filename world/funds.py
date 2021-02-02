@@ -196,8 +196,11 @@ class Funds:
             region.update_index_pop(pop_mun_minus[m_id]/pop_mun_t[m_id])
 
         v_local = defaultdict(int)
+        v_equal = 0
         if self.sim.PARAMS['ALTERNATIVE0']:
-            v_equal = sum([treasure[key]['consumption'] for key in treasure.keys()]) * \
+            # Dividing proortion of consumption into equal and local (state, municipality)
+            # And adding local part of consumption plus transaction and property to local
+            v_equal += sum([treasure[key]['consumption'] for key in treasure.keys()]) * \
                       self.sim.PARAMS['TAXES_STRUCTURE']['consumption_equal']
             mun_code = self.sim.mun_to_regions
             for mun in mun_code.keys():
@@ -205,9 +208,9 @@ class Funds:
                                 (1 - self.sim.PARAMS['TAXES_STRUCTURE']['consumption_equal'])
                 v_local[mun] += sum(treasure[r]['transaction'] for r in mun_code[mun])
                 v_local[mun] += sum(treasure[r]['property'] for r in mun_code[mun])
+            # The only case in which local funds are distributed
             self.locally(v_local, regions, mun_code, pop_t, pop_mun_t)
         else:
-            v_equal = 0
             for each in ['consumption', 'property', 'transaction']:
                 v_equal += sum([treasure[key][each] for key in treasure.keys()])
 
