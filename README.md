@@ -72,7 +72,7 @@ up to permanent income
 26. Vacancy size (offer) now impacts willingness to build of construction firms and prices
 27. New output analysis
 28. Endogenous mortgage rate setting by the bank. Default uses exogenous data though.
-29. Included SAC -- Constant Amortization System -- mostly used in Brazil.
+29. Included the SAC -- Constant Amortization System -- mostly used in Brazil.
 30. POLICY EXPERIMENTAL DESIGN. Testing wether giving houses, paying rent or distribution money is the best policy
     alternative. Both families in poverty and resources invested are endogenous.
 31. Included varying oficial monthly interest rate.      
