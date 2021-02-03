@@ -37,6 +37,8 @@ class Funds:
         if self.sim.PARAMS['POLICIES'] not in ['buy', 'rent', 'wage']:
             # Baseline scenario. Do nothing!
             return
+        # Reset indicator every month to reflect subside in a given month, not cumulatively
+        self.families_subsided = 0
         self.update_policy_families()
         if self.sim.PARAMS['POLICIES'] == 'buy':
             self.buy_houses_give_to_families()
