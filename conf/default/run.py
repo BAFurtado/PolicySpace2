@@ -43,7 +43,7 @@ SAVE_AGENTS_DATA = 'MONTHLY'
 # If you don't save "house" data for instance you can't generate housing plots.
 # Can include: ['agents', 'grave', 'house', 'family']
 # If None, set to empty list: []
-SAVE_DATA = []
+SAVE_DATA = ['house']
 # SAVE_DATA = ['agents', 'house', 'family']
 
 # What data to average across all runs. If plotting and not 'firms', 'banks', 'construction' or 'regional',
