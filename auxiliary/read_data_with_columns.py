@@ -13,7 +13,8 @@ files = ['stats', 'regional', 'time', 'firms', 'banks',
          'houses', 'agents', 'families', 'grave', 'construction']
 
 stats = ['month', 'price_index', 'gdp_index', 'gdp_growth', 'unemployment', 'average_workers',
-         'families_wealth', 'families_commuting', 'families_savings', 'firms_wealth', 'firms_profit',
+         'families_median_wealth', 'families_wealth', 'families_commuting', 'families_savings',
+         'families_helped', 'amount_subsidised', 'firms_wealth', 'firms_profit',
          'gini_index', 'average_utility', 'pct_zero_consumption', 'rent_default', 'inflation', 'average_qli',
          'house_vacancy', 'house_price', 'house_rent', 'affordable', 'p_delinquent', 'equally', 'locally',
          'fpm', 'bank']
