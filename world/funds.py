@@ -31,7 +31,7 @@ class Funds:
             # Make sure families on the list are still valid families, residing at the municipality
             self.policy_families[mun] = [f for f in self.policy_families[mun]
                                          if f.id in self.sim.families.keys() and f.house.region_id[:7] == mun]
-            self.policy_families[mun] = list(set(self.policy_families[mun]))
+            self.policy_families[mun] = list(set(f for f in self.policy_families[mun]))
             self.policy_families[mun] = sorted(self.policy_families[mun], key=lambda f: f.last_permanent_income)
 
     def apply_policies(self):
