@@ -28,7 +28,7 @@ class Family:
         self.rent_default = 0
         self.rent_voucher = 0
         self.average_utility = 0
-        self.last_permanent_income = 0
+        self.last_permanent_income = list()
 
         # Previous region id
         if house is not None:
@@ -95,13 +95,16 @@ class Family:
     def invest(self, r, bank, y, m):
         # Savings is updated during consumption as the fraction of above permanent income that is not consumed
         # If savings is above a six-month period reserve money, the surplus is invested in the bank.
-        reserve_money = self.permanent_income(bank, r) * 6
+        reserve_money = self.get_permanent_income() * 6
         if self.savings > reserve_money > 0:
             bank.deposit(self, self.savings - reserve_money, datetime.date(y, m, 1))
             self.savings = reserve_money
 
     def total_wage(self):
         return sum(member.last_wage for member in self.members.values() if member.last_wage is not None)
+
+    def get_permanent_income(self):
+        return sum(self.last_permanent_income) / len(self.last_permanent_income) if self.last_permanent_income else 0
 
     def permanent_income(self, bank, r):
         # Equals Consumption (Bielefeld, 2018, pp.13-14)
@@ -110,8 +113,8 @@ class Family:
         r_1_r = r/(1 + r)
         # Calculated as "discounted some of current income and expected future income" plus "financial wealth"
         # Perpetuity of income is a fraction (r_1_r) of income t0 divided by interest r
-        self.last_permanent_income = r_1_r * t0 + r_1_r * (t0 / r) + self.get_wealth(bank) * r
-        return self.last_permanent_income
+        self.last_permanent_income.append(r_1_r * t0 + r_1_r * (t0 / r) + self.get_wealth(bank) * r)
+        return self.get_permanent_income()
 
     def prop_employed(self):
         """Proportion of members that are employed"""

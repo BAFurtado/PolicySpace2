@@ -76,8 +76,8 @@ class Statistics(object):
 
     def calculate_affordable_rent(self, families):
         affordable = sum([1 if family.is_renting
-                          and family.last_permanent_income != 0
-                          and (family.house.rent_data[0] / family.last_permanent_income) < .3 else 0
+                          and family.get_permanent_income() != 0
+                          and (family.house.rent_data[0] / family.get_permanent_income()) < .3 else 0
                           for family in families.values()])
         renting = sum([family.is_renting for family in families.values()])
         return affordable / renting
@@ -122,10 +122,10 @@ class Statistics(object):
 
     # Calculate wealth: families, firms and profits
     def calculate_families_median_wealth(self, families):
-        return np.median([family.last_permanent_income for family in families.values()])
+        return np.median([family.get_permanent_income() for family in families.values()])
 
     def calculate_families_wealth(self, families):
-        dummy_wealth = np.sum([families[family].last_permanent_income for family in families.keys()])
+        dummy_wealth = np.sum([families[family].get_permanent_income() for family in families.keys()])
         dummy_savings = np.sum([families[family].savings for family in families.keys()])
         return dummy_wealth, dummy_savings
 
@@ -151,7 +151,7 @@ class Statistics(object):
                            if families[family].num_members > 0])
 
     def calculate_GINI(self, families):
-        family_data = [families[family].last_permanent_income for family in families.keys()]
+        family_data = [families[family].get_permanent_income() for family in families.keys()]
         # Sort smallest to largest
         cumm = np.sort(family_data)
         # Values cannot be 0
@@ -164,7 +164,7 @@ class Statistics(object):
         return gini
 
     def calculate_regional_GINI(self, families):
-        family_data = [family.last_permanent_income for family in families]
+        family_data = [family.get_permanent_income() for family in families]
         # Sort smallest to largest
         cumm = np.sort(family_data)
         # Values cannot be 0

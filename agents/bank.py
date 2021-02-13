@@ -217,7 +217,7 @@ class Central:
 
     def _max_monthly_payment(self, family):
         # Max % of income on loan repayments
-        return family.permanent_income(self, self.interest) * conf.PARAMS['LOAN_PAYMENT_TO_PERMANENT_INCOME']
+        return family.get_permanent_income() * conf.PARAMS['LOAN_PAYMENT_TO_PERMANENT_INCOME']
 
     def collect_loan_payments(self, sim):
         for family_id, loans in self.loans.items():
