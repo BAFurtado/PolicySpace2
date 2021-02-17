@@ -55,6 +55,7 @@ POLICY_COEFFICIENT = 0.2
 # POLICY_COEFFICIENT needs to be > 0.
 POLICIES = 'wage'
 POLICY_MONTHS = 180
+POLICY_QUANTILE = .25
 # HOUSING AND REAL ESTATE MARKET
 # LOANS
 # Maximum age of borrower at the end of the contract

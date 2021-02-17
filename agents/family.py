@@ -118,16 +118,8 @@ class Family:
 
     def prop_employed(self):
         """Proportion of members that are employed"""
-        unemployed, employed = 0, 0
-        for member in self.members.values():
-            if member.is_employable:
-                unemployed += 1
-            elif member.is_employed:
-                employed += 1
-        if employed + unemployed == 0:
-            return 0
-        else:
-            return employed / (employed + unemployed)
+        employable = [m for m in self.members.values() if 16 < m.age < 70]
+        return len([m for m in employable if m.firm_id is None])/len(employable) if employable else 0
 
     # Consumption ####################################################################################################
     def to_consume(self, central, r, year, month):

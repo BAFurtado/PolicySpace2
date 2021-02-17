@@ -2,6 +2,7 @@ import datetime
 from collections import defaultdict
 
 import pandas as pd
+import numpy as np
 
 from markets.housing import HousingMarket
 from .geography import STATES_CODES, state_string
@@ -23,14 +24,17 @@ class Funds:
             self.temporary_houses = defaultdict(list)
 
     def update_policy_families(self):
+        # Entering the list this month
+        incomes = [f.get_permanent_income() for f in self.sim.families.values()]
+        quantile = np.quantile(incomes, self.sim.PARAMS['POLICY_QUANTILE'])
         for region in self.sim.regions.values():
             # Unemployed, Default on rent from the region
             self.sim.regions[region.id].registry[self.sim.clock.days] += [f for f in self.sim.families.values()
-                                                                          if (f.rent_default or
-                                                                          not f.prop_employed())
+                                                                          if f.get_permanent_income() < quantile
                                                                           and f.house.region_id == region.id]
         if self.sim.clock.days < self.sim.PARAMS['STARTING_DAY'] + datetime.timedelta(360):
             return
+        # Entering the policy list. Includes families for past months as well
         for region in self.sim.regions.values():
             for keys in region.registry:
                 if keys > self.sim.clock.days - datetime.timedelta(self.sim.PARAMS['POLICY_MONTHS']):

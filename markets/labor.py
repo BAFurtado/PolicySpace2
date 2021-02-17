@@ -11,22 +11,19 @@ class LaborMarket:
 
     def __init__(self, seed):
         self.seed = seed
-        self.available_postings = []
-        self.candidates = []
+        self.available_postings = list()
+        self.candidates = list()
 
     def add_post(self, firm):
         self.available_postings.append(firm)
-
-    def add_candidate(self, agent):
-        self.candidates.append(agent)
 
     @property
     def num_candidates(self):
         return len(self.candidates)
 
     def reset(self):
-        self.available_postings = []
-        self.candidates = []
+        self.available_postings = list()
+        self.candidates = list()
 
     def assign_post(self, unemployment, wage_deciles, params):
         """Rank positions by revenue. Make a match as workers considers mobility choices """
@@ -112,9 +109,7 @@ class LaborMarket:
         firm.add_employee(chosen)
 
     def look_for_jobs(self, agents):
-        for agent in agents.values():
-            if agent.is_employable:
-                self.add_candidate(agent)
+        self.candidates += [agent for agent in agents.values() if 16 < agent.age < 70 and agent.firm_id is None]
 
     def hire_fire(self, firms, firm_enter_freq):
         """Firms adjust their labor force based on profit"""
