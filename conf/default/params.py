@@ -53,8 +53,8 @@ FPM_DISTRIBUTION = True
 POLICY_COEFFICIENT = 0.2
 # Policies alternatives may include: 'buy', 'rent' or 'wage' or 'no_policy'. For no policy set to empty strings ''
 # POLICY_COEFFICIENT needs to be > 0.
-POLICIES = 'no_policy'
-
+POLICIES = 'wage'
+POLICY_MONTHS = 180
 # HOUSING AND REAL ESTATE MARKET
 # LOANS
 # Maximum age of borrower at the end of the contract
