@@ -24,6 +24,14 @@ class Funds:
 
     def update_policy_families(self):
         for region in self.sim.regions.values():
+            # Unemployed, Default on rent from the region
+            self.sim.regions[region.id].registry[self.sim.clock.days] += [f for f in self.sim.families.values()
+                                                                          if (f.rent_default or
+                                                                          not f.prop_employed())
+                                                                          and f.house.region_id == region.id]
+        if self.sim.clock.days < self.sim.PARAMS['STARTING_DAY'] + datetime.timedelta(360):
+            return
+        for region in self.sim.regions.values():
             for keys in region.registry:
                 if keys > self.sim.clock.days - datetime.timedelta(self.sim.PARAMS['POLICY_MONTHS']):
                     self.policy_families[region.id[:7]] += region.registry[keys]
@@ -41,12 +49,18 @@ class Funds:
         # Reset indicator every month to reflect subside in a given month, not cumulatively
         self.families_subsided = 0
         self.update_policy_families()
+        # Implement policies only after first year of simulation run
+        if self.sim.clock.days < self.sim.PARAMS['STARTING_DAY'] + datetime.timedelta(360):
+            return
         if self.sim.PARAMS['POLICIES'] == 'buy':
             self.buy_houses_give_to_families()
         elif self.sim.PARAMS['POLICIES'] == 'rent':
             self.pay_families_rent()
         else:
             self.distribute_funds_to_families()
+        # Resetting lists for next month
+        self.policy_families = defaultdict(list)
+        self.temporary_houses = defaultdict(list)
 
     def pay_families_rent(self):
         for mun in self.policy_money.keys():
