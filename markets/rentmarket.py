@@ -41,11 +41,14 @@ def collect_rent(houses, sim):
                             payment += cash
 
             tenant.rent_default = 1 if payment == 0 else 0
-            # Deposit change
-            tenant.update_balance(round(payment - rent, 2))
+            # Deposit change, if any. If payment is not enough in the end, landfamily gets the loss
+            # and does not receive payment.
+            if payment > rent:
+                tenant.update_balance(round(payment - rent, 2))
 
-            # Deposit money on landfamily
-            landfamily.update_balance(round(payment - taxes, 2))
+            # Deposit money on landfamily. Taxes are due only when below payment made. Otherwise, no rent id owed.
+            if payment > taxes:
+                landfamily.update_balance(round(payment - taxes, 2))
 
 
 class RentalMarket:

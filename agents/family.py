@@ -174,27 +174,24 @@ class Family:
             # Picks SIZE_MARKET number of firms at seed and choose the closest or the cheapest
             # Consumes from each product the chosen firm offers
             market = seed.sample(firms, min(len(firms), int(params['SIZE_MARKET'])))
-            # Choose between cheapest or closest
-            firm_strategy = seed.choice(['Price', 'Distance'])
+            market = [firm for firm in market if firm.total_quantity > 0]
+            if market:
+                # Choose between cheapest or closest
+                firm_strategy = seed.choice(['Price', 'Distance'])
 
-            if firm_strategy == 'Price':
-                # Choose firm with cheapest average prices
-                chosen_firm = min(market, key=lambda firm: firm.prices)
-            else:
-                # Choose closest firm
-                chosen_firm = min(market, key=lambda firm: self.house.distance_to_firm(firm))
+                if firm_strategy == 'Price':
+                    # Choose firm with cheapest average prices
+                    chosen_firm = min(market, key=lambda firm: firm.prices)
+                else:
+                    # Choose closest firm
+                    chosen_firm = min(market, key=lambda firm: self.house.distance_to_firm(firm))
 
-            # Buy from chosen company
-            change = chosen_firm.sale(money_to_spend, regions, params['TAX_CONSUMPTION'])
-            self.savings += change
+                # Buy from chosen company
+                change = chosen_firm.sale(money_to_spend, regions, params['TAX_CONSUMPTION'])
+                self.savings += change
 
-            # Update family utility
-            self.average_utility = money_to_spend - change
-            # After first year of simulation, add families to poverty register
-            if params['POLICY_COEFFICIENT']:
-                if self.average_utility == 0:
-                    if datetime.date(year, month, 1) > params['STARTING_DAY'] + datetime.timedelta(360):
-                        regions[self.region_id].registry[datetime.date(year, month, 1)].append(self)
+                # Update family utility
+                self.average_utility = money_to_spend - change
 
     @property
     def agents(self):
