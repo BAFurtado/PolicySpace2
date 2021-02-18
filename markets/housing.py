@@ -22,7 +22,7 @@ class HousingMarket:
         neighborhood_wealth = dict()
         if sim.PARAMS['NEIGHBORHOOD_EFFECT']:
             for key in sim.regions.keys():
-                neighborhood_wealth[key] = median([f.last_permanent_income
+                neighborhood_wealth[key] = median([f.get_permanent_income()
                                                    for f in sim.families.values()
                                                    if f.house.region_id == key])
             _max, _min = max(neighborhood_wealth.values()), min(neighborhood_wealth.values())

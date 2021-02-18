@@ -75,11 +75,11 @@ class Statistics(object):
         return np.average([h.rent_data[0] for h in houses.values() if h.rent_data is not None])
 
     def calculate_affordable_rent(self, families):
-        affordable = sum([1 if family.is_renting
-                          and family.last_permanent_income != 0
-                          and (family.house.rent_data[0] / family.last_permanent_income) < .3 else 0
+        affordable = np.sum([1 if family.is_renting
+                          and family.get_permanent_income() != 0
+                          and (family.house.rent_data[0] / family.get_permanent_income()) < .3 else 0
                           for family in families.values()])
-        renting = sum([family.is_renting for family in families.values()])
+        renting = np.sum([family.is_renting for family in families.values()])
         return affordable / renting
 
     def update_GDP_capita(self, firms, mun_id, mun_pop):
@@ -92,29 +92,12 @@ class Statistics(object):
         return dummy_gdp_capita
 
     def update_unemployment(self, agents, global_u=False):
-        dummy_out_workforce = 0
-        dummy_employed = 0
-        dummy_unemployed = 0
-
-        for agent in agents:
-            if agent.is_minor or agent.is_retired:
-                dummy_out_workforce += 1
-            else:
-                if agent.is_employed:
-                    dummy_employed += 1
-                else:
-                    dummy_unemployed += 1
-
-        if (dummy_unemployed + dummy_employed) == 0:
-            dummy_temp = 0
-        else:
-            dummy_temp = (dummy_unemployed / (dummy_unemployed + dummy_employed)) * 100
-
-        logger.info('Unemployment rate: %.2f' % dummy_temp)
-
+        employable = [m for m in agents if 16 < m.age < 70]
+        temp = len([m for m in employable if m.firm_id is None])/len(employable) if employable else 0
+        logger.info(f'Unemployment rate: {temp * 100:.2f}')
         if global_u:
-            self.global_unemployment_rate = dummy_temp
-        return dummy_temp
+            self.global_unemployment_rate = temp
+        return temp
 
     def calculate_average_workers(self, firms):
         dummy_avg_workers = np.sum([firms[firm].num_employees for firm in firms.keys()])
@@ -122,10 +105,10 @@ class Statistics(object):
 
     # Calculate wealth: families, firms and profits
     def calculate_families_median_wealth(self, families):
-        return np.median([family.last_permanent_income for family in families.values()])
+        return np.median([family.get_permanent_income() for family in families.values()])
 
     def calculate_families_wealth(self, families):
-        dummy_wealth = np.sum([families[family].last_permanent_income for family in families.keys()])
+        dummy_wealth = np.sum([families[family].get_permanent_income() for family in families.keys()])
         dummy_savings = np.sum([families[family].savings for family in families.keys()])
         return dummy_wealth, dummy_savings
 
@@ -151,7 +134,7 @@ class Statistics(object):
                            if families[family].num_members > 0])
 
     def calculate_GINI(self, families):
-        family_data = [families[family].last_permanent_income for family in families.keys()]
+        family_data = [families[family].get_permanent_income() for family in families.keys()]
         # Sort smallest to largest
         cumm = np.sort(family_data)
         # Values cannot be 0
@@ -164,7 +147,7 @@ class Statistics(object):
         return gini
 
     def calculate_regional_GINI(self, families):
-        family_data = [family.last_permanent_income for family in families]
+        family_data = [family.get_permanent_income() for family in families]
         # Sort smallest to largest
         cumm = np.sort(family_data)
         # Values cannot be 0

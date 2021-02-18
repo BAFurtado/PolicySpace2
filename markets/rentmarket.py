@@ -41,11 +41,14 @@ def collect_rent(houses, sim):
                             payment += cash
 
             tenant.rent_default = 1 if payment == 0 else 0
-            # Deposit change
-            tenant.update_balance(round(payment - rent, 2))
+            # Deposit change, if any. If payment is not enough in the end, landfamily gets the loss
+            # and does not receive payment.
+            if payment > rent:
+                tenant.update_balance(round(payment - rent, 2))
 
-            # Deposit money on landfamily
-            landfamily.update_balance(round(payment - taxes, 2))
+            # Deposit money on landfamily. Taxes are due only when below payment made. Otherwise, no rent id owed.
+            if payment > taxes:
+                landfamily.update_balance(round(payment - taxes, 2))
 
 
 class RentalMarket:
@@ -91,14 +94,14 @@ class RentalMarket:
         base_proportion = sim.PARAMS['INITIAL_RENTAL_PRICE']
         self.update_list(sim, to_rent)
         if families:
-            families.sort(key=lambda f: f.last_permanent_income, reverse=True)
+            families.sort(key=lambda f: f.get_permanent_income(), reverse=True)
             for family in families:
                 # Make sure list of vacant houses is up to date
                 self.unoccupied = [h for h in self.unoccupied if h.family_id is None]
                 # Matching
                 my_market = sim.seed.sample(self.unoccupied, min(len(self.unoccupied),
                                                                  int(sim.PARAMS['SIZE_MARKET']) * 3))
-                in_budget = [h for h in my_market if h.price * base_proportion < family.last_permanent_income]
+                in_budget = [h for h in my_market if h.price * base_proportion < family.get_permanent_income()]
                 if in_budget:
                     house = sim.seed.choice(in_budget)
                     price = house.price * base_proportion

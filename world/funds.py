@@ -2,6 +2,7 @@ import datetime
 from collections import defaultdict
 
 import pandas as pd
+import numpy as np
 
 from markets.housing import HousingMarket
 from .geography import STATES_CODES, state_string
@@ -23,16 +24,27 @@ class Funds:
             self.temporary_houses = defaultdict(list)
 
     def update_policy_families(self):
+        # Entering the list this month
+        incomes = [f.get_permanent_income() for f in self.sim.families.values()]
+        quantile = np.quantile(incomes, self.sim.PARAMS['POLICY_QUANTILE'])
+        for region in self.sim.regions.values():
+            # Unemployed, Default on rent from the region
+            self.sim.regions[region.id].registry[self.sim.clock.days] += [f for f in self.sim.families.values()
+                                                                          if f.get_permanent_income() < quantile
+                                                                          and f.house.region_id == region.id]
+        if self.sim.clock.days < self.sim.PARAMS['STARTING_DAY'] + datetime.timedelta(360):
+            return
+        # Entering the policy list. Includes families for past months as well
         for region in self.sim.regions.values():
             for keys in region.registry:
-                if keys > self.sim.clock.days - datetime.timedelta(360):
+                if keys > self.sim.clock.days - datetime.timedelta(self.sim.PARAMS['POLICY_MONTHS']):
                     self.policy_families[region.id[:7]] += region.registry[keys]
         for mun in self.policy_families.keys():
             # Make sure families on the list are still valid families, residing at the municipality
             self.policy_families[mun] = [f for f in self.policy_families[mun]
                                          if f.id in self.sim.families.keys() and f.house.region_id[:7] == mun]
             self.policy_families[mun] = list(set(f for f in self.policy_families[mun]))
-            self.policy_families[mun] = sorted(self.policy_families[mun], key=lambda f: f.last_permanent_income)
+            self.policy_families[mun] = sorted(self.policy_families[mun], key=lambda f: f.get_permanent_income())
 
     def apply_policies(self):
         if self.sim.PARAMS['POLICIES'] not in ['buy', 'rent', 'wage']:
@@ -41,12 +53,18 @@ class Funds:
         # Reset indicator every month to reflect subside in a given month, not cumulatively
         self.families_subsided = 0
         self.update_policy_families()
+        # Implement policies only after first year of simulation run
+        if self.sim.clock.days < self.sim.PARAMS['STARTING_DAY'] + datetime.timedelta(360):
+            return
         if self.sim.PARAMS['POLICIES'] == 'buy':
             self.buy_houses_give_to_families()
         elif self.sim.PARAMS['POLICIES'] == 'rent':
             self.pay_families_rent()
         else:
             self.distribute_funds_to_families()
+        # Resetting lists for next month
+        self.policy_families = defaultdict(list)
+        self.temporary_houses = defaultdict(list)
 
     def pay_families_rent(self):
         for mun in self.policy_money.keys():

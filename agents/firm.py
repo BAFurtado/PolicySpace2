@@ -235,7 +235,8 @@ class ConstructionFirm(Firm):
             # Number of houses being built is endogenously dependent on number of workers and productivity within a
             # parameter-specified number of months.
             if sum([self.building[b]['cost'] for b in self.building]) > params['CONSTRUCTION_ACC_CASH_FLOW'] * \
-                    self.total_qualification(params['PRODUCTIVITY_EXPONENT']) / params['PRODUCTIVITY_MAGNITUDE_DIVISOR']:
+                    self.total_qualification(params['PRODUCTIVITY_EXPONENT']) / \
+                    params['PRODUCTIVITY_MAGNITUDE_DIVISOR']:
                 return
 
         # Candidate regions for licenses and check of funds to buy license

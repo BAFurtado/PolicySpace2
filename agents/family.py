@@ -28,7 +28,7 @@ class Family:
         self.rent_default = 0
         self.rent_voucher = 0
         self.average_utility = 0
-        self.last_permanent_income = 0
+        self.last_permanent_income = list()
 
         # Previous region id
         if house is not None:
@@ -95,13 +95,16 @@ class Family:
     def invest(self, r, bank, y, m):
         # Savings is updated during consumption as the fraction of above permanent income that is not consumed
         # If savings is above a six-month period reserve money, the surplus is invested in the bank.
-        reserve_money = self.permanent_income(bank, r) * 6
+        reserve_money = self.get_permanent_income() * 6
         if self.savings > reserve_money > 0:
             bank.deposit(self, self.savings - reserve_money, datetime.date(y, m, 1))
             self.savings = reserve_money
 
     def total_wage(self):
         return sum(member.last_wage for member in self.members.values() if member.last_wage is not None)
+
+    def get_permanent_income(self):
+        return sum(self.last_permanent_income) / len(self.last_permanent_income) if self.last_permanent_income else 0
 
     def permanent_income(self, bank, r):
         # Equals Consumption (Bielefeld, 2018, pp.13-14)
@@ -110,21 +113,13 @@ class Family:
         r_1_r = r/(1 + r)
         # Calculated as "discounted some of current income and expected future income" plus "financial wealth"
         # Perpetuity of income is a fraction (r_1_r) of income t0 divided by interest r
-        self.last_permanent_income = r_1_r * t0 + r_1_r * (t0 / r) + self.get_wealth(bank) * r
-        return self.last_permanent_income
+        self.last_permanent_income.append(r_1_r * t0 + r_1_r * (t0 / r) + self.get_wealth(bank) * r)
+        return self.get_permanent_income()
 
     def prop_employed(self):
         """Proportion of members that are employed"""
-        unemployed, employed = 0, 0
-        for member in self.members.values():
-            if member.is_employable:
-                unemployed += 1
-            elif member.is_employed:
-                employed += 1
-        if employed + unemployed == 0:
-            return 0
-        else:
-            return employed / (employed + unemployed)
+        employable = [m for m in self.members.values() if 16 < m.age < 70]
+        return len([m for m in employable if m.firm_id is None])/len(employable) if employable else 0
 
     # Consumption ####################################################################################################
     def to_consume(self, central, r, year, month):
@@ -171,27 +166,24 @@ class Family:
             # Picks SIZE_MARKET number of firms at seed and choose the closest or the cheapest
             # Consumes from each product the chosen firm offers
             market = seed.sample(firms, min(len(firms), int(params['SIZE_MARKET'])))
-            # Choose between cheapest or closest
-            firm_strategy = seed.choice(['Price', 'Distance'])
+            market = [firm for firm in market if firm.total_quantity > 0]
+            if market:
+                # Choose between cheapest or closest
+                firm_strategy = seed.choice(['Price', 'Distance'])
 
-            if firm_strategy == 'Price':
-                # Choose firm with cheapest average prices
-                chosen_firm = min(market, key=lambda firm: firm.prices)
-            else:
-                # Choose closest firm
-                chosen_firm = min(market, key=lambda firm: self.house.distance_to_firm(firm))
+                if firm_strategy == 'Price':
+                    # Choose firm with cheapest average prices
+                    chosen_firm = min(market, key=lambda firm: firm.prices)
+                else:
+                    # Choose closest firm
+                    chosen_firm = min(market, key=lambda firm: self.house.distance_to_firm(firm))
 
-            # Buy from chosen company
-            change = chosen_firm.sale(money_to_spend, regions, params['TAX_CONSUMPTION'])
-            self.savings += change
+                # Buy from chosen company
+                change = chosen_firm.sale(money_to_spend, regions, params['TAX_CONSUMPTION'])
+                self.savings += change
 
-            # Update family utility
-            self.average_utility = money_to_spend - change
-            # After first year of simulation, add families to poverty register
-            if params['POLICY_COEFFICIENT']:
-                if self.average_utility == 0:
-                    if datetime.date(year, month, 1) > params['STARTING_DAY'] + datetime.timedelta(360):
-                        regions[self.region_id].registry[datetime.date(year, month, 1)].append(self)
+                # Update family utility
+                self.average_utility = money_to_spend - change
 
     @property
     def agents(self):
