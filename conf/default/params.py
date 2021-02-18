@@ -4,12 +4,12 @@ import datetime
 # MODEL PARAMETERS
 # FIRMS
 # Production function, labour with decaying exponent, Alpha for K. [0, 1]
-PRODUCTIVITY_EXPONENT = .6
+PRODUCTIVITY_EXPONENT = .7
 # Order of magnitude correction of production. Production divided by parameter
 PRODUCTIVITY_MAGNITUDE_DIVISOR = 10
 # GENERAL CALIBRATION PARAMETERS
 # Order of magnitude parameter of input into municipality investment
-MUNICIPAL_EFFICIENCY_MANAGEMENT = .00007
+MUNICIPAL_EFFICIENCY_MANAGEMENT = .00008
 # INTEREST. Choose either: 'nominal', 'real' or 'fixed'. Default 'real'
 INTEREST = 'real'
 
@@ -53,19 +53,19 @@ FPM_DISTRIBUTION = True
 POLICY_COEFFICIENT = 0.2
 # Policies alternatives may include: 'buy', 'rent' or 'wage' or 'no_policy'. For no policy set to empty strings ''
 # POLICY_COEFFICIENT needs to be > 0.
-POLICIES = 'wage'
-POLICY_MONTHS = 180
+POLICIES = 'no_policy'
+POLICY_MONTHS = 360
 POLICY_QUANTILE = .25
 # HOUSING AND REAL ESTATE MARKET
 # LOANS
 # Maximum age of borrower at the end of the contract
 MAX_LOAN_AGE = 75
 # Used to calculate monthly payment for the families, thus limiting maximum loan by number of months and age
-LOAN_PAYMENT_TO_PERMANENT_INCOME = .5
+LOAN_PAYMENT_TO_PERMANENT_INCOME = .6
 # Refers to the maximum loan monthly payment to total wealth
 # MAX_LOAN_PAYMENT_TO_WEALTH = .4
 # Refers to the maximum rate of the loan on the value of the estate
-MAX_LOAN_TO_VALUE = .3
+MAX_LOAN_TO_VALUE = .6
 
 # This parameter refers to the total amount of resources available at the bank.
 MAX_LOAN_BANK_PERCENT = .7
