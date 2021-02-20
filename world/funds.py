@@ -37,7 +37,7 @@ class Funds:
         # Entering the policy list. Includes families for past months as well
         for region in self.sim.regions.values():
             for keys in region.registry:
-                if keys > self.sim.clock.days - datetime.timedelta(self.sim.PARAMS['POLICY_MONTHS']):
+                if keys > self.sim.clock.days - datetime.timedelta(self.sim.PARAMS['POLICY_DAYS']):
                     self.policy_families[region.id[:7]] += region.registry[keys]
         for mun in self.policy_families.keys():
             # Make sure families on the list are still valid families, residing at the municipality

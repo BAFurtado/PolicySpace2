@@ -378,7 +378,7 @@ def distributions_acps(ctx):
 
     # ACPs with just one municipality
     exclude_list = ['CAMPO GRANDE', 'CAMPO DOS GOYTACAZES', 'FEIRA DE SANTANA', 'MANAUS',
-                    'PETROLINA - JUAZEIRO', 'TERESINA', 'UBERLANDIA']
+                    'PETROLINA - JUAZEIRO', 'TERESINA', 'UBERLANDIA', 'SAO PAULO']
     all_acps = pd.read_csv('input/ACPs_BR.csv', sep=';', header=0)
     acps = set(all_acps.loc[:, 'ACPs'].values.tolist())
     acps = list(acps)

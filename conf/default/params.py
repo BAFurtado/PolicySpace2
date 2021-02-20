@@ -1,22 +1,21 @@
 import datetime
 
-
 # MODEL PARAMETERS
 # FIRMS
 # Production function, labour with decaying exponent, Alpha for K. [0, 1]
-PRODUCTIVITY_EXPONENT = .7
+PRODUCTIVITY_EXPONENT = .6
 # Order of magnitude correction of production. Production divided by parameter
-PRODUCTIVITY_MAGNITUDE_DIVISOR = 10
+PRODUCTIVITY_MAGNITUDE_DIVISOR = 12
 # GENERAL CALIBRATION PARAMETERS
 # Order of magnitude parameter of input into municipality investment
-MUNICIPAL_EFFICIENCY_MANAGEMENT = .00008
+MUNICIPAL_EFFICIENCY_MANAGEMENT = .0001
 # INTEREST. Choose either: 'nominal', 'real' or 'fixed'. Default 'real'
 INTEREST = 'real'
 
 # By how much percentage to increase prices
 MARKUP = 0.15
 # Frequency firms change prices. Probability > than parameter
-STICKY_PRICES = .7
+STICKY_PRICES = .5
 # Number of firms consulted before consumption
 SIZE_MARKET = 10
 
@@ -49,13 +48,13 @@ FPM_DISTRIBUTION = True
 # fpm           TRUE,           FALSE,      TRUE,   FALSE
 # Results     fpm + eq. + loc,  locally,  fpm + eq,   eq
 
-# POVERTY POLICIES. If POLICY_COEFFICIENT = 0, do nothing.
+# POVERTY POLICIES. If POLICY_COEFFICIENT=0, do nothing.
 POLICY_COEFFICIENT = 0.2
 # Policies alternatives may include: 'buy', 'rent' or 'wage' or 'no_policy'. For no policy set to empty strings ''
 # POLICY_COEFFICIENT needs to be > 0.
 POLICIES = 'no_policy'
-POLICY_MONTHS = 360
-POLICY_QUANTILE = .25
+POLICY_DAYS = 360
+POLICY_QUANTILE = .2
 # HOUSING AND REAL ESTATE MARKET
 # LOANS
 # Maximum age of borrower at the end of the contract
@@ -63,7 +62,7 @@ MAX_LOAN_AGE = 75
 # Used to calculate monthly payment for the families, thus limiting maximum loan by number of months and age
 LOAN_PAYMENT_TO_PERMANENT_INCOME = .6
 # Refers to the maximum loan monthly payment to total wealth
-# MAX_LOAN_PAYMENT_TO_WEALTH = .4
+# MAX_LOAN_PAYMENT_TO_WEALTH=.4
 # Refers to the maximum rate of the loan on the value of the estate
 MAX_LOAN_TO_VALUE = .6
 
@@ -77,7 +76,7 @@ CAPPED_LOW_VALUE = .7
 # It can be True or 1 or if construction companies consider vacancy strongly it might be 2 [1 - (vacancy * VALUE)]
 OFFER_SIZE_ON_PRICE = 2
 # TOO LONG ON THE MARKET:
-# value = (1 - MAX_OFFER_DISCOUNT) * e ** (ON_MARKET_DECAY_FACTOR * MONTHS ON MARKET) + MAX_OFFER_DISCOUNT
+# value=(1 - MAX_OFFER_DISCOUNT) * e ** (ON_MARKET_DECAY_FACTOR * MONTHS ON MARKET) + MAX_OFFER_DISCOUNT
 # AS SUCH (-.02) DECAY OF 1% FIRST MONTH, 10% FIRST YEAR. SET TO 0 TO ELIMINATE EFFECT
 ON_MARKET_DECAY_FACTOR = -.01
 # LOWER BOUND, THAT IS, AT LEAST 50% PERCENT OF VALUE WILL REMAIN AT END OF PERIOD, IF PARAMETER IS .5
