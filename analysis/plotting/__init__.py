@@ -5,6 +5,8 @@ import matplotlib.pyplot as plt
 import pandas as pd
 
 import conf
+from pylab import cm
+from matplotlib.colors import Normalize
 from . import geo
 from ..output import OUTPUT_DATA_SPEC
 
@@ -56,11 +58,14 @@ class Plotter:
         p_pop = self.params.get('PERCENTAGE_ACTUAL_POP', conf.PARAMS['PERCENTAGE_ACTUAL_POP'])
         title = '{}\nAgents : {}% of Population'.format(title, p_pop * 100)
 
-        for d in datas:
-            plot = d.plot()
+        colors = cm.get_cmap('tab10' if len(labels) < 10 else 'tab20')
+        norm = Normalize(0, len(labels))
+        for i, d in enumerate(datas):
+            plot = d.plot(color=colors(norm(i)), linewidth=2)
 
         # Create the plot
-        plot.legend(loc='best', ncol=3, fancybox=True, shadow=False, framealpha=.25, labels=labels)
+        # plot.legend(loc='best', ncol=3, fancybox=True, shadow=False, framealpha=.25, labels=labels)
+        plot.legend(loc='best', ncol=3, labels=labels)
         # plot.set_title(title)
         plot.set_xlabel('Time')
         if y_label is not None:
