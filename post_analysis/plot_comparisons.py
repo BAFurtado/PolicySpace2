@@ -99,6 +99,6 @@ if __name__ == "__main__":
     # Get Data
     # column 5 - house_prices, column 6 - rent, column 4 - size
     f = r'//storage1/carga/modelo dinamico de simulacao/exits_python/ps2020/' \
-        r'LOAN_TO_VALUE__2021-01-12T14_07_23.738101\LOAN_TO_VALUE=0.1/0/temp_houses.csv'
+        r'run__2021-02-19T21_03_54.541893\0/temp_houses.csv'
     # f = sys.argv[1] if sys.argv[1] else f
     main(f)
