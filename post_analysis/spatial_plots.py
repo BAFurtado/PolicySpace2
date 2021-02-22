@@ -39,7 +39,7 @@ def normalize_data(data, col):
     return data
 
 
-def main(data, col, flag='rent', rad=12):
+def main(data, col, flag='rent', rad=11):
     base = generate_base_map(-15.77972, -47.92972)
     # data = restrict_quantile(data, col)
     data = normalize_data(data, col)
@@ -57,7 +57,8 @@ if __name__ == '__main__':
     # Comparable between REAL and SIMULATED data
     # #######     SIMULATED DATA ###############
     # Read file
-    file = r'../output/run__2020-12-08T17_59_47.737770/0/temp_houses.csv'
+    file = r'//storage1/carga/modelo dinamico de simulacao/exits_python/ps2020/' \
+        r'run__2021-02-19T21_03_54.541893\0/temp_houses.csv'
     file = pd.read_csv(file, sep=';')
     # Add columns
     file = organize(file)

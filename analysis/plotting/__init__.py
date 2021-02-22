@@ -61,7 +61,7 @@ class Plotter:
 
         # Create the plot
         plot.legend(loc='best', ncol=3, fancybox=True, shadow=False, framealpha=.25, labels=labels)
-        plot.set_title(title)
+        # plot.set_title(title)
         plot.set_xlabel('Time')
         if y_label is not None:
             plot.set_ylabel(y_label)
