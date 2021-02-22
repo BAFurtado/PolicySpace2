@@ -6,7 +6,7 @@ from scipy import stats
 from statsmodels.graphics.gofplots import qqplot_2samples as qq
 
 from linear_regressions import normalize_data
-import sys
+
 
 def plot_hist(x, y, name=None, params=None):
     sns.set()
