@@ -10,27 +10,26 @@ from analysis.output import OUTPUT_DATA_SPEC as cols
 def prepare_data(file, labels):
     database = dict()
     for each in os.listdir(file):
-        data = pd.read_csv(os.path.join(file, each), header=None, sep=';', names=labels)
-        data['month'] = pd.to_datetime(data.month).dt.date
-        data = data[data.loc[:, 'month'] > datetime.date(2011, 1, 1)]
-        database[each.split('.')[0][9:]] = data
+        d = pd.read_csv(os.path.join(file, each), header=None, sep=';', names=labels)
+        d['month'] = pd.to_datetime(d.month).dt.date
+        d = d[d.loc[:, 'month'] > datetime.date(2011, 1, 1)]
+        database[each.split('.')[0][9:]] = d
     return database
 
 
 def plot(database, lbls, dpi=720, ft='png'):
-    colors = ['tab:blue', 'tab:orange', 'tab:green', 'tab:red']
-    policies = {'buy': 'Acquisition', 'no_policy': 'No Policy', 'rent': 'Rent voucher',
-                'wage': 'Monetary aid'}
+    colors = {'buy': 'tab:red', 'no_policy': 'tab:orange', 'rent': 'tab:blue', 'wage': 'tab:green'}
     fmts = {'gdp_index': '{:.0f}',
             'families_median_wealth': '{:.2f}',
             'gini_index': '{:.3f}',
             'average_utility': '{:.2f}'}
 
     for lb in lbls:
-        if lb in ['gdp_index', 'families_median_wealth', 'gini_index', 'average_utility']:
+        # if lb in ['gdp_index', 'families_median_wealth', 'gini_index', 'average_utility']:
+        if lb not in ['month']:
             fig, ax = plt.subplots(dpi=dpi)
             for i, data in enumerate(database):
-                database[data].plot('month', lb, ax=ax, linewidth=2, color=colors[i])
+                database[data].plot('month', lb, ax=ax, linewidth=2, color=colors[data])
 
             ax.spines['top'].set_visible(False)
             ax.spines['bottom'].set_visible(True)
@@ -39,7 +38,7 @@ def plot(database, lbls, dpi=720, ft='png'):
             ax.get_xaxis().tick_bottom()
             ax.get_yaxis().tick_left()
             ax.get_legend().remove()
-            fmt = fmts[lb]
+            fmt = fmts[lb] if lb in fmts else '{:.2f}'
             ax.yaxis.set_major_formatter(plt.FuncFormatter(fmt.format))
             ax.set(xlabel='Year')
             plt.grid(True, 'major', 'y', ls='-', lw=.5, c='k', alpha=.3)
@@ -59,4 +58,5 @@ if __name__ == '__main__':
     # plt.show()
 
     f = r'../PS_text/policy_data'
-    plot(prepare_data(f, dta.columns), cols['stats']['columns'])
+    data = prepare_data(f, dta.columns)
+    # plot(prepare_data(f, dta.columns), cols['stats']['columns'])
