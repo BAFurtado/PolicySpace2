@@ -106,8 +106,6 @@ def main(file):
 if __name__ == "__main__":
     # Get Data
     # column 5 - house_prices, column 6 - rent, column 4 - size
-    # f = r'//storage1/carga/modelo dinamico de simulacao/exits_python/ps2020/' \
-    #     r'run__2021-02-19T21_03_54.541893\0/temp_houses.csv'
     # f = sys.argv[1] if sys.argv[1] else f
-    f = r'../output/run__2021-02-19T12_38_34.613283/0/temp_houses.csv'
+    f = r'\\storage1\carga\modelo dinamico de simulacao\Exits_python\PS2020\run__2021-02-19T21_03_54.541893\0/temp_houses.csv'
     main(f)

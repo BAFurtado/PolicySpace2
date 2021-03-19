@@ -68,7 +68,8 @@ if __name__ == '__main__':
     # Comparable between REAL and SIMULATED data
     # #######     SIMULATED DATA ###############
     # Read file
-    file = r'../output/run__2021-02-19T12_38_34.613283/0/temp_houses.csv'
+    file = r'\\storage1\carga\modelo dinamico de simulacao' \
+           r'\Exits_python\PS2020\run__2021-02-19T21_03_54.541893\0/temp_houses.csv'
     file = pd.read_csv(file, sep=';')
     # Add columns
     file = organize(file)

@@ -15,15 +15,15 @@ def sensitivity(path='conf/default/params.py',
                 txt='PROCESSING_ACPS = ',
                 c='python main.py -c 8 -n 20 sensitivity POLICIES'):
     if alt is None:
-        alt = ["['BRASILIA']", "['BELO HORIZONTE']", "['FORTALEZA']", "['CAMPINAS']", "['PORTO ALEGRE']"]
+        alt = ["['BELO HORIZONTE']", "['FORTALEZA']", "['CAMPINAS']", "['PORTO ALEGRE']"]
     for each in alt:
         search_text = f"{txt}{default}"
         new_text = f'{txt}{each}'
         replace_in_file(path, search_text, new_text)
-        # os.system(c)
-        # search_text = f"{txt}{default}"
-        # new_text = f'{txt}{each}'
-        # replace_in_file(path, new_text, search_text)
+        os.system(c)
+        search_text = f"{txt}{default}"
+        new_text = f'{txt}{each}'
+        replace_in_file(path, new_text, search_text)
 
 
 def main(c):
@@ -60,7 +60,7 @@ if __name__ == '__main__':
          'MARRIAGE_CHECK_PROBABILITY:.02:.05:7 ' \
          'PERCENTAGE_ACTUAL_POP:.005:.03:6'
 
-    c3 = 'python main.py -c 10 -n 20 sensitivity ' \
+    c3 = 'python main.py -c 8 -n 20 sensitivity ' \
          'TAX_CONSUMPTION:.27:.33:7 ' \
          'TAX_LABOR:.12:.18:7 ' \
          'TAX_ESTATE_TRANSACTION:.001:.007:7 ' \
@@ -72,20 +72,20 @@ if __name__ == '__main__':
 
     c4 = 'python main.py -c 8 -n 5 acps' \
 
-    c5 = 'python main.py -c 10 -n 20 distributions' \
+    c5 = 'python main.py -c 8 -n 20 distributions' \
 
     c6 = 'python main.py -c 10 -n 20 sensitivity POLICIES'
 
     c7 = f'python main.py -c 10 -n 20 run'
+    #
+    # main(c7)
+    #
+    # for each in [c6, c0, c1, c2]:
+    #     main(each)
 
-    main(c7)
-
-    for each in [c6, c0, c1, c2]:
-        main(each)
-
-    sensitivity()
-    sensitivity(alt=['180', '360'], default='360', txt='POLICY_DAYS = ')
-    sensitivity(alt=['.1', '.3'], default='.2', txt='POLICY_QUANTILE = ')
+    # sensitivity()
+    # sensitivity(alt=['180', '360'], default='360', txt='POLICY_DAYS = ')
+    # sensitivity(alt=['.1', '.3'], default='.2', txt='POLICY_QUANTILE = ')
 
     for each in [c3, c4, c5]:
         main(each)

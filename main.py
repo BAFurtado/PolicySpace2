@@ -400,8 +400,7 @@ def acps(ctx):
     """
     confs = []
     # ACPs with just one municipality
-    exclude_list = ['CAMPO GRANDE', 'CAMPO DOS GOYTACAZES', 'FEIRA DE SANTANA', 'MANAUS',
-                    'PETROLINA - JUAZEIRO', 'TERESINA', 'UBERLANDIA']
+    exclude_list = ['SAO PAULO', 'RIO DE JANEIRO', 'BELO HORIZONTE']
     all_acps = pd.read_csv('input/ACPs_BR.csv', sep=';', header=0)
     acps = set(all_acps.loc[:, 'ACPs'].values.tolist())
     acps = list(acps)
@@ -409,6 +408,11 @@ def acps(ctx):
         if acp not in exclude_list:
             confs.append({
                 'PROCESSING_ACPS': [acp]
+            })
+        else:
+            confs.append({
+                'PROCESSING_ACPS': [acp],
+                'PERCENTAGE_ACTUAL_POP': .005
             })
     logger.info('Running over ACPs, {} run(s) each'.format(ctx.obj['runs']))
     multiple_runs(confs, ctx.obj['runs'], ctx.obj['cpus'], ctx.obj['output_dir'])
