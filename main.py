@@ -188,6 +188,7 @@ def plot(input_paths, output_path, params, avg=None, sim=None, only=None):
         report.stats('')
 
     keys = ['general', 'firms',
+            'regional_stats',
             'construction', 'houses',
             'families', 'banks']
     if only is not None:
@@ -420,7 +421,7 @@ def acps(ctx):
 
 @main.command()
 @click.argument('params', nargs=-1)
-def make_plots(params, flag=None):
+def make_plots(params):
     """
     (Re)generate plots for an output directory
     """
@@ -428,10 +429,10 @@ def make_plots(params, flag=None):
     plot_results(output_dir)
     if len(params) > 1:
         results = json.load(open(os.path.join(output_dir, 'meta.json'), 'r'))
-        keys = ['general', 'firms', 'construction', 'houses', 'families', 'banks']
+        keys = ['general', 'firms', 'construction', 'houses', 'families', 'banks', 'regional_stats']
         for res in results:
-            plot([('run', res['runs'][0])], os.path.join(res['runs'][0], 'plots'), params=res['params'], only=keys)
-    # TODO: ENHANCEMENT: include regional and spatial on redo
+            for i in range(len(res['runs'])):
+                plot([('run', res['runs'][i])], os.path.join(res['runs'][i], 'plots'), params=res['params'], only=keys)
     else:
         print('To plot internal maps: enter True after output directory')
 
