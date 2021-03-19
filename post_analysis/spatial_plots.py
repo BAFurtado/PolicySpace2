@@ -53,6 +53,17 @@ def main(data, col, flag='rent', rad=11):
     base.save(filepath)
 
 
+def basic_description(data):
+    print(f'Number observations: {len(data)}')
+    print(f'Number unique neighborhoods {len(data.neighbor.unique())}')
+
+    for col in data.columns:
+        try:
+            print(f'Median values for {col}: {data[col].median():,.4f}')
+        except TypeError:
+            pass
+
+
 if __name__ == '__main__':
     # Comparable between REAL and SIMULATED data
     # #######     SIMULATED DATA ###############
@@ -67,15 +78,20 @@ if __name__ == '__main__':
     file = file[file['months'] == '2019-12-01']
     file = file.rename(columns={'lat': 'latitude', 'long': 'longitude'})
 
-    main(file, 'house_value', 'simulated_sales')
-    main(file, 'rent', 'simulated_rent')
+    r = 11
+
+    main(file, 'house_value', 'simulated_sales', rad=r)
+    main(file, 'rent', 'simulated_rent', rad=r)
 
     # #######     REAL DATA ###############
     n = 300
+    r = 14
     file = f'sensible_sales_{n}.csv'
     real_sales_data = pd.read_csv(file, sep=';')
-    main(real_sales_data, 'price', 'real_sales', rad=14)
+    basic_description(real_sales_data)
+    main(real_sales_data, 'price', 'real_sales', rad=r)
 
     file = f'sensible_rent_{n}.csv'
     real_rent_data = pd.read_csv(file, sep=';')
-    main(real_rent_data, 'price', 'real_rent', rad=16)
+    basic_description(real_rent_data)
+    main(real_rent_data, 'price', 'real_rent', rad=r)
