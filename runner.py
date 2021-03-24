@@ -77,6 +77,8 @@ if __name__ == '__main__':
     c6 = 'python main.py -c 10 -n 20 sensitivity POLICIES'
 
     c7 = f'python main.py -c 10 -n 20 run'
+
+    c8 = f'python main.py -c 8 -n 20 sensitivity "PROCESSING_ACPS-BRASILIA-CAMPINAS-FORTALEZA-BELO HORIZONTE-PORTO ALEGRE"'
     #
     # main(c7)
     #

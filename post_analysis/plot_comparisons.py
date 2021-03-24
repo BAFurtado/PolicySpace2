@@ -18,6 +18,7 @@ def plot_hist(x, y, name=None, params=None):
     plt.legend()
     if name:
         plt.savefig(f'output/{name}.png')
+        plt.savefig(f'output/{name}.eps', format='eps')
     else:
         plt.show()
     plt.close()
@@ -37,6 +38,7 @@ def plot_qq(x, y, name=None, params=None):
     plt.legend(labels, frameon=False)
     if name:
         plt.savefig(f'output/{name}.png')
+        plt.savefig(f'output/{name}.eps', format='eps')
     else:
         plt.show()
     plt.close()
