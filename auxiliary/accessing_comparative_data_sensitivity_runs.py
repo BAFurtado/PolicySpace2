@@ -19,10 +19,8 @@ def moving_files(path1, path2):
 
 
 def reading_summarizing_tables(path1, path2, col='families_helped'):
-    tables = [f for f in os.listdir(os.path.join(path1, path2)) if f.endswith('.csv')]
-    for t in tables:
         d = pd.read_csv(os.path.join(path1, path2, t), sep=';', names=cols['stats']['columns'])
-        return f'{t}: avg {col} {np.mean(d[col]):.2f}'
+        return f'{t}: avg {col} {np.mean(d[col]):.2f}\n'
 
 
 if __name__ == '__main__':
@@ -35,7 +33,9 @@ if __name__ == '__main__':
         except FileNotFoundError:
             continue
         with open(f'{p1}/Report_{run}.txt', 'a') as f:
+            f.write(read_meta_json.read_meta(p1, run))
             for each in cols['stats']['columns'][1:]:
-                f.write(read_meta_json.read_meta(p1, run))
-                f.write(reading_summarizing_tables(p1, run, each))
-                f.write('_____________')
+                tables = [f for f in os.listdir(os.path.join(p1, run)) if f.endswith('.csv')]
+                for t in tables:
+                    f.write(reading_summarizing_tables(p1, run, each))
+                f.write('_____________\n')
