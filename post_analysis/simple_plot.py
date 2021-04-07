@@ -49,6 +49,7 @@ def plot(database, lbls, path, dpi=720, ft='png'):
             n = os.path.join(path, f'{lb}.{ft}')
             plt.savefig(n)
             # plt.show()
+            plt.close(fig)
 
 
 def organizing_files_avg_policy(path):
@@ -62,8 +63,9 @@ if __name__ == '__main__':
 
     # dta.gdp_index.plot()
     # plt.show()
-    p = r'\\storage1\carga\modelo dinamico de simulacao\Exits_python\PS2020' \
-        r'\POLICIES__2021-02-19T22_39_56.035769'
+    p = r'\\storage1\carga\modelo dinamico de simulacao' \
+        r'\Exits_python\PS2020\POLICIES__2021-02-24T19_04_28.220940'
+
     pths = organizing_files_avg_policy(p)
     data = prepare_data(pths, dta.columns)
     plot(data, dta.columns, p)

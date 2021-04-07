@@ -1,5 +1,6 @@
 import os
 import fileinput
+import datetime
 
 
 def replace_in_file(file_path, search_text, new_text):
@@ -88,11 +89,14 @@ if __name__ == '__main__':
     # sensitivity()
     # sensitivity(alt=['180', '360'], default='360', txt='POLICY_DAYS = ')
     # sensitivity(alt=['.1', '.3'], default='.2', txt='POLICY_QUANTILE = ')
+    sensitivity(alt=['.1', '.3'], default='.2', txt='POLICY_COEFFICIENT = ')
+    # sensitivity(alt=['7200'], default='3652', txt='TOTAL_DAYS = ')
+    # Manually 2000-2030 e 2000-2020
 
-    for each in [c3, c4, c5]:
-        main(each)
-
-    sensitivity(alt=['datetime.date(2000, 1, 1)'], txt='STARTING_DAY = ',
-                c=f'python main.py -c 10 -n 20 run')
-    sensitivity(alt=['(datetime.date(2030, 1, 1) - STARTING_DAY).days'], txt='TOTAL_DAYS = ',
-                c=f'python main.py -c 10 -n 20 run')
+    # for each in [c3, c4, c5]:
+    #     main(each)
+    #
+    # sensitivity(alt=['datetime.date(2000, 1, 1)'], txt='STARTING_DAY = ',
+    #             c=f'python main.py -c 10 -n 20 run')
+    # sensitivity(alt=['(datetime.date(2030, 1, 1) - STARTING_DAY).days'], txt='TOTAL_DAYS = ',
+    #             c=f'python main.py -c 10 -n 20 run')

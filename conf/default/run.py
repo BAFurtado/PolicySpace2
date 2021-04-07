@@ -28,7 +28,7 @@ PLOT_EACH_RUN = False
 # Spatial plots only works when PLOT_EACH_RUN is True
 SAVE_SPATIAL_PLOTS = False
 # 'png' or 'eps'
-PLOT_FORMAT = 'eps'
+PLOT_FORMAT = 'png'
 PLOT_REGIONAL = False
 
 # Plot DPI. Lower ones will plot faster

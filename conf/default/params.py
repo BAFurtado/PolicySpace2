@@ -49,11 +49,13 @@ FPM_DISTRIBUTION = True
 # Results     fpm + eq. + loc,  locally,  fpm + eq,   eq
 
 # POVERTY POLICIES. If POLICY_COEFFICIENT=0, do nothing.
+# Size of the budget designated to the policy
 POLICY_COEFFICIENT = 0.2
 # Policies alternatives may include: 'buy', 'rent' or 'wage' or 'no_policy'. For no policy set to empty strings ''
 # POLICY_COEFFICIENT needs to be > 0.
 POLICIES = 'no_policy'
 POLICY_DAYS = 360
+# Size of the poorest families to be helped
 POLICY_QUANTILE = .2
 # HOUSING AND REAL ESTATE MARKET
 # LOANS
