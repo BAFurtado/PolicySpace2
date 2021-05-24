@@ -65,32 +65,34 @@ if __name__ == '__main__':
          'TAX_LABOR:.12:.18:7 ' \
          'TAX_ESTATE_TRANSACTION:.001:.007:7 ' \
          'TAX_FIRM:.12:.18:7 ' \
-         'LOT-COST:.1:.3:5 ' \
          'CAPPED_TOP_VALUE:1:1.5:6 ' \
          'CAPPED_LOW_VALUE:.5:1:6 ' \
          'TAX_PROPERTY:.001:.007:7'
+
+    x = 'python main.py -c 10 -n 20 sensitivity LOT_COST:.1:.3:5'
 
     c4 = 'python main.py -c 8 -n 5 acps' \
 
     c5 = 'python main.py -c 10 -n 20 distributions' \
 
-    c6 = 'python main.py -c 10 -n 20 sensitivity POLICIES'
+    c6 = 'python main.py -c 10 -n 20 sensitivity POLICIES' \
 
     c7 = f'python main.py -c 10 -n 20 run'
 
-    main(c7)
+    main(x)
 
-    for each in [c6, c0, c1, c2]:
-        main(each)
+    # for each in [c6, c0, c1, c2]:
+    #     main(each)
+    #
+    # sensitivity()
+    # sensitivity(alt=['180', '360'], default='360', txt='POLICY_DAYS = ')
+    # sensitivity(alt=['.1', '.3'], default='.2', txt='POLICY_QUANTILE = ')
+    #
+    # for each in [c3, c4, c5]:
+    #     main(each)
+    #
+    # sensitivity(alt=['datetime.date(2000, 1, 1)'], txt='STARTING_DAY = ',
+    #             c=f'python main.py -c 10 -n 20 run')
+    # sensitivity(alt=['(datetime.date(2030, 1, 1) - STARTING_DAY).days'], txt='TOTAL_DAYS = ',
+    #             c=f'python main.py -c 10 -n 20 run')
 
-    sensitivity()
-    sensitivity(alt=['180', '360'], default='360', txt='POLICY_DAYS = ')
-    sensitivity(alt=['.1', '.3'], default='.2', txt='POLICY_QUANTILE = ')
-
-    for each in [c3, c4, c5]:
-        main(each)
-
-    sensitivity(alt=['datetime.date(2000, 1, 1)'], txt='STARTING_DAY = ',
-                c=f'python main.py -c 10 -n 20 run')
-    sensitivity(alt=['(datetime.date(2030, 1, 1) - STARTING_DAY).days'], txt='TOTAL_DAYS = ',
-                c=f'python main.py -c 10 -n 20 run')
