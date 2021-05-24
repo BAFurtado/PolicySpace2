@@ -122,5 +122,5 @@ class RentalMarket:
                     if vacancy_value < sim.PARAMS['MAX_OFFER_DISCOUNT']:
                         vacancy_value = sim.PARAMS['MAX_OFFER_DISCOUNT']
                     price *= vacancy_value
-                # Decision on moving. If no house, move, else, consider
+                # Decision on moving. If no house, move, else, consider. If worse quality, give up on renting.
                 self.maybe_move(family, house, price, sim)

@@ -18,6 +18,7 @@ def plot_hist(x, y, name=None, params=None):
     plt.legend()
     if name:
         plt.savefig(f'output/{name}.png')
+        plt.savefig(f'output/{name}.eps', format='eps')
     else:
         plt.show()
     plt.close()
@@ -37,6 +38,7 @@ def plot_qq(x, y, name=None, params=None):
     plt.legend(labels, frameon=False)
     if name:
         plt.savefig(f'output/{name}.png')
+        plt.savefig(f'output/{name}.eps', format='eps')
     else:
         plt.show()
     plt.close()
@@ -73,11 +75,17 @@ def prepare_data(file, real_sales_data=None, real_rental_data=None):
 
 
 def ks_test(rvs1, rvs2, significance_level=0.1):
-    """kolmogorov-smirnov test. if returns True, then cannot reject the null hypothesis that
+    """kolmogorov-smirnov test. if p value is high cannot reject the null hypothesis that
     both samples are from the same distribution, else reject
+
+    'So the null-hypothesis for the KT test is that the distributions are the same.
+    'Thus, the lower your p value the greater the statistical evidence you have to reject the null hypothesis
+    'and conclude the distributions are different.
+    
     """
-    d, p = stats.ks_2samp(rvs1, rvs2)
-    return p > significance_level, p, d
+    ks, p = stats.ks_2samp(rvs1, rvs2)
+    return f"{'different' if p < significance_level else 'cannot say is the same'}", \
+           f'p_value {p:.4f}', f'ks statistic {ks:.4f}'
 
 
 def main(file):
@@ -91,14 +99,15 @@ def main(file):
     plot_hist(s_sales['price_util'], r_sales['price_util'], name='h_sales_' + params[-16:-10], params=params)
     plot_hist(s_rent['price_util'], r_rent['price_util'], name='h_rent_' + params[-16:-10], params=params)
 
+    print('SALES')
     print(ks_test(s_sales['price_util'], r_sales['price_util']))
+    print('RENT')
     print(ks_test(s_rent['price_util'], r_rent['price_util']))
 
 
 if __name__ == "__main__":
     # Get Data
     # column 5 - house_prices, column 6 - rent, column 4 - size
-    f = r'//storage1/carga/modelo dinamico de simulacao/exits_python/ps2020/' \
-        r'run__2021-02-19T21_03_54.541893\0/temp_houses.csv'
     # f = sys.argv[1] if sys.argv[1] else f
+    f = r'\\storage1\carga\modelo dinamico de simulacao\Exits_python\PS2020\run__2021-02-19T21_03_54.541893\0/temp_houses.csv'
     main(f)

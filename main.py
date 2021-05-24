@@ -188,6 +188,7 @@ def plot(input_paths, output_path, params, avg=None, sim=None, only=None):
         report.stats('')
 
     keys = ['general', 'firms',
+            'regional_stats',
             'construction', 'houses',
             'families', 'banks']
     if only is not None:
@@ -259,7 +260,7 @@ def gen_output_dir(command):
 @click.option('-p', '--params', help='JSON of params override')
 @click.option('-r', '--config', help='JSON of run config override')
 def main(ctx, runs, cpus, params, config):
-    if conf.RUN['SAVE_AGENTS_DATA'] == None:
+    if conf.RUN['SAVE_AGENTS_DATA'] is None:
         logger.warn('Warning!!! Are you sure you do NOT want to save AGENTS\' data?')
 
     # apply any top-level overrides, if specified
@@ -400,8 +401,7 @@ def acps(ctx):
     """
     confs = []
     # ACPs with just one municipality
-    exclude_list = ['CAMPO GRANDE', 'CAMPO DOS GOYTACAZES', 'FEIRA DE SANTANA', 'MANAUS',
-                    'PETROLINA - JUAZEIRO', 'TERESINA', 'UBERLANDIA']
+    exclude_list = ['SAO PAULO', 'RIO DE JANEIRO', 'BELO HORIZONTE']
     all_acps = pd.read_csv('input/ACPs_BR.csv', sep=';', header=0)
     acps = set(all_acps.loc[:, 'ACPs'].values.tolist())
     acps = list(acps)
@@ -410,13 +410,18 @@ def acps(ctx):
             confs.append({
                 'PROCESSING_ACPS': [acp]
             })
+        else:
+            confs.append({
+                'PROCESSING_ACPS': [acp],
+                'PERCENTAGE_ACTUAL_POP': .005
+            })
     logger.info('Running over ACPs, {} run(s) each'.format(ctx.obj['runs']))
     multiple_runs(confs, ctx.obj['runs'], ctx.obj['cpus'], ctx.obj['output_dir'])
 
 
 @main.command()
 @click.argument('params', nargs=-1)
-def make_plots(params, flag=None):
+def make_plots(params):
     """
     (Re)generate plots for an output directory
     """
@@ -424,10 +429,10 @@ def make_plots(params, flag=None):
     plot_results(output_dir)
     if len(params) > 1:
         results = json.load(open(os.path.join(output_dir, 'meta.json'), 'r'))
-        keys = ['general', 'firms', 'construction', 'houses', 'families', 'banks']
+        keys = ['general', 'firms', 'construction', 'houses', 'families', 'banks', 'regional_stats']
         for res in results:
-            plot([('run', res['runs'][0])], os.path.join(res['runs'][0], 'plots'), params=res['params'], only=keys)
-    # TODO: ENHANCEMENT: include regional and spatial on redo
+            for i in range(len(res['runs'])):
+                plot([('run', res['runs'][i])], os.path.join(res['runs'][i], 'plots'), params=res['params'], only=keys)
     else:
         print('To plot internal maps: enter True after output directory')
 

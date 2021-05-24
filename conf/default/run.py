@@ -15,7 +15,7 @@ PRINT_STATISTICS_AND_RESULTS_DURING_PROCESS = True
 PRINT_FINAL_STATISTICS_ABOUT_AGENTS = False
 
 # Inform numbers in percentage of the period
-TIME_TO_BE_ELIMINATED = 0.1
+TIME_TO_BE_ELIMINATED = .05
 
 # Saving adjustments
 # If you save_plots (in a multiple run), you need AVERAGE_DATA = ['stats'] below!
@@ -32,7 +32,7 @@ PLOT_FORMAT = 'png'
 PLOT_REGIONAL = False
 
 # Plot DPI. Lower ones will plot faster
-PLOT_DPI = 360
+PLOT_DPI = 600
 
 # Save Agents data 'MONTHLY' or 'QUARTERLY', 'ANNUALLY', or None
 SAVE_AGENTS_DATA = 'MONTHLY'
