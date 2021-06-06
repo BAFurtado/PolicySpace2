@@ -111,7 +111,7 @@ class Family:
         # Using last wage available as base for permanent income calculus: total_wage = Human Capital
         t0 = self.total_wage()
         r_1_r = r/(1 + r)
-        # Calculated as "discounted some of current income and expected future income" plus "financial wealth"
+        # Calculated as "discounted sum of current income and expected future income" plus "financial wealth"
         # Perpetuity of income is a fraction (r_1_r) of income t0 divided by interest r
         self.last_permanent_income.append(r_1_r * t0 + r_1_r * (t0 / r) + self.get_wealth(bank) * r)
         return self.get_permanent_income()

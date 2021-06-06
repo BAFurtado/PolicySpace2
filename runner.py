@@ -76,12 +76,11 @@ if __name__ == '__main__':
 
     c5 = 'python main.py -c 8 -n 20 distributions' \
 
-    c6 = 'python main.py -c 10 -n 20 sensitivity POLICIES' \
+    c6 = 'python main.py -c 8 -n 2 sensitivity POLICIES' \
 
-    c7 = f'python main.py -c 10 -n 20 run'
+    c7 = f'python main.py -c 1 -n 1 run'
 
-
-    main(x)
+    main(c7)
 
     # for each in [c6, c0, c1, c2]:
     #     main(each)

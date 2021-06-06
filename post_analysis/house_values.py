@@ -134,7 +134,7 @@ def cut(f, n=10000):
 
 
 if __name__ == "__main__":
-    location = f'../output/run__2020-11-04T16_58_43.402477/0/temp_houses.csv'
+    location = fr'\\storage1\carga\MODELO DINAMICO DE SIMULACAO\Exits_python\PS2020\POLICIES__2021-02-25T11_28_10.744348\POLICIES=no_policy\0/temp_houses.csv'
     file = pd.read_csv(location, sep=';', header=None)
     try:
         mun_names = pd.read_csv('./input/names_and_codes_municipalities.csv', sep=';', header=0)
