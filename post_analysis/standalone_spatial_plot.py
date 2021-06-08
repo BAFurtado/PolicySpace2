@@ -42,17 +42,35 @@ def prepare_data(path):
     return policies
 
 
-def plot(family_coords, name):
+def restrict_quantile(data, col, max_q=.95, min_q=.05):
+    tmp = data[data[col] < data[col].quantile(max_q)]
+    tmp = tmp[tmp[col] > tmp[col].quantile(min_q)]
+    return tmp
+
+
+def prepare_real_data(path):
+    r = pd.read_csv(path, sep=';')
+    r = r[['longitude', 'latitude', 'price_util']]
+    r.columns = ['x', 'y', 'price']
+    r = r.dropna()
+    r = restrict_quantile(r, 'price', .97, .03)
+    r['price'] = scaler.fit_transform(r[['price']])
+    # Adding point geometry on pandas DataFrame
+    r['geometry'] = [Point(xy) for xy in zip(r.x, r.y)]
+    # Creating geodataframe
+    r = gpd.GeoDataFrame(r, geometry='geometry')
+    return r
+
+
+def plot(family_coords, name, c='inferno'):
     """Generate a spatial plot"""
-    cmap = cm.get_cmap('viridis')
+    cmap = cm.get_cmap(c)
 
     # Loading the shapefiles
     full_region = gpd.read_file('../input/shapes/mun_ACPS_ibge_2014_latlong_wgs1984_fixed.shp')
     urban_region = gpd.read_file('../input/shapes/URBAN_IBGE_ACPs.shp')
 
-    family_plots = ['price']
     plots = ['price']
-    figs = []
 
     for p in plots:
         # Starting the plot
@@ -71,30 +89,32 @@ def plot(family_coords, name):
             shape_select.plot(ax=ax, color='grey', linewidth=0.5, alpha=.7, edgecolor='black')
 
         # Plotting families locations
-        ax = family_coords.plot(ax=ax, column=p, cmap=cmap, markersize=12, marker='.', alpha=.5)
+        ax = family_coords.plot(ax=ax, column=p, cmap=cmap, markersize=13, marker='.', alpha=.5)
 
-        minx, miny, maxx, maxy = -48.5, -16.3, -47.25, -15.4
+        minx, miny, maxx, maxy = -48.5, -16.3, -47.6, -15.4
         ax.set_xlim(minx, maxx)
         ax.set_ylim(miny, maxy)
 
         cax = fig.add_axes([0.9, 0.1, 0.03, 0.8])
-        sm = plt.cm.ScalarMappable(cmap='viridis', norm=plt.Normalize(vmin=0, vmax=1))
+        sm = plt.cm.ScalarMappable(cmap=c, norm=plt.Normalize(vmin=0, vmax=1))
         sm._A = []
         fig.colorbar(sm, cax=cax)
 
         # Adding the grid location, title, axes labels
         ax.grid(True, color='grey', linestyle='-')
-        ax.set_title(p.capitalize().replace('_', ' '))
+        # ax.set_title(p.capitalize().replace('_', ' '))
         ax.set_xlabel('Longitude (in degrees)')
         ax.set_ylabel('Latitude (in degrees)')
-        plt.show()
-        plt.savefig(f'{name}.png')
-        figs.append((p, fig))
-    return figs
+        plt.savefig(f'output/maps/{name}.png', bbox_inches='tight')
+        plt.close()
+        # plt.show()
 
 
 if __name__ == '__main__':
-    p = r'\\storage1\carga\MODELO DINAMICO DE SIMULACAO\Exits_python\PS2020\POLICIES__2021-06-06T14_22_49.049768'
-    ps = prepare_data(p)
+    pa = r'\\storage1\carga\MODELO DINAMICO DE SIMULACAO\Exits_python\PS2020\POLICIES__2021-06-06T14_22_49.049768'
+    ps = prepare_data(pa)
+    p2 = 'sales_lat_long.csv'
+    real = prepare_real_data(p2)
     for key in ps:
         plot(ps[key], key)
+    plot(real, 'real')
