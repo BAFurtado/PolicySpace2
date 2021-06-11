@@ -7,13 +7,15 @@ def read_meta(path1, path2):
     if os.path.exists(new_path):
         with open(new_path, 'r') as h:
             out = json.load(h)
-            a = out[0]['path'].split('\\')[-2].split('.')[-1]
+            a = out[0]['path'].split('\\')[-2]
             b = out[0]['params']['PROCESSING_ACPS']
             c = out[0]['params']['POLICY_COEFFICIENT']
             d = out[0]['params']['POLICY_DAYS']
             e = out[0]['params']['POLICY_QUANTILE']
             f = out[0]['params']['TOTAL_DAYS']
-            return f'{a}:{b}:COEF:{c}:FAM_DAYS:{d}:QUANTILE:{e}:TOTAL_DAYS:{f}\n'
+            g = out[0]['path'].split('\\')[:-1]
+            return g
+            # return f"{a}:{b}:COEF:{c}:FAM_DAYS:{d}:QUANTILE:{e}:TOTAL_DAYS:{f}\n"
 
 
 if __name__ == '__main__':

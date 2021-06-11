@@ -86,7 +86,7 @@ def plot(family_coords, name, c='inferno'):
 
         for index in mun_codes:
             shape_select = full_region[full_region['CD_GEOCMU'] == str(index)]
-            shape_select.plot(ax=ax, color='grey', linewidth=0.5, alpha=.7, edgecolor='black')
+            shape_select.plot(ax=ax, color='grey', linewidth=1, alpha=.7, edgecolor='black')
 
         # Plotting families locations
         ax = family_coords.plot(ax=ax, column=p, cmap=cmap, markersize=13, marker='.', alpha=.5)

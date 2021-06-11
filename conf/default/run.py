@@ -52,7 +52,7 @@ SAVE_DATA = ['house']
 # Options: ['families', 'houses', 'agents]
 # You need to INCLUDE STATS to generate SPATIAL PLOTS. 'stats' also refer to general averaged plots
 
-AVERAGE_DATA = ['stats']
+AVERAGE_DATA = ['stats', 'regional']
 # 'median' or 'mean'
 AVERAGE_TYPE = 'mean'
 

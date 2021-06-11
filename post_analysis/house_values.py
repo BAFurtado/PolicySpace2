@@ -36,7 +36,7 @@ def plot(f):
     plt.show()
 
 
-def basics(f, names, by_what='region_id'):
+def basics(f, names, by_what='region_id', name=None):
     g = organize(f)
     # g = g.reset_index(drop=True)
     non = g[g.family_id != 'None']
@@ -62,11 +62,16 @@ def basics(f, names, by_what='region_id'):
                       move[move.months == '2010-01-01'].groupby(by_what).family_id.count()
 
     # stack bar plot
+    fig = plt.figure(figsize=(20, 20))
+    ax = fig.gca()
     up_down = up_down.merge(names, left_index=True, how='inner', right_on='cod_mun')
     up_down = up_down.set_index('cod_name')
     up_down = up_down[['up', 'down']]
-    up_down.sort_values('up').plot(kind='barh', stacked=True)
+    up_down.sort_values('up').plot(kind='barh', stacked=False, ax=ax)
+    ax.set_ylabel("Municipalities")
+    plt.yticks(fontsize=24)
     plt.legend(frameon=False)
+    plt.savefig(f'output/maps/hist/{name}_hist.png', bbox_inches='tight')
     plt.show()
 
     print('Vacant houses: {:.2f}%'.format(vacant))
@@ -112,7 +117,7 @@ def prepare_chord(df, names):
     return df
 
 
-def plot_chord(df):
+def plot_chord(df, name):
     # Making and saving and showing Chord
     cities = list(set(df.cod_name_x.unique()).union(set(df.cod_name_y.unique())))
     cities_dataset = hv.Dataset(pd.DataFrame(cities, columns=["city"]))
@@ -125,7 +130,8 @@ def plot_chord(df):
     # To save to figure
     # hv.extension("matplotlib")
     # hv.output(fig='svg', size=250)
-    hv.save(chord, '../other/PS2_validation/chord.html')
+    hv.save(chord, f'output/maps/{name}_chord.png')
+    # hv.save(chord, f'output/maps/{name}_chord.html')
 
 
 def cut(f, n=10000):
@@ -134,16 +140,18 @@ def cut(f, n=10000):
 
 
 if __name__ == "__main__":
-    location = fr'\\storage1\carga\MODELO DINAMICO DE SIMULACAO\Exits_python\PS2020\POLICIES__2021-02-25T11_28_10.744348\POLICIES=no_policy\0/temp_houses.csv'
-    file = pd.read_csv(location, sep=';', header=None)
-    try:
-        mun_names = pd.read_csv('./input/names_and_codes_municipalities.csv', sep=';', header=0)
-    except FileNotFoundError:
-        mun_names = pd.read_csv('../input/names_and_codes_municipalities.csv', sep=';', header=0)
-    file = basics(file, mun_names, 'mun_id')
-    plot(file)
+    for each in ['buy', 'wage', 'no_policy', 'rent']:
+        location = r'\\storage1\carga\modelo dinamico de simulacao' \
+                   fr'\Exits_python\PS2020\POLICIES__2021-06-06T14_22_49.049768\POLICIES={each}\0\temp_houses.csv'
+        file = pd.read_csv(location, sep=';', header=None)
+        try:
+            mun_names = pd.read_csv('./input/names_and_codes_municipalities.csv', sep=';', header=0)
+        except FileNotFoundError:
+            mun_names = pd.read_csv('../input/names_and_codes_municipalities.csv', sep=';', header=0)
+        file = basics(file, mun_names, 'mun_id', name=each)
+        # plot(file)
 
-    file = organize(file)
-    print(file.columns)
-    chord_base = prepare_chord(file, mun_names)
-    plot_chord(chord_base)
+        file = organize(file)
+        # print(file.columns)
+        chord_base = prepare_chord(file, mun_names)
+        plot_chord(chord_base, each)
