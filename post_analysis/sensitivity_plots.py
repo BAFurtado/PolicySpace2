@@ -14,6 +14,10 @@ def plot(database, lbls, path, dpi=720, ft='png'):
             fig, ax = plt.subplots(dpi=dpi)
             for i, data in enumerate(database):
                 ax.plot(pd.to_datetime(database[data]['month']), database[data][lb], linewidth=2, color=colors[data])
+                # ax.fill_between(database[data][lb],
+                #                 database[data]['upper_table'],
+                #                 database[data]['lower_table'],
+                #                 facecolor=colors[data], alpha=.5)
             ax.spines['top'].set_visible(False)
             ax.spines['bottom'].set_visible(True)
             ax.spines['right'].set_visible(False)
@@ -36,6 +40,11 @@ def plot(database, lbls, path, dpi=720, ft='png'):
             plt.close(fig)
 
 
+def calculate_bounds(data, col):
+
+    return data
+
+
 if __name__ == '__main__':
     w_false = r'\\storage1\carga\MODELO DINAMICO DE SIMULACAO\Exits_python\PS2020\WAGE_IGNORE_UNEMPLOYMENT__2021-02-22T08_13_37.848876\WAGE_IGNORE_UNEMPLOYMENT=False\avg\temp_stats.csv'
     w_true = r'\\storage1\carga\MODELO DINAMICO DE SIMULACAO\Exits_python\PS2020\WAGE_IGNORE_UNEMPLOYMENT__2021-02-22T08_13_37.848876\WAGE_IGNORE_UNEMPLOYMENT=True\avg\temp_stats.csv'
@@ -47,4 +56,6 @@ if __name__ == '__main__':
     f = pd.read_csv(w_false, sep=';', names=cols['stats']['columns'])
     t = pd.read_csv(w_true, sep=';', names=cols['stats']['columns'])
     ls = ['firms_profit']
+    f = calculate_bounds(f, ls)
+    t = calculate_bounds(t, ls)
     plot({options[0]: f, options[1]: t}, ls, 'output')

@@ -28,6 +28,5 @@ class Logger:
         for region in sim.regions.values():
             print(region)
 
-
     def info(self, msg):
         self.logger.info(msg)

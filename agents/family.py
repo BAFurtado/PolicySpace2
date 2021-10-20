@@ -189,8 +189,8 @@ class Family:
     def agents(self):
         return list(self.members.values())
 
-    def is_member(self, id):
-        return id in self.members
+    def is_member(self, _id):
+        return _id in self.members
 
     @property
     def num_members(self):
