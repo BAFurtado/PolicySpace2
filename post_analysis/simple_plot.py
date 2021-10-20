@@ -12,13 +12,13 @@ def prepare_data(filepaths, labels):
     keys = ['buy', 'rent', 'wage', 'no_policy']
     database = dict()
     for key in keys:
-        database[key] = dict()
+        database[key] = pd.DataFrame()
         for each in filepaths:
             this_key = each.split('=')[1].split('\\')[0]
             if key == this_key:
                 d = pd.read_csv(each, header=None, sep=';', names=labels)
                 d['month'] = pd.to_datetime(d.month).dt.date
-                database[key][each.split('\\')[-2]] = d[d.loc[:, 'month'] > datetime.date(2011, 1, 1)]
+                database[key] = database[key].append(d[d.loc[:, 'month'] > datetime.date(2011, 1, 1)])
     return database
 
 
@@ -50,10 +50,20 @@ def plot(database, lbls, path, dpi=720, ft='png'):
                 plt.tick_params(axis='both', which='both', bottom=False, top=False,
                                 labelbottom=True, left=False, right=False, labelleft=True)
                 n = os.path.join(path, f'{lb}.{ft}')
-                plt.savefig(f"output/{lb}.{ft}")
+                plt.savefig(f"output/{lb}_R1.{ft}")
                 # plt.savefig(n)
                 plt.show()
                 plt.close(fig)
+
+
+def transform_into_avg_quartiles(database):
+    data = dict()
+    for key in database:
+        data[key] = dict()
+        data[key]['avg'] = database[key].groupby(by='month').agg('mean').reset_index()
+        data[key]['upper_bound'] = database[key].groupby(by='month').quantile(.75).reset_index()
+        data[key]['lower_bound'] = database[key].groupby(by='month').quantile(.25).reset_index()
+    return data
 
 
 def organizing_files_avg_policy(path):
@@ -66,5 +76,6 @@ if __name__ == '__main__':
     # r'\Exits_python\PS2020\POLICIES__2021-02-25T11_28_10.744348'
 
     pths = organizing_files_avg_policy(p)
-    data = prepare_data(pths,  cols['stats']['columns'])
-    # plot(data,  cols['stats']['columns'], p)
+    dat = prepare_data(pths,  cols['stats']['columns'])
+    dat = transform_into_avg_quartiles(dat)
+    plot(dat,  cols['stats']['columns'], p)
