@@ -1,3 +1,4 @@
+import os
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -12,14 +13,16 @@ plt.rcParams['svg.fonttype'] = 'none'
 def plot_hist(x, y, name=None, params=None):
     sns.set()
     fig = plt.figure()
-    fig.suptitle(params, fontsize=9)
-    fig.subplots_adjust(top=0.85)
-    sns.distplot(x, hist=True, kde=True, label='simulated')
-    sns.distplot(y, hist=True, kde=True, label='real')
-    plt.legend()
+    # fig.suptitle(params, fontsize=9)
+    # fig.subplots_adjust(top=0.85)
+    for key in x:
+        sns.distplot(x[key], hist=False, kde=True)
+    ax = sns.distplot(y, hist=True, kde=True, label='real')
+    ax.set(xlabel='Normalized price per square meter')
+    plt.legend(frameon=False)
     if name:
         # plt.savefig(f'output/{name}.png')
-        plt.savefig(f'output/{name}.svg', format='svg', dpi=1200)
+        plt.savefig(f'output/{name}_R1.png', format='png', dpi=600)
     else:
         plt.show()
     plt.close()
@@ -51,14 +54,20 @@ def restrict_quantile(data, col, max_q=.9, min_q=.1):
     return tmp
 
 
-def prepare_data(file, real_sales_data=None, real_rental_data=None):
-    s_sales_price = pd.read_csv(file, sep=';', header=None, usecols=[0, 4, 5])
-    s_sales_price = s_sales_price[s_sales_price[0] == '2019-12-01']
-    s_sales_price['price_util'] = s_sales_price[5] / s_sales_price[4]
-    s_sales_price = restrict_quantile(s_sales_price, 'price_util')
-    s_sales_price = normalize_data(s_sales_price, 'price_util')
-    s_sales_price = s_sales_price[['price_util']]
-    s_rent_price = pd.read_csv(file, sep=';', header=None, usecols=[0, 4, 6])
+def prepare_data(folder, real_sales_data=None, real_rental_data=None):
+    files = [fi for fi in os.listdir(folder) if fi.isdigit()]
+    s_sales_price = dict()
+    for file in files:
+        path = os.path.join(folder, file, 'temp_houses.csv')
+        table = pd.read_csv(path, sep=';', header=None, usecols=[0, 4, 5])
+        table = table[table[0] == '2019-12-01']
+        table['price_util'] = table[5]/table[4]
+        table = restrict_quantile(table, 'price_util')
+        table = normalize_data(table, 'price_util')
+        table = table[['price_util']]
+        s_sales_price[file] = table
+
+    s_rent_price = pd.read_csv(os.path.join(folder, '0', 'temp_houses.csv'), sep=';', header=None, usecols=[0, 4, 6])
     s_rent_price = s_rent_price[s_rent_price[0] == '2019-12-01']
     s_rent_price = s_rent_price.dropna()
     s_rent_price['price_util'] = s_rent_price[6]/s_rent_price[4]
@@ -90,20 +99,20 @@ def ks_test(rvs1, rvs2, significance_level=0.1):
 
 
 def main(file):
-    params = file[:-17] + 'conf.json'
+    params = os.path.join(file, 'conf.json')
 
     s_sales, r_sales, s_rent, r_rent = prepare_data(file)
 
-    plot_qq(s_sales['price_util'], r_sales['price_util'], name='qq_sales_' + params[-16:-10], params=params)
-    plot_qq(s_rent['price_util'], r_rent['price_util'], name='qq_rent_' + params[-16:-10], params=params)
+    # plot_qq(s_sales['price_util'], r_sales['price_util'], name='qq_sales_' + params[-16:-10], params=params)
+    # plot_qq(s_rent['price_util'], r_rent['price_util'], name='qq_rent_' + params[-16:-10], params=params)
 
-    plot_hist(s_sales['price_util'], r_sales['price_util'], name='h_sales_' + params[-16:-10], params=params)
-    plot_hist(s_rent['price_util'], r_rent['price_util'], name='h_rent_' + params[-16:-10], params=params)
+    plot_hist(s_sales, r_sales['price_util'], name='h_sales_' + params[-16:-10], params=params)
+    # plot_hist(s_rent['price_util'], r_rent['price_util'], name='h_rent_' + params[-16:-10], params=params)
 
-    print('SALES')
-    print(ks_test(s_sales['price_util'], r_sales['price_util']))
-    print('RENT')
-    print(ks_test(s_rent['price_util'], r_rent['price_util']))
+    # print('SALES')
+    # print(ks_test(s_sales['price_util'], r_sales['price_util']))
+    # print('RENT')
+    # print(ks_test(s_rent['price_util'], r_rent['price_util']))
 
 
 if __name__ == "__main__":
@@ -111,5 +120,5 @@ if __name__ == "__main__":
     # column 5 - house_prices, column 6 - rent, column 4 - size
     # f = sys.argv[1] if sys.argv[1] else f
 
-    f = r'\\storage1\carga\modelo dinamico de simulacao\Exits_python\PS2020\run__2021-07-14T16_10_39.876864\0/temp_houses.csv'
+    f = r'\\storage1\carga\modelo dinamico de simulacao\Exits_python\PS2020\run__2021-07-14T16_10_39.876864'
     main(f)
