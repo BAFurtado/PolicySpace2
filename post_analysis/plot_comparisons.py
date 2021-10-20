@@ -12,17 +12,18 @@ plt.rcParams['svg.fonttype'] = 'none'
 
 def plot_hist(x, y, name=None, params=None):
     sns.set()
+    sns.set_palette("viridis")
     fig = plt.figure()
     # fig.suptitle(params, fontsize=9)
     # fig.subplots_adjust(top=0.85)
     for key in x:
         sns.distplot(x[key], hist=False, kde=True)
-    ax = sns.distplot(y, hist=True, kde=True, label='real')
-    ax.set(xlabel='Normalized price per square meter')
+    ax = sns.distplot(y, hist=True, kde=True, label='empirical data')
+    ax.set(xlabel='Normalized prices per square meter')
     plt.legend(frameon=False)
     if name:
         # plt.savefig(f'output/{name}.png')
-        plt.savefig(f'output/{name}_R1.png', format='png', dpi=600)
+        plt.savefig(f'output/{name}_R1.png', format='png', dpi=1200)
     else:
         plt.show()
     plt.close()
