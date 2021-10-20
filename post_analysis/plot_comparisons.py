@@ -6,6 +6,7 @@ from scipy import stats
 from statsmodels.graphics.gofplots import qqplot_2samples as qq
 
 from linear_regressions import normalize_data
+plt.rcParams['svg.fonttype'] = 'none'
 
 
 def plot_hist(x, y, name=None, params=None):
@@ -17,8 +18,8 @@ def plot_hist(x, y, name=None, params=None):
     sns.distplot(y, hist=True, kde=True, label='real')
     plt.legend()
     if name:
-        plt.savefig(f'output/{name}.png')
-        plt.savefig(f'output/{name}.eps', format='eps')
+        # plt.savefig(f'output/{name}.png')
+        plt.savefig(f'output/{name}.svg', format='svg', dpi=1200)
     else:
         plt.show()
     plt.close()
@@ -37,8 +38,8 @@ def plot_qq(x, y, name=None, params=None):
     labels = ['simulated', 'real']
     plt.legend(labels, frameon=False)
     if name:
-        plt.savefig(f'output/{name}.png')
-        plt.savefig(f'output/{name}.eps', format='eps')
+        # plt.savefig(f'output/{name}.png')
+        plt.savefig(f'output/{name}.svg', format='svg', dpi=1200)
     else:
         plt.show()
     plt.close()
@@ -109,5 +110,6 @@ if __name__ == "__main__":
     # Get Data
     # column 5 - house_prices, column 6 - rent, column 4 - size
     # f = sys.argv[1] if sys.argv[1] else f
-    f = r'\\storage1\carga\modelo dinamico de simulacao\Exits_python\PS2020\run__2021-02-19T21_03_54.541893\0/temp_houses.csv'
+
+    f = r'\\storage1\carga\modelo dinamico de simulacao\Exits_python\PS2020\run__2021-07-14T16_10_39.876864\0/temp_houses.csv'
     main(f)
