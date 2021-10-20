@@ -54,7 +54,7 @@ def plot(database, lbls, path, dpi=720, ft='png'):
 
 
 def organizing_files_avg_policy(path):
-    return [f for f in glob.glob(path + '/**/avg/temp_stats.csv', recursive=True)]
+    return [f for f in glob.glob(path + '/**/**/temp_stats.csv', recursive=True) if 'avg' not in f]
 
 
 if __name__ == '__main__':
@@ -63,5 +63,5 @@ if __name__ == '__main__':
     # r'\Exits_python\PS2020\POLICIES__2021-02-25T11_28_10.744348'
 
     pths = organizing_files_avg_policy(p)
-    data = prepare_data(pths,  cols['stats']['columns'])
-    plot(data,  cols['stats']['columns'], p)
+    # data = prepare_data(pths,  cols['stats']['columns'])
+    # plot(data,  cols['stats']['columns'], p)
