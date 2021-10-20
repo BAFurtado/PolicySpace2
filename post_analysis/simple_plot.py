@@ -34,14 +34,23 @@ def plot(database, lbls, path, dpi=720, ft='png'):
             if lb not in ['month']:
                 fig, ax = plt.subplots(dpi=dpi)
                 for i, data in enumerate(database):
-                    database[data].plot('month', lb, ax=ax, linewidth=2, alpha=.7, color=colors[data])
+                    ax.plot(database[data]['avg']['month'], database[data]['avg'][lb], linewidth=2,
+                            color=colors[data], label=data, alpha=.7)
+                    ax.plot(database[data]['upper_table']['month'], database[data]['upper_table'][lb], linewidth=.6,
+                            color=colors[data])
+                    ax.plot(database[data]['upper_table']['month'], database[data]['lower_table'][lb], linewidth=.6,
+                            color=colors[data])
+                    ax.fill_between(pd.to_datetime(database[data]['avg']['month']),
+                                    database[data]['upper_table'][lb],
+                                    database[data]['lower_table'][lb],
+                                    facecolor=colors[data], alpha=.7)
                 ax.spines['top'].set_visible(False)
                 ax.spines['bottom'].set_visible(True)
                 ax.spines['right'].set_visible(False)
                 ax.spines['left'].set_visible(True)
                 ax.get_xaxis().tick_bottom()
                 ax.get_yaxis().tick_left()
-                ax.get_legend().remove()
+                # ax.get_legend().remove()
                 fmt = fmts[lb] if lb in fmts else '{:.4f}'
                 ax.yaxis.set_major_formatter(plt.FuncFormatter(fmt.format))
                 ax.set(xlabel='Year')
@@ -61,8 +70,8 @@ def transform_into_avg_quartiles(database):
     for key in database:
         data[key] = dict()
         data[key]['avg'] = database[key].groupby(by='month').agg('mean').reset_index()
-        data[key]['upper_bound'] = database[key].groupby(by='month').quantile(.75).reset_index()
-        data[key]['lower_bound'] = database[key].groupby(by='month').quantile(.25).reset_index()
+        data[key]['upper_table'] = database[key].groupby(by='month').quantile(.75).reset_index()
+        data[key]['lower_table'] = database[key].groupby(by='month').quantile(.25).reset_index()
     return data
 
 
