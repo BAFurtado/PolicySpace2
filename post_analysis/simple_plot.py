@@ -9,13 +9,16 @@ from analysis.output import OUTPUT_DATA_SPEC as cols
 
 
 def prepare_data(filepaths, labels):
+    keys = ['buy', 'rent', 'wage', 'no_policy']
     database = dict()
-    for each in filepaths:
-        key = each.split('=')[1].split('\\')[0]
-        d = pd.read_csv(each, header=None, sep=';', names=labels)
-        d['month'] = pd.to_datetime(d.month).dt.date
-        d = d[d.loc[:, 'month'] > datetime.date(2011, 1, 1)]
-        database[key] = d
+    for key in keys:
+        database[key] = dict()
+        for each in filepaths:
+            this_key = each.split('=')[1].split('\\')[0]
+            if key == this_key:
+                d = pd.read_csv(each, header=None, sep=';', names=labels)
+                d['month'] = pd.to_datetime(d.month).dt.date
+                database[key][each.split('\\')[-2]] = d[d.loc[:, 'month'] > datetime.date(2011, 1, 1)]
     return database
 
 
@@ -63,5 +66,5 @@ if __name__ == '__main__':
     # r'\Exits_python\PS2020\POLICIES__2021-02-25T11_28_10.744348'
 
     pths = organizing_files_avg_policy(p)
-    # data = prepare_data(pths,  cols['stats']['columns'])
+    data = prepare_data(pths,  cols['stats']['columns'])
     # plot(data,  cols['stats']['columns'], p)
