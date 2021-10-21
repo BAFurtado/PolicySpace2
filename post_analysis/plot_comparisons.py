@@ -63,7 +63,8 @@ def prepare_data(folder, real_sales_data=None, real_rental_data=None):
         table = pd.read_csv(path, sep=';', header=None, usecols=[0, 4, 5])
         table = table[table[0] == '2019-12-01']
         table['price_util'] = table[5]/table[4]
-        table = restrict_quantile(table, 'price_util')
+        table = table.dropna(subset=['price_util'])
+        table = restrict_quantile(table, 'price_util', .97, .03)
         table = normalize_data(table, 'price_util')
         table = table[['price_util']]
         s_sales_price[file] = table
@@ -122,4 +123,5 @@ if __name__ == "__main__":
     # f = sys.argv[1] if sys.argv[1] else f
 
     f = r'\\storage1\carga\modelo dinamico de simulacao\Exits_python\PS2020\run__2021-07-14T16_10_39.876864'
+
     main(f)

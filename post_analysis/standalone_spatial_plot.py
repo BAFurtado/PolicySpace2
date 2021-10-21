@@ -30,9 +30,10 @@ def prepare_data(path):
             if pol in each:
                 policies[pol] = pd.read_csv(each, sep=';', names=cols)
                 policies[pol] = policies[pol][policies[pol].month == '2019-12-01']
-                policies[pol] = policies[pol][['x', 'y', 'price']]
+                policies[pol] = policies[pol][['x', 'y', 'price', 'size']]
+                policies[pol]['price_util'] = policies[pol]['price'] / policies[pol]['size']
                 # Normalized
-                policies[pol]['price'] = scaler.fit_transform(policies[pol][['price']])
+                policies[pol]['price_util'] = scaler.fit_transform(policies[pol][['price_util']])
                 # Adding point geometry on pandas DataFrame
                 policies[pol]['geometry'] = [Point(xy) for xy in zip(policies[pol].x, policies[pol].y)]
                 # Creating geodataframe
@@ -50,11 +51,14 @@ def restrict_quantile(data, col, max_q=.95, min_q=.05):
 
 def prepare_real_data(path):
     r = pd.read_csv(path, sep=';')
+    r = r.dropna(subset=['longitude', 'latitude', 'price_util'])
+    r = restrict_quantile(r, 'price_util', .97, .03)
+    for col in r.columns:
+        print(r[col].describe())
+    r.to_csv('spatial_plotted_data.csv', sep=';')
     r = r[['longitude', 'latitude', 'price_util']]
-    r.columns = ['x', 'y', 'price']
-    r = r.dropna()
-    r = restrict_quantile(r, 'price', .97, .03)
-    r['price'] = scaler.fit_transform(r[['price']])
+    r.columns = ['x', 'y', 'price_util']
+    r['price_util'] = scaler.fit_transform(r[['price_util']])
     # Adding point geometry on pandas DataFrame
     r['geometry'] = [Point(xy) for xy in zip(r.x, r.y)]
     # Creating geodataframe
@@ -62,7 +66,7 @@ def prepare_real_data(path):
     return r
 
 
-def plot(family_coords, name, c='inferno'):
+def plot(family_coords, name, c='viridis'):
     """Generate a spatial plot"""
     cmap = cm.get_cmap(c)
 
@@ -70,7 +74,7 @@ def plot(family_coords, name, c='inferno'):
     full_region = gpd.read_file('../input/shapes/mun_ACPS_ibge_2014_latlong_wgs1984_fixed.shp')
     urban_region = gpd.read_file('../input/shapes/URBAN_IBGE_ACPs.shp')
 
-    plots = ['price']
+    plots = ['price_util']
 
     for p in plots:
         # Starting the plot
@@ -105,7 +109,10 @@ def plot(family_coords, name, c='inferno'):
         # ax.set_title(p.capitalize().replace('_', ' '))
         ax.set_xlabel('Longitude (in degrees)')
         ax.set_ylabel('Latitude (in degrees)')
-        plt.savefig(f'output/maps/{name}.png', bbox_inches='tight')
+        for item in ([ax.xaxis.label, ax.yaxis.label] +
+                     ax.get_xticklabels() + ax.get_yticklabels()):
+            item.set_fontsize(17)
+        plt.savefig(f'output/maps/{name}_R1.png', bbox_inches='tight')
         plt.close()
         # plt.show()
 
@@ -113,7 +120,7 @@ def plot(family_coords, name, c='inferno'):
 if __name__ == '__main__':
     pa = r'\\storage1\carga\MODELO DINAMICO DE SIMULACAO\Exits_python\PS2020\POLICIES__2021-06-06T14_22_49.049768'
     ps = prepare_data(pa)
-    p2 = 'sales_lat_long.csv'
+    p2 = 'sensible_sales_300.csv'
     real = prepare_real_data(p2)
     for key in ps:
         plot(ps[key], key)
