@@ -25,25 +25,28 @@ def prepare_data(filepaths, labels):
 def plot(database, lbls, path, dpi=720, ft='png'):
     colors = {'buy': 'tab:red', 'no_policy': 'tab:orange', 'rent': 'tab:blue', 'wage': 'tab:green'}
     fmts = {'gdp_index': '{:.0f}',
-            'families_median_wealth': '{:.2f}',
             'gini_index': '{:.3f}',
-            'average_utility': '{:.2f}'}
+            'average_qli': '{:.3f}',
+            'house_price': '{:.0f}',
+            'pct_zero_consumption': '{:.3f}',
+            'rent_default': '{:.3f}'}
 
     for lb in lbls:
-        if lb not in ['gdp_index', 'gini_index']:
+        if lb in ['gdp_index', 'gini_index', 'average_qli', 'house_price', 'rent_default',
+                  'pct_zero_consumption']:
             if lb not in ['month']:
                 fig, ax = plt.subplots(dpi=dpi)
                 for i, data in enumerate(database):
-                    ax.plot(database[data]['avg']['month'], database[data]['avg'][lb], linewidth=2,
-                            color=colors[data], label=data, alpha=.7)
-                    ax.plot(database[data]['upper_table']['month'], database[data]['upper_table'][lb], linewidth=.6,
+                    ax.plot(database[data]['avg']['month'], database[data]['avg'][lb], linewidth=.2,
+                            color=colors[data], label=data, alpha=.6)
+                    ax.plot(database[data]['upper_table']['month'], database[data]['upper_table'][lb], linewidth=.5,
                             color=colors[data])
-                    ax.plot(database[data]['upper_table']['month'], database[data]['lower_table'][lb], linewidth=.6,
+                    ax.plot(database[data]['upper_table']['month'], database[data]['lower_table'][lb], linewidth=.5,
                             color=colors[data])
                     ax.fill_between(pd.to_datetime(database[data]['avg']['month']),
                                     database[data]['upper_table'][lb],
                                     database[data]['lower_table'][lb],
-                                    facecolor=colors[data], alpha=.7)
+                                    facecolor=colors[data], alpha=.5)
                 ax.spines['top'].set_visible(False)
                 ax.spines['bottom'].set_visible(True)
                 ax.spines['right'].set_visible(False)
