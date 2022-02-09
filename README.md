@@ -3,26 +3,23 @@ PolicySpace2: Real Estate Modeling
 <img alt="GitHub stars" src="https://img.shields.io/github/stars/bafurtado/policyspace2.svg?color=orange">  ![GitHub All Releases](https://img.shields.io/github/downloads/bafurtado/policyspace2/total) ![GitHub](https://img.shields.io/github/license/bafurtado/policyspace2)  ![GitHub forks](https://img.shields.io/github/forks/bafurtado/policyspace2)
 ------
 
-First preliminary documented results are out:
+### Published at JASSS
 
-## https://arxiv.org/abs/2102.11929
+## https://www.jasss.org/25/1/8.html
 
-Policymakers decide on alternative policies facing restricted budgets and uncertain, 
-ever-changing future. Designing housing policies is further difficult giving the 
-heterogeneous characteristics of properties themselves and the intricacy of housing 
-markets and the spatial context of cities. We propose PolicySpace2 (PS2) as an 
-adapted and extended version of the open source PolicySpace agent-based model. 
-PS2 is a computer simulation that relies on empirically detailed spatial data 
-to model real estate, along with labor, credit and goods and services markets. 
-Interaction among workers, firms, a bank, households and municipalities follow 
-the literature benchmarks to integrate economic, spatial and transport literature. 
-PS2 is applied to a comparison among three competing municipal housing policies 
-aimed at alleviating poverty: (a) property acquisition and distribution, (b) 
-rental vouchers and (c) monetary aid. Within the model context, the monetary aid, 
-that is, a smaller amounts of help for a larger number of households, 
-makes the economy perform better in terms of production, consumption, 
-reduction of inequality and maintenance of financial duties. PS2 as such is also 
-a framework that may be further adapted to a number of related research questions. 
+Policymakers' role in decision making on alternative policies is facing restricted budgets and an uncertain future. 
+The need to decide on priorities and handle effects across policies has made their task even more difficult. 
+For instance, housing policies involve heterogeneous characteristics of the properties themselves and the intricacy 
+of housing markets within the spatial context of cities. Here, we have proposed PolicySpace2 (PS2) as an adapted and 
+extended version of the open source PolicySpace agent-based model. PS2 is a computer simulation that relies 
+on empirically detailed spatial data to model real estate, along with labor, credit, and goods and services markets. 
+Interaction among workers, firms, a bank, households and municipalities follow the literature benchmarks by 
+integrating economic, spatial and transport research. PS2 is applied here as a comparison of three competing public 
+policies aimed at reducing inequality and alleviating poverty: (a) house acquisition by the government and 
+distribution to lower income households, (b) rental vouchers and (c) monetary aid. Within the model context, 
+monetary aid, that is smaller amounts of help for a larger number of households, improves the economy in terms 
+of production, consumption, reduction of inequality and maintenance of financial duties. PS2 is also a framework 
+that can be further adapted to a number of related research questions.  
 
 
 This is an evolution of PolicySpace  
