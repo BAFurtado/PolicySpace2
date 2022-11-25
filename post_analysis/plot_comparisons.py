@@ -20,10 +20,10 @@ def plot_hist(x, y, name=None, params=None):
         sns.distplot(x[key], hist=False, kde=True)
     ax = sns.distplot(y, hist=True, kde=True, label='empirical data')
     ax.set(xlabel='Normalized prices per square meter')
-    plt.legend(frameon=False)
+    # plt.legend(frameon=False)
     if name:
         # plt.savefig(f'output/{name}.png')
-        plt.savefig(f'output/{name}_R1.png', format='png', dpi=1200)
+        plt.savefig(f'output/{name}_ps2_book.svg', format='svg', dpi=600)
     else:
         plt.show()
     plt.close()
@@ -43,7 +43,7 @@ def plot_qq(x, y, name=None, params=None):
     plt.legend(labels, frameon=False)
     if name:
         # plt.savefig(f'output/{name}.png')
-        plt.savefig(f'output/{name}.svg', format='svg', dpi=1200)
+        plt.savefig(f'output/{name}_ps2book.svg', format='svg', dpi=600)
     else:
         plt.show()
     plt.close()
@@ -105,7 +105,7 @@ def main(file):
 
     s_sales, r_sales, s_rent, r_rent = prepare_data(file)
 
-    # plot_qq(s_sales['price_util'], r_sales['price_util'], name='qq_sales_' + params[-16:-10], params=params)
+    plot_qq(s_sales['price_util'], r_sales['price_util'], name='qq_sales_' + params[-16:-10], params=params)
     # plot_qq(s_rent['price_util'], r_rent['price_util'], name='qq_rent_' + params[-16:-10], params=params)
 
     plot_hist(s_sales, r_sales['price_util'], name='h_sales_' + params[-16:-10], params=params)

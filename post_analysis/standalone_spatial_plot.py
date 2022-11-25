@@ -66,7 +66,7 @@ def prepare_real_data(path):
     return r
 
 
-def plot(family_coords, name, c='viridis'):
+def plot(family_coords, name, c='inferno'):
     """Generate a spatial plot"""
     cmap = cm.get_cmap(c)
 
@@ -112,7 +112,7 @@ def plot(family_coords, name, c='viridis'):
         for item in ([ax.xaxis.label, ax.yaxis.label] +
                      ax.get_xticklabels() + ax.get_yticklabels()):
             item.set_fontsize(17)
-        plt.savefig(f'output/maps/{name}_R1.png', bbox_inches='tight')
+        plt.savefig(f'output/maps/{name}_bookps2.svg', format='svg', bbox_inches='tight')
         plt.close()
         # plt.show()
 

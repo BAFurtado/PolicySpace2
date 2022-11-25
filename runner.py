@@ -104,7 +104,6 @@ if __name__ == '__main__':
     # sensitivity(alt=['7200'], default='3652', txt='TOTAL_DAYS = ')
     # Manually 2000-2030 e 2000-2020
 
-
     # for each in [c3, c4, c5]:
     #     main(each)
     #

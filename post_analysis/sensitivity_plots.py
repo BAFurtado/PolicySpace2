@@ -8,7 +8,7 @@ from matplotlib.dates import DateFormatter
 from analysis.output import OUTPUT_DATA_SPEC as cols
 
 
-def plot(database, lbls, path, dpi=720, ft='png'):
+def plot(database, lbls, path, dpi=360, ft='png'):
     for lb in lbls:
         if lb not in ['month']:
             fig, ax = plt.subplots(dpi=dpi)

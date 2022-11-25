@@ -264,7 +264,12 @@ def main(ctx, runs, cpus, params, config):
         logger.warn('Warning!!! Are you sure you do NOT want to save AGENTS\' data?')
 
     # apply any top-level overrides, if specified
-    params = json.loads(params) if params is not None else {}
+    if params:
+        with open(params, 'r') as infile:
+            params = json.load(infile)
+    else:
+        params = {}
+    # params = json.loads(params) if params is not None else {}
     config = json.loads(config) if config is not None else {}
     conf.PARAMS.update(params) # applied per-run
     conf.RUN.update(config)    # applied globally
