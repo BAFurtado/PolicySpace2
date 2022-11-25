@@ -68,7 +68,7 @@ RENTAL_SHARE = {'max': 1, 'min': 0, 'distribution': 'normal'}
 INITIAL_RENTAL_PRICE = {'max': .01, 'min': 0, 'distribution': 'normal'}
 # CONSTRUCTION
 PERCENT_CONSTRUCTION_FIRMS = {'alternatives': [.03, .04, .02, .01, .005],
-                              'distribution': 'choice', 'weights': [.95, .1, .2, .1, .1]}
+                              'distribution': 'choice', 'weights': [.95, .01, .02, .01, .01]}
 # Months that construction firm will divide its income into monthly revenue installments.
 # Although prices are accounted for at once.
 CONSTRUCTION_ACC_CASH_FLOW = {'max': 100, 'min': 1, 'distribution': 'normal', 'tp': int}
