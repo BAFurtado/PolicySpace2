@@ -3,6 +3,16 @@ PolicySpace2: Real Estate Modeling
 <img alt="GitHub stars" src="https://img.shields.io/github/stars/bafurtado/policyspace2.svg?color=orange">  ![GitHub All Releases](https://img.shields.io/github/downloads/bafurtado/policyspace2/total) ![GitHub](https://img.shields.io/github/license/bafurtado/policyspace2)  ![GitHub forks](https://img.shields.io/github/forks/bafurtado/policyspace2)
 ------
 
+<a href="https://www.comses.net/codebases/c8775158-4360-46d8-bac8-be94502b04b0/releases/1.2.0/"><img src="https://www.comses.net/static/images/icons/open-code-badge.png" align="left" height="64" width="64" ></a>
+
+---
+#### Reviewed code at ComSES
+
+## Post-PolicySpace2 work
+
+1. Optimal policy, which, where, and why: https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4276602
+2. Machine Learning Simulates Agent-Based Model Towards Policy: https://arxiv.org/abs/2203.02576
+
 ### Published at JASSS
 
 ## https://www.jasss.org/25/1/8.html
