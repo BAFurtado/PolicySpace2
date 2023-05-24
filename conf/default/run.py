@@ -3,7 +3,7 @@
 
 
 # OUTPUT_PATH = 'output'
-OUTPUT_PATH = r'\\STORAGE6\USUARIOS\# BERNARDO ALVES FURTADO #\MLSecondRunData'
+OUTPUT_PATH = r'output'
 
 KEEP_RANDOM_SEED = False
 
@@ -56,7 +56,7 @@ AVERAGE_DATA = ['stats', 'regional']
 # 'median' or 'mean'
 AVERAGE_TYPE = 'mean'
 
-# Whether or not to save data for the transit simulation
+# Whether to save data for the transit simulation
 SAVE_TRANSIT_DATA = False
 
 # Limit to the following region ids that begin with any of the listed codes (as strings).

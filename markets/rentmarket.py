@@ -96,7 +96,7 @@ class RentalMarket:
         if families:
             families.sort(key=lambda f: f.get_permanent_income(), reverse=True)
             for family in families:
-                # Make sure list of vacant houses is up to date
+                # Make sure list of vacant houses is up-to-date
                 self.unoccupied = [h for h in self.unoccupied if h.family_id is None]
                 # Matching
                 my_market = sim.seed.sample(self.unoccupied, min(len(self.unoccupied),
