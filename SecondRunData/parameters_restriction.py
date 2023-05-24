@@ -76,7 +76,8 @@ CONSTRUCTION_ACC_CASH_FLOW = {'max': 100, 'min': 1, 'distribution': 'normal', 't
 LOT_COST = {'max': .7, 'min': 0, 'distribution': 'normal'}
 PRIVATE_TRANSIT_COST = {'max': .5, 'min': 0, 'distribution': 'normal'}
 PUBLIC_TRANSIT_COST = {'max': .5, 'min': 0, 'distribution': 'normal'}
-
+# Minimum value to run depends on the size of municipality 0,001 is recommended minimum
+PERCENTAGE_ACTUAL_POP = {'alternatives': [.01, .02, .03], 'distribution': 'choice', 'weights': [.9, .05, .05]}
 PROCESSING_ACPS = {'alternatives': [['ARACAJU'], ['BELEM'], ['BELO HORIZONTE'], ['BRASILIA'],
                                     ['CAMPINA GRANDE'],
                                     ['CAMPINAS'],
@@ -108,8 +109,7 @@ PROCESSING_ACPS = {'alternatives': [['ARACAJU'], ['BELEM'], ['BELO HORIZONTE'], 
                                     ['UBERLANDIA'], ['VITORIA'],
                                     ['VOLTA REDONDA - BARRA MANSA']],
                    'distribution': 'choice'}
-# Minimum value to run depends on the size of municipality 0,001 is recommended minimum
-PERCENTAGE_ACTUAL_POP = {'alternatives': [.01, .02, .03], 'distribution': 'choice', 'weights': [.9, .05, .05]}
+
 # Selecting the starting year to build the Agents, can be: 1991, 2000 or 2010
 # STARTING_DAY = {'alternatives': ['2010-01-01', '2000-01-01'], 'distribution': 'choice', 'weights': [.9, .1]}
 TOTAL_DAYS = {'max': 14610, 'min': 1826, 'distribution': 'normal', 'tp': int}

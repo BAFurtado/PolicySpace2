@@ -31,7 +31,7 @@ from analysis import report
 from analysis.output import OUTPUT_DATA_SPEC
 from analysis.plotting import Plotter, MissingDataError
 from simulation import Simulation
-from web import app
+# from web import app
 
 matplotlib.use('agg')
 

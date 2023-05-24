@@ -4,8 +4,6 @@ import scipy.stats as stats
 
 from SecondRunData import parameters_restriction as params
 
-np.random.seed(0)
-
 
 def to_dict_from_module(prs):
     return {k: getattr(prs, k) for k in dir(prs) if not k.startswith('_')}
@@ -37,5 +35,7 @@ def compound(n):
                 else:
                     idx = np.random.choice(m, n, p=[1 / m] * m)
                     choices_vector = [choices[i] for i in idx]
+                if param['PROCESSING_ACPS'] == "['RIO DE JANEIRO']" or param['PROCESSING_ACPS'] == "['SAO PAULO']":
+                    data['PERCENTAGE_ACTUAL_POPULATION'] = np.random.choice([.5, .6, .7])
                 data[p] = choices_vector
     return data

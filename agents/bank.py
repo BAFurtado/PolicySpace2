@@ -7,6 +7,7 @@ import datetime
 from collections import defaultdict
 
 import numpy as np
+import numpy_financial as npf
 
 import conf
 
@@ -62,6 +63,7 @@ class Central:
         Given a set rate of real interest rates, it provides capital remuneration
         (internationally, exogenously provided for the moment)
         """
+
     def __init__(self, id_):
         self.id = id_
         self.balance = 0
@@ -84,10 +86,10 @@ class Central:
         # Compute future values
         interest = 0
         for amount, date in self.wallet[client]:
-            interest += np.fv(self.interest,
-                              (datetime.date(y, m, 1) - date).days // 30,
-                              0,
-                              amount * -1)
+            interest += npf.fv(self.interest,
+                               (datetime.date(y, m, 1) - date).days // 30,
+                               0,
+                               amount * -1)
             interest -= amount
 
         # Compute taxes
@@ -173,7 +175,7 @@ class Central:
         loans = self.active_loans()
         amounts = [l.principal for l in loans]
         if amounts:
-            mean = np.sum(amounts)/len(amounts)
+            mean = np.sum(amounts) / len(amounts)
             return min(amounts), max(amounts), mean
         return 0, 0, 0
 
